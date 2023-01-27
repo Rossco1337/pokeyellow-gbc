@@ -58,8 +58,7 @@ AnimateHallOfFame:
 	ld c, 80
 	call DelayFrames
 	hlcoord 2, 13
-	ld b, 3
-	ld c, 14
+	lb bc, 3, 14
 	call TextBoxBorder
 	hlcoord 4, 15
 	ld de, HallOfFameText
@@ -77,7 +76,7 @@ AnimateHallOfFame:
 	ld bc, HOF_MON
 	call AddNTimes
 	ld [hl], $ff
-	call SaveHallOfFameTeams
+	callfar SaveHallOfFameTeams ; useless since in same bank
 	xor a
 	ld [wHoFMonSpecies], a
 	inc a
@@ -122,6 +121,7 @@ HoFShowMonOrPlayer:
 	call RunPaletteCommand
 	ld a, %11100100
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	ld c, $31 ; back pic
 	call HoFLoadMonPlayerPicTileIDs
 	ld d, $a0
@@ -154,12 +154,27 @@ HoFDisplayAndRecordMonInfo:
 	ld hl, wPartyMonNicks
 	call GetPartyMonName
 	call HoFDisplayMonInfo
+	ld a, [wHoFPartyMonIndex]
+	ld [wWhichPokemon], a
+	callfar IsThisPartymonStarterPikachu_Party
+	jr nc, .asm_70336
+	ld e, $22
+	callfar PlayPikachuSoundClip
+	jr .asm_7033c
+.asm_70336
+	ld a, [wHoFMonSpecies]
+	call PlayCry
+.asm_7033c
 	jp HoFRecordMonInfo
+
+Func_7033f:
+	call HoFDisplayMonInfo
+	ld a, [wHoFMonSpecies]
+	jp PlayCry
 
 HoFDisplayMonInfo:
 	hlcoord 0, 2
-	ld b, 9
-	ld c, 10
+	lb bc, 9, 10
 	call TextBoxBorder
 	hlcoord 2, 6
 	ld de, HoFMonInfoText
@@ -174,8 +189,7 @@ HoFDisplayMonInfo:
 	ld [wd0b5], a
 	hlcoord 3, 9
 	predef PrintMonType
-	ld a, [wHoFMonSpecies]
-	jp PlayCry
+	ret
 
 HoFMonInfoText:
 	db   "LEVEL/"
@@ -186,31 +200,22 @@ HoFLoadPlayerPics:
 	ld de, RedPicFront
 	ld a, BANK(RedPicFront)
 	call UncompressSpriteFromDE
+	ld a, $0
+	call SwitchSRAMBankAndLatchClockData
 	ld hl, sSpriteBuffer1
 	ld de, sSpriteBuffer0
 	ld bc, $310
 	call CopyData
+	call PrepareRTCDataAndDisableSRAM
 	ld de, vFrontPic
 	call InterlaceMergeSpriteBuffers
 	ld de, RedPicBack
 	ld a, BANK(RedPicBack)
 	call UncompressSpriteFromDE
-
-IF GEN_2_GRAPHICS ; Use uncompressed red sprite
-	ld a, $66
-	ld c, a
-	ld de, vBackPic
-	call LoadUncompressedSpriteData
-	nop
-	nop
-	nop
-	nop
-ELSE
 	predef ScaleSpriteByTwo
 	ld de, vBackPic
 	call InterlaceMergeSpriteBuffers
 	ld c, $1
-ENDC
 
 HoFLoadMonPlayerPicTileIDs:
 ; c = base tile ID
@@ -222,12 +227,10 @@ HoFDisplayPlayerStats:
 	SetEvent EVENT_HALL_OF_FAME_DEX_RATING
 	predef DisplayDexRating
 	hlcoord 0, 4
-	ld b, 6
-	ld c, 10
+	lb bc, 6, 10
 	call TextBoxBorder
 	hlcoord 5, 0
-	ld b, 2
-	ld c, 9
+	lb bc, 2, 9
 	call TextBoxBorder
 	hlcoord 7, 2
 	ld de, wPlayerName

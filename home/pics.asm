@@ -8,7 +8,7 @@ UncompressMonSprite::
 	ld [wSpriteInputPtr], a    ; fetch sprite input pointer
 	ld a, [hl]
 	ld [wSpriteInputPtr+1], a
-
+	
 	; HAX: code from Danny-E33's hack
 	; Each pokemon's picture bank is defined with an unused byte in its stats.
 	ld a, [wcf91] ; get Pokémon ID
@@ -27,7 +27,7 @@ UncompressMonSprite::
 .GotBank
 	jp UncompressSpriteData
 
-SECTION "LoadMonFrontSprite", ROM0
+	SECTION "LoadMonFrontSprite", ROM0
 
 ; de: destination location
 LoadMonFrontSprite::
@@ -76,8 +76,8 @@ LoadUncompressedSpriteData::
 	add a
 	add a     ; 8*(7*((8-w)/2) + 7-h) ; combined overall offset (in bytes)
 	ldh [hSpriteOffset], a
-	xor a
-	ld [MBC1SRamBank], a
+	ld a, $0
+	call SwitchSRAMBankAndLatchClockData
 	ld hl, sSpriteBuffer0
 	call ZeroSpriteBuffer   ; zero buffer 0
 	ld de, sSpriteBuffer1
@@ -88,6 +88,7 @@ LoadUncompressedSpriteData::
 	ld de, sSpriteBuffer2
 	ld hl, sSpriteBuffer1
 	call AlignSpriteDataCentered    ; copy and align buffer 2 to 1 (containing the LSB of the 2bpp sprite)
+	call PrepareRTCDataAndDisableSRAM
 	pop de
 	jp InterlaceMergeSpriteBuffers
 
@@ -134,8 +135,8 @@ ZeroSpriteBuffer::
 ; in the resulting sprite, the rows of the two source sprites are interlaced
 ; de: output address
 InterlaceMergeSpriteBuffers::
-	xor a
-	ld [MBC1SRamBank], a
+	ld a, $0
+	call SwitchSRAMBankAndLatchClockData
 	push de
 	ld hl, sSpriteBuffer2 + (SPRITEBUFFERSIZE - 1) ; destination: end of buffer 2
 	ld de, sSpriteBuffer1 + (SPRITEBUFFERSIZE - 1) ; source 2: end of buffer 1
@@ -177,4 +178,5 @@ InterlaceMergeSpriteBuffers::
 	ld c, (2*SPRITEBUFFERSIZE)/16 ; $31, number of 16 byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
-	jp CopyVideoData
+	call CopyVideoData
+	jp PrepareRTCDataAndDisableSRAM

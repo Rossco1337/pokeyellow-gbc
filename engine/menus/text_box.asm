@@ -134,8 +134,7 @@ DisplayMoneyBox:
 	ld [wTextBoxID], a
 	call DisplayTextBoxID
 	hlcoord 13, 1
-	ld b, 1
-	ld c, 6
+	lb bc, 1, 6
 	call ClearScreenArea
 	hlcoord 12, 1
 	ld de, wPlayerMoney
@@ -277,36 +276,10 @@ DisplayTwoOptionMenu:
 	pop hl
 	add hl, bc
 	call PlaceString
+	xor a
+	ld [wTwoOptionMenuID], a
 	ld hl, wd730
 	res 6, [hl] ; turn on the printing delay
-	ld a, [wTwoOptionMenuID]
-	cp NO_YES_MENU
-	jr nz, .notNoYesMenu
-; No/Yes menu
-; this menu type ignores the B button
-; it only seems to be used when confirming the deletion of a save file
-	xor a
-	ld [wTwoOptionMenuID], a
-	ld a, [wFlags_0xcd60]
-	push af
-	push hl
-	ld hl, wFlags_0xcd60
-	bit 5, [hl]
-	set 5, [hl] ; don't play sound when A or B is pressed in menu
-	pop hl
-.noYesMenuInputLoop
-	call HandleMenuInput
-	bit BIT_B_BUTTON, a
-	jr nz, .noYesMenuInputLoop ; try again if B was not pressed
-	pop af
-	pop hl
-	ld [wFlags_0xcd60], a
-	ld a, SFX_PRESS_AB
-	call PlaySound
-	jr .pressedAButton
-.notNoYesMenu
-	xor a
-	ld [wTwoOptionMenuID], a
 	call HandleMenuInput
 	pop hl
 	bit BIT_B_BUTTON, a
@@ -395,8 +368,7 @@ DisplayFieldMoveMonMenu:
 
 ; no field moves
 	hlcoord 11, 11
-	ld b, 5
-	ld c, 7
+	lb bc, 5, 7
 	call TextBoxBorder
 	call UpdateSprites
 	ld a, 12

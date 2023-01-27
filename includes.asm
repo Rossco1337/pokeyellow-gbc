@@ -1,6 +1,7 @@
 GEN_2_GRAPHICS EQU 1
 GEN_2_MUSIC    EQU 1
 
+
 INCLUDE "charmap.asm"
 
 INCLUDE "macros/asserts.asm"
@@ -17,9 +18,10 @@ INCLUDE "macros/vc.asm"
 INCLUDE "macros/scripts/maps.asm"
 INCLUDE "macros/scripts/events.asm"
 INCLUDE "macros/scripts/text.asm"
-INCLUDE "macros/scripts/gfx_anims.asm"
 
 INCLUDE "macros/color.asm"
+
+INCLUDE "macros/scripts/gfx_anims.asm"
 
 INCLUDE "constants/hardware_constants.asm"
 INCLUDE "constants/oam_constants.asm"
@@ -55,8 +57,8 @@ INCLUDE "constants/tileset_constants.asm"
 INCLUDE "constants/event_constants.asm"
 INCLUDE "constants/text_constants.asm"
 INCLUDE "constants/menu_constants.asm"
+INCLUDE "constants/sprite_anim_constants.asm"
+INCLUDE "constants/pikachu_emotion_constants.asm"
 
 INCLUDE "color/wram.asm"
 INCLUDE "color/data/map_palette_constants.asm"
-
-INCLUDE "constants/pikachu_emotion_constants.asm"

@@ -15,6 +15,8 @@ DrawFrameBlock:
 	ld a, [wFBTileCounter]
 	inc a
 	ld [wFBTileCounter], a
+	ld a, $2
+	ld [wdef5], a
 	ld a, [wSubAnimTransform]
 	dec a
 	jr z, .flipHorizontalAndVertical   ; SUBANIMTYPE_HVFLIP
@@ -46,6 +48,12 @@ DrawFrameBlock:
 .finishCopying ; finish copying values to OAM (when subanimation not transformed)
 	add [hl] ; X offset
 	ld [de], a ; store X
+	cp 88
+	jr c, .asm_78056
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_78056
 	inc hl
 	inc de
 	ld a, [hli]
@@ -53,6 +61,9 @@ DrawFrameBlock:
 	ld [de], a ; store tile ID
 	inc de
 	ld a, [hli]
+	ld b, a
+	ld a, [wdef5]
+	or b
 	ld [de], a ; store flags
 	inc de
 	jp .nextTile
@@ -71,6 +82,12 @@ DrawFrameBlock:
 	ld a, 168
 	sub b ; flip X coordinate
 	ld [de], a ; store X
+	cp 88
+	jr c, .asm_78087
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_78087
 	inc hl
 	inc de
 	ld a, [hli]
@@ -90,7 +107,8 @@ DrawFrameBlock:
 	jr z, .storeFlags1
 	ld b, 0
 .storeFlags1
-	ld a, b
+	ld a, [wdef5]
+	or b
 	ld [de], a
 	inc de
 	jp .nextTile
@@ -107,6 +125,12 @@ DrawFrameBlock:
 	ld a, 168
 	sub b ; flip X coordinate
 	ld [de], a ; store X
+	cp 88
+	jr c, .asm_780c8
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_780c8
 	inc hl
 	inc de
 	ld a, [hli]
@@ -122,6 +146,9 @@ DrawFrameBlock:
 .disableHorizontalFlip
 	res 5, a
 .storeFlags2
+	ld b, a
+	ld a, [wdef5]
+	or b
 	ld [de], a
 	inc de
 .nextTile
@@ -176,12 +203,10 @@ PlayAnimation:
 	ld h, [hl]
 	ld l, a
 .animationLoop
-	vc_hook Stop_reducing_move_anim_flashing_Thunderbolt
+	vc_hook Stop_reducing_move_anim_flashing_Bubblebeam
 	ld a, [hli]
-	vc_hook_red Stop_reducing_move_anim_flashing_Reflect
-	vc_hook_blue Stop_reducing_move_anim_flashing_Self_Destruct
+	vc_hook Stop_reducing_move_anim_flashing_Mega_Punch
 	cp -1
-	vc_hook_blue Stop_reducing_move_anim_flashing_Reflect
 	jr z, .AnimationOver
 	cp FIRST_SE_ID ; is this subanimation or a special effect?
 	jr c, .playSubanimation
@@ -248,61 +273,54 @@ PlayAnimation:
 	ldh a, [rOBP0]
 	push af
 	ld a, [wAnimPalette]
-;	ldh [rOBP0], a	; HAX
-	nop
-	nop
+	ldh [rOBP0], a
+	call UpdateGBCPal_OBP0
 	call LoadMoveAnimationTiles
-	vc_hook Reduce_move_anim_flashing_Mega_Punch_Self_Destruct_Explosion
 	call LoadSubanimation
 	call PlaySubanimation
-	vc_hook_red Stop_reducing_move_anim_flashing_Mega_Punch
-	vc_hook_blue Stop_reducing_move_anim_flashing_Mega_Punch_Explosion
 	pop af
-	vc_hook_red Stop_reducing_move_anim_flashing_Blizzard
+	vc_hook Stop_reducing_move_anim_flashing_Thunderbolt
 	ldh [rOBP0], a
+	vc_hook Stop_reducing_move_anim_flashing_Explosion
+	call UpdateGBCPal_OBP0
 .nextAnimationCommand
-	vc_hook_red Stop_reducing_move_anim_flashing_Hyper_Beam
-	vc_hook_blue Stop_reducing_move_anim_flashing_Bubblebeam_Hyper_Beam_Blizzard
-	pop hl
 	vc_hook Stop_reducing_move_anim_flashing_Guillotine
+	pop hl
+	vc_hook Stop_reducing_move_anim_flashing_Mega_Kick
 	jr .animationLoop
 .AnimationOver
+	vc_hook Stop_reducing_move_anim_flashing_Blizzard
 	ret
 
 LoadSubanimation:
-	vc_hook Reduce_move_anim_flashing_Guillotine
 	ld a, [wSubAnimAddrPtr + 1]
-	vc_hook Reduce_move_anim_flashing_Mega_Kick
 	ld h, a
-	vc_hook_red Reduce_move_anim_flashing_Blizzard
 	ld a, [wSubAnimAddrPtr]
-	vc_hook_red Reduce_move_anim_flashing_Self_Destruct
 	ld l, a
 	ld a, [hli]
 	ld e, a
-	vc_hook Reduce_move_anim_flashing_Explosion
 	ld a, [hl]
-	vc_hook Reduce_move_anim_flashing_Thunderbolt
 	ld d, a ; de = address of subanimation
-	ld a, [de]
-	vc_hook_blue Reduce_move_anim_flashing_Rock_Slide
-	ld b, a
-	vc_hook Reduce_move_anim_flashing_Spore
-	and %00011111
 	vc_hook Reduce_move_anim_flashing_Bubblebeam
+	ld a, [de]
+	vc_hook Reduce_move_anim_flashing_Mega_Kick
+	ld b, a
+	vc_hook Reduce_move_anim_flashing_Guillotine
+	and %00011111
+	vc_hook Reduce_move_anim_flashing_Mega_Punch_Explosion_Self_Destruct
 	ld [wSubAnimCounter], a ; number of frame blocks
-	vc_hook_red Reduce_move_anim_flashing_Rock_Slide
-	vc_hook_blue Reduce_move_anim_flashing_Self_Destruct
+	vc_hook Reduce_move_anim_flashing_Blizzard
 	ld a, b
+	vc_hook Reduce_move_anim_flashing_Thunderbolt
 	and %11100000
 	cp SUBANIMTYPE_ENEMY << 5
-	vc_hook_blue Reduce_move_anim_flashing_Blizzard
+	vc_hook Reduce_move_anim_flashing_Reflect
 	jr nz, .isNotType5
 .isType5
 	call GetSubanimationTransform2
 	jr .saveTransformation
 .isNotType5
-	vc_hook Reduce_move_anim_flashing_Hyper_Beam
+	vc_hook Reduce_move_anim_flashing_Self_Destruct
 	call GetSubanimationTransform1
 .saveTransformation
 ; place the upper 3 bits of a into bits 0-2 of a before storing
@@ -333,7 +351,7 @@ LoadSubanimation:
 ; sets the transform to SUBANIMTYPE_NORMAL if it's the player's turn
 ; sets the transform to the subanimation type if it's the enemy's turn
 GetSubanimationTransform1:
-	vc_hook Reduce_move_anim_flashing_Reflect
+	vc_hook Reduce_move_anim_flashing_Explosion
 	ld b, a
 	ldh a, [hWhoseTurn]
 	and a
@@ -354,32 +372,25 @@ GetSubanimationTransform2:
 	ret
 
 ; loads tile patterns for battle animations
-; I HAXed with this function by shaving off a few bytes in order to
-; call a function to load sprite palettes.
 LoadMoveAnimationTiles:
 	ld a, [wWhichBattleAnimTileset]
 	add a
 	add a
+	ld hl, MoveAnimationTilesPointers
 	ld e, a
 	ld d, 0
-
-	; HAX: Load corresponding palettes as well
-	call _LoadAnimationTilesetPalettes
-
-	ld hl, MoveAnimationTilesPointers
 	add hl, de
 	ld a, [hli]
 	ld [wTempTilesetNumTiles], a ; number of tiles
-	ld c, a
 	ld a, [hli]
 	ld e, a
-	ld d, [hl] ; de = address of tileset
+	ld a, [hl]
+	ld d, a ; de = address of tileset
 	ld hl, vSprites tile $31
 	ld b, BANK(MoveAnimationTiles0) ; ROM bank
+	ld a, [wTempTilesetNumTiles]
+	ld c, a ; number of tiles
 	jp CopyVideoData ; load tileset
-
-	; Padding to prevent data shifting
-	nop
 
 MACRO anim_tileset
 	db \1
@@ -401,12 +412,7 @@ MoveAnimationTiles1:
 	INCBIN "gfx/battle/move_anim_1.2bpp"
 
 SlotMachineTiles2:
-IF DEF(_RED)
-	INCBIN "gfx/slots/red_slots_2.2bpp"
-ENDC
-IF DEF(_BLUE)
-	INCBIN "gfx/slots/blue_slots_2.2bpp"
-ENDC
+	INCBIN "gfx/slots/slots_2.2bpp"
 SlotMachineTiles2End:
 
 MoveAnimation:
@@ -434,19 +440,17 @@ MoveAnimation:
 	jr nz, .animationsDisabled
 	call ShareMoveAnimations
 	call PlayAnimation
-	vc_hook_red Stop_reducing_move_anim_flashing_Bubblebeam_Mega_Kick
-	vc_hook_blue Stop_reducing_move_anim_flashing_Spore
 	jr .next4
 .animationsDisabled
 	ld c, 30
 	call DelayFrames
 .next4
-	vc_hook_red Stop_reducing_move_anim_flashing
-	vc_hook_blue Stop_reducing_move_anim_flashing_Rock_Slide_Dream_Eater
+	vc_hook Stop_reducing_move_anim_flashing_Reflect
 	call PlayApplyingAttackAnimation ; shake the screen or flash the pic in and out (to show damage)
 .animationFinished
 	call WaitForSoundToFinish
 	xor a
+	vc_hook Stop_reducing_move_anim_flashing_Haze_Hyper_Beam
 	ld [wSubAnimSubEntryAddr], a
 	ld [wUnusedD09B], a
 	ld [wSubAnimTransform], a
@@ -484,6 +488,7 @@ ShareMoveAnimations:
 PlayApplyingAttackAnimation:
 ; Generic animation that shows after the move's individual animation
 ; Different animation depending on whether the move has an additional effect and on whose turn it is
+	vc_hook Stop_reducing_move_anim_flashing_Self_Destruct
 	ld a, [wAnimationType]
 	and a
 	ret z
@@ -573,21 +578,42 @@ SetAnimationPalette:
 	ld b, $f0
 .next
 	ld a, b
-	;ldh [rOBP0], a ; HAX: don't mess with these palettes in-battle
-	nop
-	nop
+	vc_hook Reduce_move_anim_flashing_Hyper_Beam
+	ldh [rOBP0], a
 	ld a, $6c
-	;ldh [rOBP1], a ; HAX
-	nop
-	nop
+	vc_hook Reduce_move_anim_flashing_Haze
+	ldh [rOBP1], a
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ret
 .notSGB
 	ld a, $e4
 	ld [wAnimPalette], a
-	vc_hook Reduce_move_anim_flashing_Dream_Eater
 	ldh [rOBP0], a
 	ld a, $6c
 	ldh [rOBP1], a
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
+	ret
+
+Func_78e98:
+	call SaveScreenTilesToBuffer2
+	xor a
+	ldh [hAutoBGTransferEnabled], a
+	call ClearScreen
+	ld h, HIGH(vBGMap0)
+	call WriteLowerByteOfBGMapAndEnableBGTransfer
+	call Delay3
+	xor a
+	ldh [hAutoBGTransferEnabled], a
+	call LoadScreenTilesFromBuffer2
+	ld h, HIGH(vBGMap1)
+
+WriteLowerByteOfBGMapAndEnableBGTransfer:
+	ld l, LOW(vBGMap0)
+	call BattleAnimCopyTileMapToVRAM
+	ld a, $1
+	ldh [hAutoBGTransferEnabled], a
 	ret
 
 PlaySubanimation:
@@ -703,6 +729,7 @@ DoBallTossSpecialEffects:
 	ldh a, [rOBP0]
 	xor %00111100 ; complement colors 1 and 2
 	ldh [rOBP0], a
+	call UpdateGBCPal_OBP0
 .skipFlashingEffect
 	ld a, [wSubAnimCounter]
 	cp 11 ; is it the beginning of the subanimation?
@@ -992,6 +1019,7 @@ AnimationFlashScreenLong:
 	cp $01 ; is it the end of the palettes?
 	jr z, .endOfPalettes
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	call FlashScreenLongDelay
 	jr .innerLoop
 .endOfPalettes
@@ -1000,7 +1028,6 @@ AnimationFlashScreenLong:
 	ld [wFlashScreenLongCounter], a
 	pop hl
 	jr nz, .loop
-	vc_hook_red Stop_reducing_move_anim_flashing_Psychic
 	ret
 
 ; BG palettes
@@ -1055,14 +1082,17 @@ AnimationFlashScreen:
 	push af ; save initial palette
 	ld a, %00011011 ; 0, 1, 2, 3 (inverted colors)
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	ld c, 2
 	call DelayFrames
 	xor a ; white out background
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	ld c, 2
 	call DelayFrames
 	pop af
 	ldh [rBGP], a ; restore initial palette
+	call UpdateGBCPal_BGP
 	ret
 
 AnimationDarkScreenPalette:
@@ -1108,6 +1138,7 @@ SetAnimationBGPalette:
 	ld a, c
 .next
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	ret
 
 	ld b, $5
@@ -1152,15 +1183,30 @@ AnimationWaterDropletsEverywhere:
 _AnimationWaterDroplets:
 	ld hl, wShadowOAM
 .loop
+	ld a, $1
+	ld [wdef5], a
 	ld a, [wBaseCoordY]
 	ld [hli], a ; Y
+	cp 40
+	jr c, .asm_792d7
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_792d7
 	ld a, [wBaseCoordX]
 	add 27
 	ld [wBaseCoordX], a
 	ld [hli], a ; X
+	cp 88
+	jr c, .asm_792ee
+	ld a, [wdef5]
+	add $2
+	and $3
+	ld [wdef5], a
+.asm_792ee
 	ld a, [wDropletTile]
 	ld [hli], a ; tile
-	xor a
+	ld a, [wdef5]
 	ld [hli], a ; attribute
 	ld a, [wBaseCoordX]
 	cp 144
@@ -1303,16 +1349,30 @@ BattleAnimWriteOAMEntry:
 ; Y coordinate = e (increased by 8 each call, before the write to OAM)
 ; X coordinate = [wBaseCoordX]
 ; tile = d
-; attributes = 0
+; attributes = variable (depending on coords)
+	ld a, $1
+	ld [wdef5], a
 	ld a, e
 	add 8
 	ld e, a
 	ld [hli], a
+	cp 40
+	jr c, .asm_793d8
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_793d8
 	ld a, [wBaseCoordX]
 	ld [hli], a
+	cp 88
+	jr c, .asm_793e8
+	ld a, [wdef5]
+	add $2
+	ld [wdef5], a
+.asm_793e8
 	ld a, d
 	ld [hli], a
-	xor a
+	ld a, [wdef5]
 	ld [hli], a
 	ret
 
@@ -1517,6 +1577,8 @@ AnimationSpiralBallsInward:
 	ld a, [hl]
 	cp $ff
 	jr z, .done
+	ld a, $2
+	ld [wdef5], a
 	ld a, [wSpiralBallsBaseY]
 	add [hl]
 	ld [de], a ; Y
@@ -1525,9 +1587,20 @@ AnimationSpiralBallsInward:
 	ld a, [wSpiralBallsBaseX]
 	add [hl]
 	ld [de], a ; X
+	cp 88
+	jr c, .asm_79524
+	ld a, $3
+	ld [wdef5], a
+.asm_79524
 	inc hl
 	inc de
 	inc de
+	ld a, [de]
+	and $f0
+	ld b, a
+	ld a, [wdef5]
+	or b
+	ld [de], a
 	inc de
 	dec c
 	jr nz, .innerLoop
@@ -1847,10 +1920,8 @@ _AnimationSlideMonOff:
 .PlayerNextTile
 	ld a, [hl]
 	add 7
-; This is a bug. The lower right corner tile of the mon back pic is blanked
-; while the mon is sliding off the screen. It should compare with the max tile
-; plus one instead.
-	cp $61
+; bugfix: compares against the max tile + 1 as opposed to the max tile
+	cp $62
 	ret c
 	ld a, " "
 	ret
@@ -1987,18 +2058,24 @@ AnimationSubstitute:
 CopyMonsterSpriteData:
 	ld bc, 1 tiles
 	ld a, BANK(MonsterSprite)
-	jp FarCopyData2
+	jp FarCopyData
 
 HideSubstituteShowMonAnim:
 	ldh a, [hWhoseTurn]
 	and a
 	ld hl, wPlayerMonMinimized
+	ld de, wPlayerBattleStatus1
+	ld bc, wPlayerMoveNum
 	ld a, [wPlayerBattleStatus2]
 	jr z, .next1
 	ld hl, wEnemyMonMinimized
+	ld de, wEnemyBattleStatus1
+	ld bc, wEnemyMoveNum
 	ld a, [wEnemyBattleStatus2]
 .next1
 	push hl
+	push de
+	push bc
 ; if the substitute broke, slide it down, else slide it offscreen horizontally
 	bit HAS_SUBSTITUTE_UP, a
 	jr nz, .substituteStillUp
@@ -2007,12 +2084,65 @@ HideSubstituteShowMonAnim:
 .substituteStillUp
 	call AnimationSlideMonOff
 .next2
+	pop bc
+	pop de
+	ld a, [de]
+	bit INVULNERABLE, a
 	pop hl
+	jr nz, .invulnerable
+	ld a, [bc]
+	cp FLY
+	jr z, .flyOrDig
+	cp DIG
+	jr z, .flyOrDig
+.invulnerable
 	ld a, [hl]
 	and a
 	jp nz, AnimationMinimizeMon
 	call AnimationFlashMonPic
 	jp AnimationShowMonPic
+.flyOrDig
+	ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemy
+	ld a, [wPlayerMonMinimized]
+	and a
+	jr nz, .monIsMinimized
+	ld a, [wBattleMonSpecies]
+	ld [wcf91], a
+	ld [wd0b5], a
+	call GetMonHeader
+	predef LoadMonBackPic
+	ret
+.enemy
+	ld a, [wEnemyMonMinimized]
+	and a
+	jr nz, .monIsMinimized
+	ld a, [wEnemyMonSpecies]
+	ld [wcf91], a
+	ld [wd0b5], a
+	call GetMonHeader
+	ld de, vFrontPic
+	jp LoadMonFrontSprite
+.monIsMinimized
+	ld hl, wTempPic
+	push hl
+	xor a
+	ld bc, 7 * 7 * $10
+	call FillMemory
+	pop hl
+	ld de, $194
+	add hl, de
+	ld de, MinimizedMonSprite
+	ld c, MinimizedMonSpriteEnd - MinimizedMonSprite
+.loop
+	ld a, [de]
+	ld [hli], a
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .loop
+	jp CopyTempPicToMonPic
 
 ReshowSubstituteAnim:
 	call AnimationSlideMonOff
@@ -2080,6 +2210,23 @@ AnimationHideEnemyMonPic:
 	ldh [hAutoBGTransferEnabled], a
 	jp Delay3
 
+Func_79929:
+	ld hl, wPlayerMonMinimized
+	ldh a, [hWhoseTurn]
+	and a
+	jr z, .playerTurn
+	ld hl, wEnemyMonMinimized
+.playerTurn
+	ld a, [hl]
+	and a
+	jr z, .notMinimized
+	call AnimationMinimizeMon
+	ret
+.notMinimized
+	call AnimationFlashMonPic
+	call AnimationShowMonPic
+	ret
+
 InitMultipleObjectsOAM:
 ; Writes c OAM entries with tile d.
 ; Sets their Y coordinates to sequential multiples of 8, starting from 0.
@@ -2100,6 +2247,8 @@ InitMultipleObjectsOAM:
 	dec c
 	jr nz, .loop
 	ret
+
+	ret ; unreferenced
 
 AnimationHideMonPic:
 ; Hides the mon's sprite.
@@ -2342,19 +2491,13 @@ INCLUDE "data/tilemaps.asm"
 AnimationLeavesFalling:
 ; Makes leaves float down from the top of the screen. This is used
 ; in Razor Leaf's animation.
-	ldh a, [rOBP0]
-	push af
 	ld a, [wAnimPalette]
-;	ldh [rOBP0], a ; HAX
-	nop
-	nop
+	ldh [rOBP0], a
+	call UpdateGBCPal_OBP0
 	ld d, $37 ; leaf tile
 	ld a, 3 ; number of leaves
 	ld [wNumFallingObjects], a
-	call AnimationFallingObjects
-	pop af
-	ldh [rOBP0], a
-	ret
+	jp AnimationFallingObjects
 
 AnimationPetalsFalling:
 ; Makes lots of petals fall down from the top of the screen. It's used in
@@ -2409,6 +2552,8 @@ FallingObjects_UpdateOAMEntry:
 ; movement byte.
 	ld hl, wShadowOAM
 	add hl, de
+	ld a, $1
+	ld [wdef5], a
 	ld a, [hl]
 	inc a
 	inc a
@@ -2417,6 +2562,12 @@ FallingObjects_UpdateOAMEntry:
 	ld a, 160 ; if Y >= 112, put it off-screen
 .next
 	ld [hli], a ; Y
+	cp 40
+	jr c, .asm_79e51
+	ld a, [wdef5]
+	inc a
+	ld [wdef5], a
+.asm_79e51
 	ld a, [wFallingObjectMovementByte]
 	ld b, a
 	ld de, FallingObjects_DeltaXs
@@ -2433,6 +2584,13 @@ FallingObjects_UpdateOAMEntry:
 	ld a, [de]
 	add [hl]
 	ld [hli], a ; X
+	cp 88
+	jr c, .asm_79e75
+	ld a, [wdef5]
+	add $2
+	and $3
+	ld [wdef5], a
+.asm_79e75
 	inc hl
 	xor a ; no horizontal flip
 	jr .next2
@@ -2442,9 +2600,19 @@ FallingObjects_UpdateOAMEntry:
 	ld a, [hl]
 	sub b
 	ld [hli], a ; X
+	cp 88
+	jr c, .asm_79e5c
+	ld a, [wdef5]
+	add $2
+	and $3
+	ld [wdef5], a
+.asm_79e5c
 	inc hl
 	ld a, (1 << OAM_X_FLIP)
 .next2
+	ld b, a
+	ld a, [wdef5]
+	or b
 	ld [hl], a ; attribute
 	ret
 
@@ -2504,10 +2672,12 @@ FallingObjects_InitialMovementData:
 
 AnimationShakeEnemyHUD:
 ; Shakes the enemy HUD.
-	call SpriteifyPlayerPokemon
-	REPT 9
-	nop
-	ENDR
+
+; Make a copy of the back pic's tile patterns in sprite tile pattern VRAM.
+	ld de, vBackPic
+	ld hl, vSprites
+	ld bc, 7 * 7
+	call CopyVideoData
 
 	xor a
 	ldh [hSCX], a
@@ -2526,6 +2696,14 @@ AnimationShakeEnemyHUD:
 ; lined up with row 0 of the window.
 	ld hl, vBGMap1 - $20 * 7
 	call BattleAnimCopyTileMapToVRAM
+
+; update BGMap attributes
+	ldh a, [hGBC]
+	and a
+	jr z, .notGBC
+	ld c, 13
+	farcall LoadBGMapAttributes
+.notGBC
 
 ; Move the window so that the row below the enemy HUD (in BG map 0) lines up
 ; with the top row of the window on the screen. This makes it so that the window
@@ -2560,13 +2738,18 @@ AnimationShakeEnemyHUD:
 	ldh [hWY], a
 	ld hl, vBGMap1
 	call BattleAnimCopyTileMapToVRAM
+; update BGMap attributes
+	ldh a, [hGBC]
+	and a
+	jr z, .notGBC2
+	ld c, 11
+	farcall LoadBGMapAttributes
+.notGBC2
 	xor a
 	ldh [hWY], a
 	call SaveScreenTilesToBuffer1
 	ld hl, vBGMap0
 	call BattleAnimCopyTileMapToVRAM
-	call ClearScreen
-	call Delay3
 	call LoadScreenTilesFromBuffer1
 	ld hl, vBGMap1
 	jp BattleAnimCopyTileMapToVRAM

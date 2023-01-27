@@ -105,16 +105,11 @@ StatusScreen:
 	push af
 	xor a
 	ldh [hTileAnimations], a
-IF GEN_2_GRAPHICS
-	hlcoord 19, 3
-	lb bc, 2, 8
-ELSE
 	hlcoord 19, 1
 	lb bc, 6, 10
-ENDC
 	call DrawLineBox ; Draws the box around name, HP and status
-	hlcoord 2, 7
-	nop
+	ld de, -6
+	add hl, de
 	ld [hl], "<DOT>"
 	dec hl
 	ld [hl], "№"
@@ -129,7 +124,7 @@ ENDC
 	ld hl, wStatusScreenHPBarColor
 	call GetHealthBarColor
 	ld b, SET_PAL_STATUS_SCREEN
-	call StatusScreenHook ; HAX: Draws EXP bar if GEN_2_GRAPHICS is set
+	call RunPaletteCommand
 	hlcoord 16, 6
 	ld de, wLoadedMonStatus
 	call PrintStatusCondition
@@ -175,8 +170,25 @@ ENDC
 	call GBPalNormal
 	hlcoord 1, 0
 	call LoadFlippedFrontSpriteByMonIndex ; draw Pokémon picture
+	ld a, [wMonDataLocation]
+	cp ENEMY_PARTY_DATA
+	jr z, .playRegularCry
+	cp BOX_DATA
+	jr z, .checkBoxData
+	callfar IsThisPartymonStarterPikachu_Party
+	jr nc, .playRegularCry
+	jr .playPikachuSoundClip
+.checkBoxData
+	callfar IsThisPartymonStarterPikachu_Box
+	jr nc, .playRegularCry
+.playPikachuSoundClip
+	ld e, 16
+	callfar PlayPikachuSoundClip
+	jr .continue
+.playRegularCry
 	ld a, [wcf91]
 	call PlayCry ; play Pokémon cry
+.continue
 	call WaitForTextScrollButtonPress ; wait for button
 	pop af
 	ldh [hTileAnimations], a
@@ -256,16 +268,14 @@ PrintStatsBox:
 	and a ; a is 0 from the status screen
 	jr nz, .DifferentBox
 	hlcoord 0, 8
-	ld b, 8
-	ld c, 8
+	lb bc, 8, 8
 	call TextBoxBorder ; Draws the box
 	hlcoord 1, 9 ; Start printing stats from here
 	ld bc, $19 ; Number offset
 	jr .PrintStats
 .DifferentBox
 	hlcoord 9, 2
-	ld b, 8
-	ld c, 9
+	lb bc, 8, 9
 	call TextBoxBorder
 	hlcoord 11, 3
 	ld bc, $18
@@ -317,17 +327,10 @@ StatusScreen2:
 	hlcoord 9, 2
 	lb bc, 5, 10
 	call ClearScreenArea ; Clear under name
-IF GEN_2_GRAPHICS
-	call StatusScreen2Hook
-	nop
-	nop
-ELSE
 	hlcoord 19, 3
 	ld [hl], $78
-ENDC
 	hlcoord 0, 8
-	ld b, 8
-	ld c, 18
+	lb bc, 8, 18
 	call TextBoxBorder ; Draw move container
 	hlcoord 2, 9
 	ld de, wMovesString

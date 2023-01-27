@@ -112,4 +112,10 @@ SFX:
 	dba SFX_Slots_New_Spin
 	dba SFX_Shooting_Star
 
+	dba SFX_Surfing_Jump
+	dba SFX_Surfing_Flip
+	dba SFX_Surfing_Crash
+	dba SFX_Unknown_802cc
+	dba SFX_Surfing_Land
+
 	dba SFX_PokefluteInBattle

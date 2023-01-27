@@ -3,6 +3,9 @@ Serial::
 	push bc
 	push de
 	push hl
+	ld a, [wPrinterConnectionOpen]
+	bit 0, a
+	jp nz, PrinterSerial__
 	ldh a, [hSerialConnectionStatus]
 	inc a
 	jr z, .connectionNotYetEstablished
@@ -255,7 +258,7 @@ Serial_SyncAndExchangeNybble::
 	inc a
 	jr z, .loop1
 	vc_patch Wireless_net_delay_3
-IF DEF(_RED_VC) || DEF(_BLUE_VC)
+IF DEF(_YELLOW_VC)
 	ld b, 26
 ELSE
 	ld b, 10
@@ -267,7 +270,7 @@ ENDC
 	dec b
 	jr nz, .loop2
 	vc_patch Wireless_net_delay_4
-IF DEF(_RED_VC) || DEF(_BLUE_VC)
+IF DEF(_YELLOW_VC)
 	ld b, 26
 ELSE
 	ld b, 10
@@ -324,3 +327,11 @@ Serial_TryEstablishingExternallyClockedConnection::
 	ld a, START_TRANSFER_EXTERNAL_CLOCK
 	ldh [rSC], a
 	ret
+
+PrinterSerial__::
+	call PrinterSerial
+	pop hl
+	pop de
+	pop bc
+	pop af
+	reti

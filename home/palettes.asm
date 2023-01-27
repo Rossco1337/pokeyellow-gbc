@@ -1,3 +1,6 @@
+InitMapSprites::
+	jpfar _InitMapSprites
+
 RestoreScreenTilesAndReloadTilePatterns::
 	call ClearSprites
 	ld a, $1
@@ -24,6 +27,9 @@ GBPalNormal::
 ;	ld a, %11010000
 	ld a, %11100100	; HAX
 	ldh [rOBP0], a
+	call UpdateGBCPal_BGP
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ret
 
 GBPalWhiteOut::
@@ -32,6 +38,9 @@ GBPalWhiteOut::
 	ldh [rBGP], a
 	ldh [rOBP0], a
 	ldh [rOBP1], a
+	call UpdateGBCPal_BGP
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ret
 
 RunDefaultPaletteCommand::

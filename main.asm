@@ -1,8 +1,6 @@
 SECTION "bank1", ROMX
 
 INCLUDE "data/sprites/facings.asm"
-INCLUDE "engine/events/black_out.asm"
-INCLUDE "data/pokemon/mew.asm"
 INCLUDE "engine/battle/safari_zone.asm"
 INCLUDE "engine/movie/title.asm"
 INCLUDE "engine/pokemon/load_mon_data.asm"
@@ -10,10 +8,8 @@ INCLUDE "data/items/prices.asm"
 INCLUDE "data/items/names.asm"
 INCLUDE "data/text/unused_names.asm"
 INCLUDE "engine/gfx/sprite_oam.asm"
-INCLUDE "engine/gfx/oam_dma.asm"
 INCLUDE "engine/link/print_waiting_text.asm"
 INCLUDE "engine/overworld/sprite_collisions.asm"
-
 INCLUDE "engine/events/pick_up_item.asm"
 INCLUDE "engine/overworld/movement.asm"
 INCLUDE "engine/link/cable_club.asm"
@@ -50,16 +46,12 @@ ENDC
 SECTION "bank3", ROMX
 
 INCLUDE "engine/joypad.asm"
-
-
 INCLUDE "engine/overworld/clear_variables.asm"
 INCLUDE "engine/overworld/player_state.asm"
 INCLUDE "engine/events/poison.asm"
 INCLUDE "engine/overworld/tilesets.asm"
 INCLUDE "engine/overworld/daycare_exp.asm"
 INCLUDE "data/maps/hide_show_data.asm"
-INCLUDE "engine/overworld/field_move_messages.asm"
-INCLUDE "engine/items/inventory.asm"
 INCLUDE "engine/overworld/wild_mons.asm"
 INCLUDE "engine/items/item_effects.asm"
 INCLUDE "engine/menus/draw_badges.asm"
@@ -84,28 +76,23 @@ INCLUDE "engine/events/hidden_objects/pokemon_stuff.asm"
 
 INCLUDE "color/update_hp_bar.asm"
 
-
-SECTION "Font Graphics", ROMX
+SECTION "bank4", ROMX
 
 INCLUDE "gfx/font.asm"
+INCLUDE "engine/pokemon/status_screen.asm"
+INCLUDE "engine/menus/party_menu.asm"
+INCLUDE "gfx/player.asm"
+INCLUDE "engine/menus/start_sub_menus.asm"
+INCLUDE "engine/items/tms.asm"
 
 
 SECTION "Battle Engine 1", ROMX
 
-INCLUDE "engine/overworld/is_player_just_outside_map.asm"
-INCLUDE "engine/pokemon/status_screen.asm"
-INCLUDE "engine/menus/party_menu.asm"
-INCLUDE "gfx/player.asm"
-INCLUDE "engine/overworld/turn_sprite.asm"
-INCLUDE "engine/menus/start_sub_menus.asm"
-INCLUDE "engine/items/tms.asm"
 INCLUDE "engine/battle/end_of_battle.asm"
 INCLUDE "engine/battle/wild_encounters.asm"
 INCLUDE "engine/battle/move_effects/recoil.asm"
 INCLUDE "engine/battle/move_effects/conversion.asm"
 INCLUDE "engine/battle/move_effects/haze.asm"
-INCLUDE "engine/battle/get_trainer_name.asm"
-INCLUDE "engine/math/random.asm"
 
 INCLUDE "color/status_screen.asm"
 
@@ -115,19 +102,16 @@ EXPBarGraphicsEnd:
 ENDC
 
 
-SECTION "Battle Engine 2", ROMX
+SECTION "bank5", ROMX
 
 INCLUDE "engine/gfx/load_pokedex_tiles.asm"
 INCLUDE "engine/overworld/map_sprites.asm"
-INCLUDE "engine/overworld/emotion_bubbles.asm"
-INCLUDE "engine/events/evolve_trade.asm"
+
+
+SECTION "Battle Engine 2", ROMX
+
 INCLUDE "engine/battle/move_effects/substitute.asm"
 INCLUDE "engine/menus/pc.asm"
-
-
-SECTION "Play Time", ROMX
-
-INCLUDE "engine/play_time.asm"
 
 
 SECTION "Doors and Ledges", ROMX
@@ -137,9 +121,8 @@ INCLUDE "engine/overworld/doors.asm"
 INCLUDE "engine/overworld/ledges.asm"
 
 
-SECTION "Pokémon Names", ROMX
+SECTION "bank7", ROMX
 
-INCLUDE "data/pokemon/names.asm"
 INCLUDE "engine/movie/oak_speech/clear_save.asm"
 INCLUDE "engine/events/elevator.asm"
 
@@ -165,55 +148,39 @@ SECTION "Battle Engine 3", ROMX
 
 INCLUDE "engine/battle/print_type.asm"
 INCLUDE "engine/battle/save_trainer_name.asm"
-INCLUDE "engine/battle/move_effects/focus_energy.asm"
 
 
 SECTION "Battle Engine 4", ROMX
 
+INCLUDE "engine/gfx/screen_effects.asm"
 INCLUDE "engine/battle/move_effects/leech_seed.asm"
 
 
 SECTION "Battle Engine 5", ROMX
 
 INCLUDE "engine/battle/display_effectiveness.asm"
-INCLUDE "gfx/trainer_card.asm"
 INCLUDE "engine/items/tmhm.asm"
+INCLUDE "engine/pikachu/respawn_overworld_pikachu.asm"
 INCLUDE "engine/battle/scale_sprites.asm"
-INCLUDE "engine/battle/move_effects/pay_day.asm"
 INCLUDE "engine/slots/game_corner_slots2.asm"
-
-
-SECTION "Battle Engine 6", ROMX
-
-INCLUDE "engine/battle/move_effects/mist.asm"
-INCLUDE "engine/battle/move_effects/one_hit_ko.asm"
 
 
 SECTION "Slot Machines", ROMX
 
-INCLUDE "engine/movie/title2.asm"
-INCLUDE "engine/battle/link_battle_versus_text.asm"
+INCLUDE "engine/movie/title_rb.asm"
 INCLUDE "engine/slots/slot_machine.asm"
-INCLUDE "engine/events/pewter_guys.asm"
-INCLUDE "engine/math/multiply_divide.asm"
 INCLUDE "engine/slots/game_corner_slots.asm"
 
 
-SECTION "Battle Engine 7", ROMX
+SECTION "Battle Engine 6", ROMX
 
 INCLUDE "data/moves/moves.asm"
 INCLUDE "data/pokemon/base_stats.asm"
 INCLUDE "data/pokemon/cries.asm"
-INCLUDE "engine/battle/unused_stats_functions.asm"
-INCLUDE "engine/battle/scroll_draw_trainer_pic.asm"
 INCLUDE "engine/battle/trainer_ai.asm"
 INCLUDE "engine/battle/draw_hud_pokeball_gfx.asm"
 INCLUDE "gfx/trade.asm"
 INCLUDE "engine/pokemon/evos_moves.asm"
-INCLUDE "engine/battle/move_effects/heal.asm"
-INCLUDE "engine/battle/move_effects/transform.asm"
-INCLUDE "engine/battle/move_effects/reflect_light_screen.asm"
-
 INCLUDE "color/draw_hud_pokeball_gfx.asm"
 
 
@@ -226,12 +193,14 @@ INCLUDE "engine/battle/core.asm"
 SECTION "bank10", ROMX
 
 INCLUDE "engine/menus/pokedex.asm"
+INCLUDE "engine/overworld/emotion_bubbles.asm"
 INCLUDE "engine/movie/trade.asm"
 INCLUDE "engine/movie/intro.asm"
 INCLUDE "engine/movie/trade2.asm"
-
+INCLUDE "engine/menus/options.asm"
 ; Hooks for color hack
 INCLUDE "color/trade.asm"
+
 
 
 SECTION "Pokédex Rating", ROMX
@@ -244,28 +213,6 @@ SECTION "Dungeon Warps", ROMX
 INCLUDE "engine/overworld/dungeon_warps.asm"
 
 
-SECTION "Hidden Objects Core", ROMX
-
-INCLUDE "engine/overworld/hidden_objects.asm"
-
-
-SECTION "Screen Effects", ROMX
-
-INCLUDE "engine/gfx/screen_effects.asm"
-
-
-SECTION "Predefs", ROMX
-
-INCLUDE "engine/events/give_pokemon.asm"
-INCLUDE "engine/predefs.asm"
-
-
-SECTION "Battle Engine 8", ROMX
-
-INCLUDE "engine/battle/init_battle_variables.asm"
-INCLUDE "engine/battle/move_effects/paralyze.asm"
-
-
 SECTION "Hidden Objects 2", ROMX
 
 INCLUDE "engine/events/card_key.asm"
@@ -275,7 +222,7 @@ INCLUDE "engine/events/hidden_objects/fighting_dojo.asm"
 INCLUDE "engine/events/hidden_objects/indigo_plateau_hq.asm"
 
 
-SECTION "Battle Engine 9", ROMX
+SECTION "Battle Engine 7", ROMX
 
 INCLUDE "engine/battle/experience.asm"
 
@@ -294,10 +241,10 @@ INCLUDE "color/exp_bar.asm"
 ENDC
 
 
-SECTION "Battle Engine 10", ROMX
+SECTION "bank16", ROMX
 
-INCLUDE "engine/battle/common_text.asm"
 INCLUDE "engine/pokemon/experience.asm"
+INCLUDE "engine/pokemon/status_ailments.asm"
 INCLUDE "engine/events/oaks_aide.asm"
 
 
@@ -313,10 +260,13 @@ INCLUDE "engine/events/starter_dex.asm"
 
 SECTION "Hidden Objects 3", ROMX
 
+INCLUDE "engine/movie/evolution.asm"
 INCLUDE "engine/pokemon/set_types.asm"
 INCLUDE "engine/events/hidden_objects/reds_room.asm"
 INCLUDE "engine/events/hidden_objects/route_15_binoculars.asm"
 INCLUDE "engine/events/hidden_objects/museum_fossils.asm"
+INCLUDE "engine/events/hidden_objects/fanclub_pictures.asm"
+INCLUDE "engine/events/hidden_objects/museum_fossils2.asm"
 INCLUDE "engine/events/hidden_objects/school_blackboard.asm"
 INCLUDE "engine/events/hidden_objects/vermilion_gym_trash.asm"
 
@@ -334,9 +284,8 @@ INCLUDE "engine/events/hidden_objects/blues_room.asm"
 INCLUDE "engine/events/hidden_objects/pokecenter_pc.asm"
 
 
-SECTION "Battle Engine 11", ROMX
+SECTION "Version Graphics", ROMX
 
-INCLUDE "engine/battle/decrement_pp.asm"
 INCLUDE "gfx/version.asm"
 
 
@@ -367,27 +316,11 @@ INCLUDE "color/ghost_marowak_anim.asm"
 INCLUDE "color/color.asm"
 
 
-SECTION "Credits", ROMX
-
-INCLUDE "engine/events/pokecenter_chansey.asm"
-INCLUDE "engine/movie/credits.asm"
-
 
 SECTION "Itemfinder 1", ROMX
 
-INCLUDE "engine/pokemon/status_ailments.asm"
 INCLUDE "engine/items/itemfinder.asm"
 
-SECTION "Pikachu PCM", ROMX
-
-INCLUDE "engine/pikachu/pikachu_pcm.asm"
-INCLUDE "engine/overworld/advance_player_sprite.asm"
-INCLUDE "engine/overworld/specific_script_flags.asm"
-
-SECTION "Try Pikachu Movement", ROMX
-
-INCLUDE "engine/overworld/unused_load_missable_object_data.asm"
-INCLUDE "engine/events/try_pikachu_movement.asm"
 
 SECTION "Vending Machine", ROMX
 
@@ -397,6 +330,7 @@ INCLUDE "engine/events/vending_machine.asm"
 SECTION "Itemfinder 2", ROMX
 
 INCLUDE "engine/menus/league_pc.asm"
+INCLUDE "engine/overworld/elevator.asm"
 INCLUDE "engine/events/hidden_items.asm"
 
 
@@ -409,11 +343,104 @@ INCLUDE "gfx/fishing.asm"
 INCLUDE "data/moves/animations.asm"
 INCLUDE "data/battle_anims/subanimations.asm"
 INCLUDE "data/battle_anims/frame_blocks.asm"
-INCLUDE "engine/movie/evolution.asm"
-INCLUDE "engine/overworld/elevator.asm"
-INCLUDE "engine/items/tm_prices.asm"
 
-INCLUDE "color/animations.asm"
+
+SECTION "BG Map Attributes (Debug)", ROMX
+
+IF DEF(_DEBUG)
+	INCLUDE "engine/gfx/bg_map_attributes.asm"
+ENDC
+
+
+SECTION "BG Map Attributes", ROMX
+
+INCLUDE "data/cgb/bg_map_attributes.asm"
+IF !DEF(_DEBUG)
+	INCLUDE "engine/gfx/bg_map_attributes.asm"
+ENDC
+
+
+SECTION "bank30", ROMX
+
+; This whole bank is garbage data.
+IF !DEF(_DEBUG)
+	INCBIN "garbage/bank30.bin"
+ENDC
+
+
+SECTION "bank3A", ROMX
+
+INCLUDE "data/pokemon/names.asm"
+INCLUDE "engine/overworld/is_player_just_outside_map.asm"
+INCLUDE "engine/printer/serial.asm"
+INCLUDE "engine/printer/printer.asm"
+INCLUDE "engine/events/diploma2.asm"
+INCLUDE "engine/printer/printer2.asm"
+INCLUDE "engine/overworld/npc_movement_2.asm"
+
+
+SECTION "Pikachu PCM", ROMX
+
+INCLUDE "engine/pikachu/pikachu_pcm.asm"
+INCLUDE "engine/overworld/advance_player_sprite.asm"
+INCLUDE "engine/events/black_out.asm"
+INCLUDE "engine/overworld/specific_script_flags.asm"
+
+
+SECTION "Try Pikachu Movement", ROMX
+
+INCLUDE "engine/overworld/unused_load_missable_object_data.asm"
+INCLUDE "engine/events/try_pikachu_movement.asm"
+
+
+SECTION "Credits", ROMX
+
+INCLUDE "engine/events/pokecenter_chansey.asm"
+INCLUDE "engine/movie/credits.asm"
+
+
+SECTION "Hidden Objects Core", ROMX
+
+INCLUDE "engine/overworld/hidden_objects.asm"
+INCLUDE "engine/events/hidden_objects/vermilion_gym_trash2.asm"
+
+
+SECTION "Battle Engine 8", ROMX
+
+INCLUDE "engine/battle/common_text.asm"
+INCLUDE "engine/battle/link_battle_versus_text.asm"
+INCLUDE "engine/battle/unused_stats_functions.asm"
+INCLUDE "engine/battle/scroll_draw_trainer_pic.asm"
+INCLUDE "engine/battle/pikachu_entrance_anim.asm"
+INCLUDE "engine/battle/decrement_pp.asm"
+INCLUDE "engine/events/pikachu_happiness.asm"
+
+
+SECTION "Battle Engine 9", ROMX
+
+INCLUDE "engine/movie/title_yellow.asm"
+INCLUDE "engine/menus/link_menu.asm"
+INCLUDE "engine/menus/unused_input.asm"
+INCLUDE "engine/overworld/field_move_messages.asm"
+INCLUDE "engine/items/inventory.asm"
+INCLUDE "gfx/trainer_card.asm"
+INCLUDE "engine/items/super_rod.asm"
+INCLUDE "engine/battle/init_battle.asm"
+INCLUDE "engine/battle/init_battle_variables.asm"
+INCLUDE "engine/battle/move_effects/focus_energy.asm"
+INCLUDE "engine/battle/move_effects/heal.asm"
+INCLUDE "engine/battle/move_effects/transform.asm"
+INCLUDE "engine/battle/move_effects/reflect_light_screen.asm"
+INCLUDE "engine/battle/move_effects/mist.asm"
+INCLUDE "engine/battle/move_effects/one_hit_ko.asm"
+INCLUDE "engine/battle/move_effects/pay_day.asm"
+INCLUDE "engine/battle/move_effects/paralyze.asm"
+INCLUDE "engine/items/tm_prices.asm"
+INCLUDE "engine/math/multiply_divide.asm"
+INCLUDE "engine/events/give_pokemon.asm"
+INCLUDE "engine/battle/get_trainer_name.asm"
+INCLUDE "engine/math/random.asm"
+INCLUDE "engine/predefs.asm"
 
 
 SECTION "Surfing Minigame", ROMX
@@ -435,12 +462,12 @@ INCLUDE "engine/pikachu/pikachu_movement.asm"
 INCLUDE "engine/pikachu/pikachu_pic_animation.asm"
 INCLUDE "engine/debug/debug_menu.asm"
 
-
+INCLUDE "color/animations.asm"
 
 ; Inserted pokemon images go here
 
 IF GEN_2_GRAPHICS
-SECTION "bank32", ROMX
+SECTION "bank42", ROMX
 
 GrowlithePicFront::   INCBIN "gfx/pokemon/gsfront/growlithe.pic"
 GrowlithePicBack::    INCBIN "gfx/pokemon/gsback/growlitheb.pic"
@@ -494,7 +521,7 @@ TaurosPicFront::      INCBIN "gfx/pokemon/gsfront/tauros.pic"
 TaurosPicBack::       INCBIN "gfx/pokemon/gsback/taurosb.pic"
 
 
-SECTION "bank33", ROMX
+SECTION "bank43", ROMX
 
 
 RhydonPicFront::      INCBIN "gfx/pokemon/gsfront/rhydon.pic"
@@ -543,7 +570,7 @@ ShellderPicFront::    INCBIN "gfx/pokemon/gsfront/shellder.pic"
 ShellderPicBack::     INCBIN "gfx/pokemon/gsback/shellderb.pic"
 
 
-SECTION "bank34", ROMX
+SECTION "bank44", ROMX
 
 
 ArticunoPicFront::    INCBIN "gfx/pokemon/gsfront/articuno.pic"
@@ -594,7 +621,7 @@ FlareonPicFront::     INCBIN "gfx/pokemon/gsfront/flareon.pic"
 FlareonPicBack::      INCBIN "gfx/pokemon/gsback/flareonb.pic"
 
 
-SECTION "bank35", ROMX
+SECTION "bank45", ROMX
 
 
 DodrioPicFront::      INCBIN "gfx/pokemon/gsfront/dodrio.pic"
@@ -644,7 +671,7 @@ PersianPicBack::      INCBIN "gfx/pokemon/gsback/persianb.pic"
 
 
 
-SECTION "bank36", ROMX
+SECTION "bank46", ROMX
 
 
 BulbasaurPicFront::   INCBIN "gfx/pokemon/gsfront/bulbasaur.pic"
@@ -696,7 +723,7 @@ GloomPicFront::       INCBIN "gfx/pokemon/gsfront/gloom.pic"
 GloomPicBack::        INCBIN "gfx/pokemon/gsback/gloomb.pic"
 
 
-SECTION "bank37", ROMX
+SECTION "bank47", ROMX
 
 
 BellsproutPicFront::  INCBIN "gfx/pokemon/gsfront/bellsprout.pic"
@@ -726,7 +753,7 @@ MarowakPicBack::      INCBIN "gfx/pokemon/gsback/marowakb.pic"
 ENDC
 
 IF !GEN_2_GRAPHICS
-SECTION "bank32", ROMX
+SECTION "bank42", ROMX
 
 GrowlithePicFront::   INCBIN "gfx/pokemon/front/growlithe.pic"
 GrowlithePicBack::    INCBIN "gfx/pokemon/back/growlitheb.pic"
@@ -780,7 +807,7 @@ TaurosPicFront::      INCBIN "gfx/pokemon/front/tauros.pic"
 TaurosPicBack::       INCBIN "gfx/pokemon/back/taurosb.pic"
 
 
-SECTION "bank33", ROMX
+SECTION "bank43", ROMX
 
 
 RhydonPicFront::      INCBIN "gfx/pokemon/front/rhydon.pic"
@@ -829,7 +856,7 @@ ShellderPicFront::    INCBIN "gfx/pokemon/front/shellder.pic"
 ShellderPicBack::     INCBIN "gfx/pokemon/back/shellderb.pic"
 
 
-SECTION "bank34", ROMX
+SECTION "bank44", ROMX
 
 
 ArticunoPicFront::    INCBIN "gfx/pokemon/front/articuno.pic"
@@ -880,7 +907,7 @@ FlareonPicFront::     INCBIN "gfx/pokemon/front/flareon.pic"
 FlareonPicBack::      INCBIN "gfx/pokemon/back/flareonb.pic"
 
 
-SECTION "bank35", ROMX
+SECTION "bank45", ROMX
 
 
 DodrioPicFront::      INCBIN "gfx/pokemon/front/dodrio.pic"
@@ -930,7 +957,7 @@ PersianPicBack::      INCBIN "gfx/pokemon/back/persianb.pic"
 
 
 
-SECTION "bank36", ROMX
+SECTION "bank46", ROMX
 
 
 BulbasaurPicFront::   INCBIN "gfx/pokemon/front/bulbasaur.pic"
@@ -982,7 +1009,7 @@ GloomPicFront::       INCBIN "gfx/pokemon/front/gloom.pic"
 GloomPicBack::        INCBIN "gfx/pokemon/back/gloomb.pic"
 
 
-SECTION "bank37", ROMX
+SECTION "bank47", ROMX
 
 
 BellsproutPicFront::  INCBIN "gfx/pokemon/front/bellsprout.pic"
@@ -1010,4 +1037,3 @@ JynxPicBack::         INCBIN "gfx/pokemon/back/jynxb.pic"
 MarowakPicFront::     INCBIN "gfx/pokemon/front/marowak.pic"
 MarowakPicBack::      INCBIN "gfx/pokemon/back/marowakb.pic"
 ENDC
-

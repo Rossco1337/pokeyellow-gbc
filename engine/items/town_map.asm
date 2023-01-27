@@ -105,6 +105,13 @@ DisplayTownMap:
 	ld [wWhichTownMapLocation], a
 	jp .townMapLoop
 
+Func_70f87: ; unreferenced
+	ldh a, [hJoy5]
+	and D_DOWN | D_UP
+	ret z
+	callfar PlayPikachuSoundClip
+	ret
+
 INCLUDE "data/maps/town_map_order.asm"
 
 TownMapCursor:
@@ -139,11 +146,14 @@ MonsNestText:
 LoadTownMap_Fly::
 	call ClearSprites
 	call LoadTownMap
+	ld a, $1
+	ldh [hJoy7], a
 	call LoadPlayerSpriteGraphics
 	call LoadFontTilePatterns
 	ld de, BirdSprite
+	ld b, BANK(BirdSprite)
+	ld c, 12
 	ld hl, vSprites tile $04
-	lb bc, BANK(BirdSprite), 12
 	call CopyVideoData
 	ld de, TownMapUpArrow
 	ld hl, vChars1 tile $6d
@@ -181,7 +191,7 @@ LoadTownMap_Fly::
 	ld c, 15
 	call DelayFrames
 	hlcoord 18, 0
-	ld [hl], "▲"
+	ld [hl], "▶"
 	hlcoord 19, 0
 	ld [hl], "▼"
 	pop hl
@@ -215,6 +225,7 @@ LoadTownMap_Fly::
 .pressedB
 	xor a
 	ld [wTownMapSpriteBlinkingEnabled], a
+	ldh [hJoy7], a
 	call GBPalWhiteOutWithDelay3
 	pop hl
 	pop af
@@ -281,15 +292,14 @@ LoadTownMap:
 	call ClearScreen
 	call UpdateSprites
 	hlcoord 0, 0
-	ld b, $12
-	ld c, $12
+	lb bc, $12, $12
 	call TextBoxBorder
 	call DisableLCD
 	ld hl, WorldMapTileGraphics
 	ld de, vChars2 tile $60
 	ld bc, WorldMapTileGraphicsEnd - WorldMapTileGraphics
 	ld a, BANK(WorldMapTileGraphics)
-	call FarCopyData2
+	call FarCopyData
 	ld hl, MonNestIcon
 	ld de, vSprites tile $04
 	ld bc, MonNestIconEnd - MonNestIcon
@@ -398,8 +408,7 @@ DisplayWildLocations:
 	jr nz, .drawPlayerSprite
 ; if no OAM entries were written, print area unknown text
 	hlcoord 1, 7
-	ld b, 2
-	ld c, 15
+	lb bc, 2, 15
 	call TextBoxBorder
 	hlcoord 2, 9
 	ld de, AreaUnknownText

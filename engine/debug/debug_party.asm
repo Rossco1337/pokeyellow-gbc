@@ -1,13 +1,6 @@
-; This function is a debugging feature to give the player Tsunekazu Ishihara's
-; favorite Pokemon. This is indicated by the overpowered Exeggutor, which
-; Ishihara (president of Creatures Inc.) said was his favorite Pokemon in an ABC
-; interview on February 8, 2000.
-; "Exeggutor is my favorite. That's because I was always using this character
-; while I was debugging the program."
-; http://www.ign.com/articles/2000/02/09/abc-news-pokamon-chat-transcript
-
-SetIshiharaTeam:
-	ld de, IshiharaTeam
+; not IshiharaTeam
+SetDebugTeam:
+	ld de, DebugTeam
 .loop
 	ld a, [de]
 	cp -1
@@ -20,19 +13,11 @@ SetIshiharaTeam:
 	call AddPartyMon
 	jr .loop
 
-IshiharaTeam:
-	db EXEGGUTOR, 90
-IF DEF(_DEBUG)
-	db MEW, 5
-ELSE
-	db MEW, 20
-ENDC
-	db JOLTEON, 56
-	db DUGTRIO, 56
-	db ARTICUNO, 57
-IF DEF(_DEBUG)
-	db PIKACHU, 5
-ENDC
+DebugTeam:
+	db SNORLAX, 80
+	db PERSIAN, 80
+	db JIGGLYPUFF, 15
+	db STARTER_PIKACHU, 5
 	db -1 ; end
 
 DebugStart:
@@ -49,9 +34,14 @@ IF DEF(_DEBUG)
 	ld a, ~(1 << BIT_EARTHBADGE)
 	ld [wObtainedBadges], a
 
-	call SetIshiharaTeam
+	call SetDebugTeam
 
-	; Exeggutor gets four HM moves.
+	; Pikachu gets Surf.
+	ld a, SURF
+	ld hl, wPartyMon4Moves + 2
+	ld [hl], a
+
+	; Snorlax gets four HM moves.
 	ld hl, wPartyMon1Moves
 	ld a, FLY
 	ld [hli], a
@@ -60,38 +50,6 @@ IF DEF(_DEBUG)
 	ld a, SURF
 	ld [hli], a
 	ld a, STRENGTH
-	ld [hl], a
-	ld hl, wPartyMon1PP
-	ld a, 15
-	ld [hli], a
-	ld a, 30
-	ld [hli], a
-	ld a, 15
-	ld [hli], a
-	ld [hl], a
-
-	; Jolteon gets Thunderbolt.
-	ld hl, wPartyMon3Moves + 3
-	ld a, THUNDERBOLT
-	ld [hl], a
-	ld hl, wPartyMon3PP + 3
-	ld a, 15
-	ld [hl], a
-
-	; Articuno gets Fly.
-	ld hl, wPartyMon5Moves
-	ld a, FLY
-	ld [hl], a
-	ld hl, wPartyMon5PP
-	ld a, 15
-	ld [hl], a
-
-	; Pikachu gets Surf.
-	ld hl, wPartyMon6Moves + 2
-	ld a, SURF
-	ld [hl], a
-	ld hl, wPartyMon6PP + 2
-	ld a, 15
 	ld [hl], a
 
 	; Get some debug items.
@@ -117,13 +75,20 @@ IF DEF(_DEBUG)
 	call DebugSetPokedexEntries
 	SetEvent EVENT_GOT_POKEDEX
 
-	; Rival chose Squirtle,
-	; Player chose Charmander.
+	; Rival chose Jolteon.
 	ld hl, wRivalStarter
-	ld a, STARTER2
+	ld a, RIVAL_STARTER_JOLTEON
 	ld [hli], a
-	inc hl ; hl = wPlayerStarter
-	ld a, STARTER1
+	ld a, NUM_POKEMON
+	ld [hli], a ; hl = wUnknownDebugByte
+	ld a, STARTER_PIKACHU
+	ld [hl], a ; hl = wPlayerStarter
+
+	; Give max money.
+	ld hl, wPlayerMoney
+	ld a, $99
+	ld [hli], a
+	ld [hli], a
 	ld [hl], a
 
 	ret
@@ -139,20 +104,55 @@ DebugSetPokedexEntries:
 	ret
 
 DebugItemsList:
-	db BICYCLE, 1
-	db FULL_RESTORE, 99
-	db FULL_HEAL, 99
-	db ESCAPE_ROPE, 99
-	db RARE_CANDY, 99
 	db MASTER_BALL, 99
 	db TOWN_MAP, 1
+	db BICYCLE, 1
+	db FULL_RESTORE, 99
+	db ESCAPE_ROPE, 99
+	db RARE_CANDY, 99
 	db SECRET_KEY, 1
 	db CARD_KEY, 1
+	db FULL_HEAL, 99
+	db REVIVE, 99
+	db FRESH_WATER, 99
 	db S_S_TICKET, 1
 	db LIFT_KEY, 1
+	db PP_UP, 99
 	db -1 ; end
 
 DebugUnusedList:
+	db OLD_AMBER, 1
+	db DOME_FOSSIL, 1
+	db HELIX_FOSSIL, 1
+	db X_ACCURACY, 99
+	db DIRE_HIT, 99
+	db FRESH_WATER, 1
+	db S_S_TICKET, 1
+	db GOLD_TEETH, 1
+	db COIN_CASE, 1
+	db SILPH_SCOPE, 1
+	db POKE_FLUTE, 1
+	db LIFT_KEY, 1
+	db ETHER, 99
+	db MAX_ETHER, 99
+	db ELIXER, 99
+	db MAX_ELIXER, 99
+	db TM_RAZOR_WIND, 10
+	db TM_HORN_DRILL, 10
+	db TM_TAKE_DOWN, 10
+	db TM_BLIZZARD, 10
+	db TM_HYPER_BEAM, 10
+	db TM_SOLARBEAM, 10
+	db TM_DRAGON_RAGE, 10
+	db TM_MIMIC, 10
+	db TM_BIDE, 10
+	db TM_METRONOME, 10
+	db TM_SELFDESTRUCT, 10
+	db TM_SWIFT, 10
+	db TM_SOFTBOILED, 10
+	db TM_DREAM_EATER, 10
+	db TM_REST, 10
+	db TM_SUBSTITUTE, 10
 	db -1 ; end
 ELSE
 	ret

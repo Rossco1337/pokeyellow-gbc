@@ -2,6 +2,13 @@
 ; assumes that input sprite chunks are 4x4 tiles, and the rightmost and bottommost 4 pixels will be ignored
 ; resulting in a 7*7 tile output sprite chunk
 ScaleSpriteByTwo:
+	ld a, $0
+	call SwitchSRAMBankAndLatchClockData
+	call .ScaleSpriteByTwo
+	call PrepareRTCDataAndDisableSRAM
+	ret
+
+.ScaleSpriteByTwo:
 	ld de, sSpriteBuffer1 + (4*4*8) - 5          ; last byte of input data, last 4 rows already skipped
 	ld hl, sSpriteBuffer0 + SPRITEBUFFERSIZE - 1 ; end of destination buffer
 	call ScaleLastSpriteColumnByTwo              ; last tile column is special case

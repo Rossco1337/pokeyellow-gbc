@@ -30,9 +30,17 @@ RedrawPartyMenu_::
 	call GetPartyMonName
 	pop hl
 	call PlaceString ; print the pokemon's name
-	farcall WriteMonPartySpriteOAMByPartyIndex ; place the appropriate pokemon icon
 	ldh a, [hPartyMonIndex]
 	ld [wWhichPokemon], a
+	callfar IsThisPartymonStarterPikachu_Party
+	jr nc, .regularMon
+	call CheckPikachuFollowingPlayer
+	jr z, .regularMon
+	ld a, $ff
+	ldh [hPartyMonIndex], a
+.regularMon
+	farcall WriteMonPartySpriteOAMByPartyIndex ; place the appropriate pokemon icon
+	ld a, [wWhichPokemon]
 	inc a
 	ldh [hPartyMonIndex], a
 	call LoadMonData
@@ -90,8 +98,8 @@ RedrawPartyMenu_::
 	jr nz, .placeMoveLearnabilityString
 	ld de, .notAbleToLearnMoveText
 .placeMoveLearnabilityString
-	ld bc, 20 + 9 ; down 1 row and right 9 columns
 	push hl
+	ld bc, 20 + 9 ; down 1 row and right 9 columns
 	add hl, bc
 	call PlaceString
 	pop hl
@@ -157,9 +165,9 @@ RedrawPartyMenu_::
 ; if it does match
 	ld de, .ableToEvolveText
 .placeEvolutionStoneString
-	ld bc, 20 + 9 ; down 1 row and right 9 columns
 	pop hl
 	push hl
+	ld bc, 20 + 9 ; down 1 row and right 9 columns
 	add hl, bc
 	call PlaceString
 	pop hl

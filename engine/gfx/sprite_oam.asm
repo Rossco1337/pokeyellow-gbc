@@ -1,6 +1,8 @@
 PrepareOAMData::
 ; Determine OAM data for currently visible
 ; sprites and write it to wShadowOAM.
+; Yellow code has been changed to use registers more efficiently
+; as well as tweaking the code to show gbc palettes
 
 	ld a, [wUpdateSpritesEnabled]
 	dec a
@@ -18,9 +20,9 @@ PrepareOAMData::
 .spriteLoop
 	ldh [hSpriteOffset2], a
 
-	ld d, HIGH(wSpriteStateData1)
-	ldh a, [hSpriteOffset2]
 	ld e, a
+	ld d, HIGH(wSpriteStateData1)
+
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
 	and a
 	jp z, .nextSprite
@@ -40,16 +42,22 @@ PrepareOAMData::
 	jr c, .usefacing
 
 ; unchanging
-	and $f
-	add $10 ; skip to the second half of the table which doesn't account for facing direction
+	ld a, $0
 	jr .next
 
 .usefacing
 	and $f
 
 .next
+; read the entry from the table
+	ld c, a
+	ld b, 0
+	ld hl, SpriteFacingAndAnimationTable
+	add hl, bc
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
 	ld l, a
-
 ; get sprite priority
 	push de
 	inc d
@@ -61,65 +69,46 @@ PrepareOAMData::
 	ldh [hSpritePriority], a ; temp store sprite priority
 	pop de
 
-; read the entry from the table
-	ld h, 0
-	ld bc, SpriteFacingAndAnimationTable
-	add hl, hl
-	add hl, hl
-	add hl, bc
-	ld a, [hli]
-	ld c, a
-	ld a, [hli]
-	ld b, a
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
 
 	call GetSpriteScreenXY
 
 	ldh a, [hOAMBufferOffset]
+	add [hl]
+	cp $a0
+	jr z, .hidden
+	jr nc, .asm_4a41
+.hidden
+	call Func_4a7b
+	ld [wd5cd], a
+	ldh a, [hOAMBufferOffset]
+
 	ld e, a
 	ld d, HIGH(wShadowOAM)
 
 .tileLoop
+	ld a, [hli]
+	ld c, a
+.loop
 	ldh a, [hSpriteScreenY]   ; temp for sprite Y position
 	add $10                  ; Y=16 is top of screen (Y=0 is invisible)
 	add [hl]                 ; add Y offset from table
 	ld [de], a               ; write new sprite OAM Y position
 	inc hl
+	inc e
 	ldh a, [hSpriteScreenX]   ; temp for sprite X position
 	add $8                   ; X=8 is left of screen (X=0 is invisible)
 	add [hl]                 ; add X offset from table
+	ld [de], a
+	inc hl
 	inc e
-	ld [de], a               ; write new sprite OAM X position
-	inc e
-	ld a, [bc]               ; read pattern number offset (accommodates orientation (offset 0,4 or 8) and animation (offset 0 or $80))
-	inc bc
-	push bc
+	ld a, [wd5cd]
+	add [hl]
+	cp $80
+	jr c, .asm_4a1c
 	ld b, a
-
-	ld a, [wd5cd]            ; temp copy of [x#SPRITESTATEDATA1_IMAGEINDEX]
-	swap a                   ; high nybble determines sprite used (0 is always player sprite, next are some npcs)
-	and $f
-
-	; Sprites $a and $b have one face (and therefore 4 tiles instead of 12).
-	; As a result, sprite $b's tile offset is less than normal.
-	cp $b
-	jr nz, .notFourTileSprite
-	ld a, $a * 12 + 4
-	jr .next2
-
-.notFourTileSprite
-	; a *= 12
-	sla a
-	sla a
-	ld c, a
-	sla a
-	add c
-
-.next2
-	add b ; add the tile offset from the table (based on frame and facing direction)
-	pop bc
+	ldh a, [hPikachuSpriteVRAMOffset]
+	add b
+.asm_4a1c
 	ld [de], a ; tile id
 	inc hl
 	inc e
@@ -129,13 +118,19 @@ PrepareOAMData::
 	ldh a, [hSpritePriority]
 	or [hl]
 .skipPriority
-	call _ColorOverworldSprite	; HAX
-	bit 0, a ; OAMFLAG_ENDOFDATA
-	jr z, .tileLoop
+	and $f0
+	bit OAM_OBP_NUM, a
+	jr z, .spriteusesOBP0
+	or OAM_HIGH_PALS
+.spriteusesOBP0
+	ld [de], a
+	inc hl
+	inc e
+	dec c
+	jr nz, .loop
 
 	ld a, e
 	ldh [hOAMBufferOffset], a
-
 .nextSprite
 	ldh a, [hSpriteOffset2]
 	add $10
@@ -143,26 +138,31 @@ PrepareOAMData::
 	jp nz, .spriteLoop
 
 	; Clear unused OAM.
-	ldh a, [hOAMBufferOffset]
-	ld l, a
-	ld h, HIGH(wShadowOAM)
-	ld de, $4
-	ld b, $a0
+.asm_4a41
 	ld a, [wd736]
 	bit 6, a ; jumping down ledge or fishing animation?
-	ld a, $a0
+	ld c, $a0
 	jr z, .clear
 
 ; Don't clear the last 4 entries because they are used for the shadow in the
 ; jumping down ledge animation and the rod in the fishing animation.
-	ld a, $90
+	ld c, $90
 
 .clear
-	cp l
-	ret z
+	ldh a, [hOAMBufferOffset]
+	cp c
+	ret nc
+	ld l, a
+	ld h, HIGH(wShadowOAM)
+	ld a, c
+	ld de, $4 ; entry size
+	ld b, $a0
+.clearLoop
 	ld [hl], b
 	add hl, de
-	jr .clear
+	cp l
+	jr nz, .clearLoop
+	ret
 
 GetSpriteScreenXY:
 	inc e
@@ -185,3 +185,48 @@ GetSpriteScreenXY:
 	and $f0
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
 	ret
+
+Func_4a7b:
+	push bc
+	ld a, [wd5cd]            ; temp copy of [x#SPRITESTATEDATA1_IMAGEINDEX]
+	swap a                   ; high nybble determines sprite used (0 is always player sprite, next are some npcs)
+	and $f
+
+	; Sprites $a and $b have one face (and therefore 4 tiles instead of 12).
+	; As a result, sprite $b's tile offset is less than normal.
+	cp $b
+	jr nz, .notFourTileSprite
+	ld a, $a * 12 + 4 ; $7c
+	jr .done
+
+.notFourTileSprite
+	; a *= 12
+	add a
+	add a
+	ld c, a
+	add a
+	add c
+.done
+	pop bc
+	ret
+
+INCLUDE "engine/gfx/oam_dma.asm"
+
+_IsTilePassable::
+	ld hl, wTilesetCollisionPtr ; pointer to list of passable tiles
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a ; hl now points to passable tiles
+.loop
+	ld a, [hli]
+	cp $ff
+	jr z, .tileNotPassable
+	cp c
+	jr nz, .loop
+	xor a
+	ret
+.tileNotPassable
+	scf
+	ret
+
+INCLUDE "data/tilesets/collision_tile_ids.asm"

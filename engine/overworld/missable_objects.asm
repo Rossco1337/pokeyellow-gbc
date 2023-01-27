@@ -15,20 +15,13 @@ MarkTownVisitedAndLoadMissableObjects::
 	add hl, bc
 	ld a, [hli]                ; load missable objects pointer in hl
 	ld h, [hl]
-	; fall through
-
-LoadMissableObjects:
 	ld l, a
 	push hl
-	ld de, MissableObjects     ; calculate difference between out pointer and the base pointer
 	ld a, l
-	sub e
-	jr nc, .noCarry
-	dec h
-.noCarry
+	sub LOW(MissableObjects)   ; calculate difference between out pointer and the base pointer
 	ld l, a
 	ld a, h
-	sub d
+	sbc HIGH(MissableObjects)
 	ld h, a
 	ld a, h
 	ldh [hDividend], a

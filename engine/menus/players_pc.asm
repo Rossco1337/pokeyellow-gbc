@@ -1,6 +1,4 @@
 PlayerPC::
-	ld hl, wd730
-	set 6, [hl]
 	ld a, ITEM_NAME
 	ld [wNameListType], a
 	call SaveScreenTilesToBuffer1
@@ -17,14 +15,15 @@ PlayerPC::
 	call PrintText
 
 PlayerPCMenu:
+	ld hl, wd730
+	set 6, [hl]
 	ld a, [wParentMenuItem]
 	ld [wCurrentMenuItem], a
 	ld hl, wFlags_0xcd60
 	set 5, [hl]
 	call LoadScreenTilesFromBuffer2
 	hlcoord 0, 0
-	ld b, $8
-	ld c, $e
+	lb bc, 8, 14
 	call TextBoxBorder
 	call UpdateSprites
 	hlcoord 2, 2

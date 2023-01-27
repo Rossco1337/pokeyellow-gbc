@@ -121,8 +121,7 @@ TryingToLearn:
 	ld hl, WhichMoveToForgetText
 	call PrintText
 	hlcoord 4, 7
-	ld b, 4
-	ld c, 14
+	lb bc, 4, 14
 	call TextBoxBorder
 	hlcoord 6, 8
 	ld de, wMovesString
@@ -206,11 +205,39 @@ TryingToLearnText:
 	text_end
 
 OneTwoAndText:
+; bugfix: In Red/Blue, the SFX_SWAP sound was played in the wrong bank, which played an incorrect sound
+; Yellow has fixed this by swapping to the correct bank
 	text_far _OneTwoAndText
 	text_pause
 	text_asm
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $1
+;	ld [wMuteAudioAndPauseMusic], a
+	call DelayFrame
+;	ld a, [wAudioROMBank]
+;	push af
+;	ld a, 0 ; BANK(SFX_Swap_1)
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
+	call WaitForSoundToFinish
 	ld a, SFX_SWAP
-	call PlaySoundWaitForCurrent
+	call PlaySound
+	ld a, 1
+	ld [wSFXPriority], a
+	call WaitForSoundToFinish
+;	pop af
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
+	xor a
+	ld [wSFXPriority], a
+;	ld [wMuteAudioAndPauseMusic], a
+	pop hl
+	pop de
+	pop bc
+	pop af
 	ld hl, PoofText
 	ret
 

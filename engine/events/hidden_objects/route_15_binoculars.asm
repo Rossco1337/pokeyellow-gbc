@@ -7,7 +7,10 @@ Route15GateLeftBinoculars:
 	ld a, ARTICUNO
 	ld [wcf91], a
 	call PlayCry
-	jp DisplayMonFrontSpriteInBox
+	call DisplayMonFrontSpriteInBox
+	xor a
+	ldh [hAutoBGTransferEnabled], a
+	ret
 
 Route15UpstairsBinocularsText::
 	text_far _Route15UpstairsBinocularsText

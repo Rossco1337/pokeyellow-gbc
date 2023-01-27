@@ -33,53 +33,17 @@ GymTrashScript:
 .openFirstLock
 ; Next can is trying for the second switch.
 	SetEvent EVENT_1ST_LOCK_OPENED
-
-	ld hl, GymTrashCans
-	ld a, [wGymTrashCanIndex]
-	; * 5
-	ld b, a
-	add a
-	add a
-	add b
-
-	ld d, 0
-	ld e, a
-	add hl, de
-	ld a, [hli]
-
-; There is a bug in this code. It should calculate a value in the range [0, 3]
-; but if the mask and random number don't have any 1 bits in common, then
-; the result of the AND will be 0. When 1 is subtracted from that, the value
-; will become $ff. This will result in 255 being added to hl, which will cause
-; hl to point to one of the zero bytes that pad the end of the ROM bank.
-; Trash can 0 was intended to be able to have the second lock only when the
-; first lock was in trash can 1 or 3. However, due to this bug, trash can 0 can
-; have the second lock regardless of which trash can had the first lock.
-
-	ldh [hGymTrashCanRandNumMask], a
-	push hl
-	call Random
-	swap a
-	ld b, a
-	ldh a, [hGymTrashCanRandNumMask]
-	and b
-	dec a
-	pop hl
-
-	ld d, 0
-	ld e, a
-	add hl, de
-	ld a, [hl]
-	and $f
-	ld [wSecondLockTrashCanIndex], a
-
+	callfar Yellow_SampleSecondTrashCan
 	tx_pre_id VermilionGymTrashSuccessText1
 	jr .done
 
 .trySecondLock
-	ld a, [wSecondLockTrashCanIndex]
-	ld b, a
 	ld a, [wGymTrashCanIndex]
+	ld b, a
+	ld a, [wSecondLockTrashCanIndex]
+	cp b
+	jr z, .openSecondLock
+	ld a, [wSecondLockTrashCanIndex + 1]
 	cp b
 	jr z, .openSecondLock
 
@@ -107,25 +71,26 @@ GymTrashScript:
 GymTrashCans:
 ; byte 0: mask for random number
 ; bytes 1-4: indices of the trash cans that can have the second lock
-;            (but see the comment above explaining a bug regarding this)
 ; Note that the mask is simply the number of valid trash can indices that
-; follow. The remaining bytes are filled with 0 to pad the length of each entry
+; follow. The remaining bytes are filled with -1 to pad the length of each entry
 ; to 5 bytes.
-	db 2,  1,  3,  0,  0 ; 0
-	db 3,  0,  2,  4,  0 ; 1
-	db 2,  1,  5,  0,  0 ; 2
-	db 3,  0,  4,  6,  0 ; 3
+; This is functionally replaced with GymTrashCans3a but was never removed from source.
+
+	db 2,  1,  3, -1, -1 ; 0
+	db 3,  0,  2,  4, -1 ; 1
+	db 2,  1,  5, -1, -1 ; 2
+	db 3,  0,  4,  6, -1 ; 3
 	db 4,  1,  3,  5,  7 ; 4
-	db 3,  2,  4,  8,  0 ; 5
-	db 3,  3,  7,  9,  0 ; 6
+	db 3,  2,  4,  8, -1 ; 5
+	db 3,  3,  7,  9, -1 ; 6
 	db 4,  4,  6,  8, 10 ; 7
-	db 3,  5,  7, 11,  0 ; 8
-	db 3,  6, 10, 12,  0 ; 9
+	db 3,  5,  7, 11, -1 ; 8
+	db 3,  6, 10, 12, -1 ; 9
 	db 4,  7,  9, 11, 13 ; 10
-	db 3,  8, 10, 14,  0 ; 11
-	db 2,  9, 13,  0,  0 ; 12
-	db 3, 10, 12, 14,  0 ; 13
-	db 2, 11, 13,  0,  0 ; 14
+	db 3,  8, 10, 14, -1 ; 11
+	db 2,  9, 13, -1, -1 ; 12
+	db 3, 10, 12, 14, -1 ; 13
+	db 2, 11, 13, -1, -1 ; 14
 
 VermilionGymTrashSuccessText1::
 	text_far _VermilionGymTrashSuccessText1

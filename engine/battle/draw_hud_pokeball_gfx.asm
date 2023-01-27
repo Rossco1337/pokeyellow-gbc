@@ -10,18 +10,14 @@ DrawEnemyPokeballs:
 	call LoadPartyPokeballGfx
 	jp SetupEnemyPartyPokeballs
 
-LoadPartyPokeballGfx_orig: ; Name changed so color hack can hijack this
+	LoadPartyPokeballGfx_orig: ; Name changed so color hack can hijack this
 	ld de, PokeballTileGraphics
 	ld hl, vSprites tile $31
 	lb bc, BANK(PokeballTileGraphics), (PokeballTileGraphicsEnd - PokeballTileGraphics) / $10
 	jp CopyVideoData
 
 SetupOwnPartyPokeballs:
-IF GEN_2_GRAPHICS
-	call PlayerHUDHAX
-ELSE
 	call PlacePlayerHUDTiles
-ENDC
 	ld hl, wPartyMon1
 	ld de, wPartyCount
 	call SetupPokeballs
@@ -31,6 +27,8 @@ ENDC
 	ld [hl], a
 	ld a, 8
 	ld [wHUDPokeballGfxOffsetX], a
+	xor a
+	ld [wdef5], a
 	ld hl, wShadowOAM
 	jp WritePokeballOAMData
 
@@ -45,6 +43,8 @@ SetupEnemyPartyPokeballs:
 	ld [hl], $20
 	ld a, -8
 	ld [wHUDPokeballGfxOffsetX], a
+	ld a, $1
+	ld [wdef5], a
 	ld hl, wShadowOAMSprite06
 	jp WritePokeballOAMData
 
@@ -108,7 +108,7 @@ WritePokeballOAMData:
 	ld [hli], a
 	ld a, [de]
 	ld [hli], a
-	xor a
+	ld a, [wdef5]
 	ld [hli], a
 	ld a, [wBaseCoordX]
 	ld b, a
@@ -122,7 +122,6 @@ WritePokeballOAMData:
 
 PlacePlayerHUDTiles:
 	ld hl, PlayerBattleHUDGraphicsTiles
-PlayerHUDUpdateDone:
 	ld de, wHUDGraphicsTiles
 	ld bc, $3
 	call CopyData
@@ -142,11 +141,7 @@ PlaceEnemyHUDTiles:
 	ld bc, $3
 	call CopyData
 	hlcoord 1, 2
-IF GEN_2_GRAPHICS
-	jp EnemyHUDHAX
-ELSE
 	ld de, $1
-ENDC
 	jr PlaceHUDTiles
 
 EnemyBattleHUDGraphicsTiles:
@@ -157,7 +152,6 @@ EnemyBattleHUDGraphicsTiles:
 
 PlaceHUDTiles:
 	ld [hl], $73
-EnemyHUDUpdateDone:
 	ld bc, SCREEN_WIDTH
 	add hl, bc
 	ld a, [wHUDGraphicsTiles + 1] ; leftmost tile
@@ -184,6 +178,8 @@ SetupPlayerAndEnemyPokeballs:
 	ld [hl], $40
 	ld a, 8
 	ld [wHUDPokeballGfxOffsetX], a
+	xor a
+	ld [wdef5], a
 	ld hl, wShadowOAM
 	call WritePokeballOAMData
 	ld hl, wEnemyMons
@@ -193,6 +189,8 @@ SetupPlayerAndEnemyPokeballs:
 	ld a, $50
 	ld [hli], a
 	ld [hl], $68
+	ld a, $1
+	ld [wdef5], a
 	ld hl, wShadowOAMSprite06
 	jp WritePokeballOAMData
 

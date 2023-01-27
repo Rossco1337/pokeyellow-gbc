@@ -215,3 +215,7 @@ DEF NUM_TM_HM EQU NUM_TMS + NUM_HMS
 ; These fit in 7 bytes, with one unused bit left over.
 DEF __tmhm_value__ = NUM_TM_HM + 1
 DEF UNUSED_TMNUM EQU __tmhm_value__
+
+; used for Time Capsule held item compatibility
+DEF TWISTEDSPOON_GSC EQU $60
+DEF LIGHT_BALL_GSC   EQU $a3

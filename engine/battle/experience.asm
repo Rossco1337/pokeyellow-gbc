@@ -43,7 +43,7 @@ GainExperience:
 	inc de
 	jr .nextBaseStat
 .maxStatExp ; if the upper byte also overflowed, then we have hit the max stat exp
-	ld a, $ff
+	dec a ; ld a, $ff; a is 0 from previous check
 	ld [de], a
 	inc de
 	ld [de], a
@@ -150,11 +150,7 @@ GainExperience:
 	call PrintText
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
-IF GEN_2_GRAPHICS
-	call AnimateEXPBar
-ELSE
 	call LoadMonData
-ENDC
 	pop hl
 	ld bc, wPartyMon1Level - wPartyMon1Exp
 	add hl, bc
@@ -164,11 +160,7 @@ ENDC
 	ld a, [hl] ; current level
 	cp d
 	jp z, .nextMon ; if level didn't change, go to next mon
-IF GEN_2_GRAPHICS
-	call KeepEXPBarFull
-ELSE
 	ld a, [wCurEnemyLVL]
-ENDC
 	push af
 	push hl
 	ld a, d
@@ -241,22 +233,24 @@ ENDC
 .recalcStatChanges
 	xor a ; battle mon
 	ld [wCalculateWhoseStats], a
-	callfar CalculateModifiedStats
-	callfar ApplyBurnAndParalysisPenaltiesToPlayer
-	callfar ApplyBadgeStatBoosts
-	callfar DrawPlayerHUDAndHPBar
-	callfar PrintEmptyString
+	ld hl, CalculateModifiedStats
+	call CallBattleCore
+	ld hl, ApplyBurnAndParalysisPenaltiesToPlayer
+	call CallBattleCore
+	ld hl, ApplyBadgeStatBoosts
+	call CallBattleCore
+	ld hl, DrawPlayerHUDAndHPBar
+	call CallBattleCore
+	ld hl, PrintEmptyString
+	call CallBattleCore
 	call SaveScreenTilesToBuffer1
 .printGrewLevelText
+	callabd_ModifyPikachuHappiness PIKAHAPPY_LEVELUP
 	ld hl, GrewLevelText
 	call PrintText
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
-IF GEN_2_GRAPHICS
-	call AnimateEXPBarAgain
-ELSE
 	call LoadMonData
-ENDC
 	ld d, $1
 	callfar PrintStatsBox
 	call WaitForTextScrollButtonPress
@@ -350,6 +344,10 @@ BoostExp:
 	adc b
 	ldh [hQuotient + 2], a
 	ret
+
+CallBattleCore:
+	ld b, BANK(BattleCore)
+	jp Bankswitch
 
 GainedText:
 	text_far _GainedText

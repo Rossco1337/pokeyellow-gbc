@@ -1,3 +1,7 @@
+UnknownText_2812:: ; unreferenced
+	text_far _PokemonText
+	text_end
+
 ; this function is used to display sign messages, sprite dialog, etc.
 ; INPUT: [hSpriteIndexOrTextID] = sprite ID or text ID
 DisplayTextID::
@@ -22,6 +26,7 @@ DisplayTextID::
 	ld [wSpriteIndex], a
 
 	dict TEXT_START_MENU,       DisplayStartMenu
+	dict TEXT_PIKACHU_ANIM,     DisplayPikachuEmotion
 	dict TEXT_SAFARI_GAME_OVER, DisplaySafariGameOverText
 	dict TEXT_MON_FAINTED,      DisplayPokemonFaintedText
 	dict TEXT_BLACKED_OUT,      DisplayPlayerBlackedOutText
@@ -36,20 +41,13 @@ DisplayTextID::
 .spriteHandling
 ; get the text ID of the sprite
 	push hl
-	push de
-	push bc
-	farcall UpdateSpriteFacingOffsetAndDelayMovement ; update the graphics of the sprite the player is talking to (to face the right direction)
-	pop bc
-	pop de
 	ld hl, wMapSpriteData ; NPC text entries
 	ldh a, [hSpriteIndexOrTextID]
 	dec a
 	add a
-	add l
-	ld l, a
-	jr nc, .noCarry
-	inc h
-.noCarry
+	ld e, a
+	ld d, 0
+	add hl, de
 	inc hl
 	ld a, [hl] ; a = text ID of the sprite
 	pop hl
@@ -57,7 +55,8 @@ DisplayTextID::
 ; look up the address of the text in the map's text entries
 	dec a
 	ld e, a
-	sla e
+	ld d, 0
+	add hl, de
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
@@ -122,9 +121,6 @@ CloseTextDisplay::
 	add hl, de
 	dec c
 	jr nz, .restoreSpriteFacingDirectionLoop
-	ld a, BANK(InitMapSprites)
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
 	call InitMapSprites ; reload sprite tile pattern data (since it was partially overwritten by text tile patterns)
 	ld hl, wFontLoaded
 	res 0, [hl]
@@ -133,8 +129,7 @@ CloseTextDisplay::
 	call z, LoadPlayerSpriteGraphics
 	call LoadCurrentMapView
 	pop af
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 	jp UpdateSprites
 
 DisplayPokemartDialogue::
@@ -199,6 +194,16 @@ DisplayPlayerBlackedOutText::
 	ld a, [wd732]
 	res 5, a ; reset forced to use bike bit
 	ld [wd732], a
+	CheckEvent EVENT_IN_SAFARI_ZONE
+	jr z, .didnotblackoutinsafari
+	xor a
+	ld [wNumSafariBalls], a
+	ld [wSafariSteps], a
+	ld [wSafariSteps + 1], a
+	EventFlagAddressA EVENT_IN_SAFARI_ZONE
+	ld [wcf0d], a
+	ld [wSafariZoneGateCurScript], a
+.didnotblackoutinsafari
 	jp HoldTextDisplayOpen
 
 PlayerBlackedOutText::
@@ -213,3 +218,7 @@ DisplayRepelWoreOffText::
 RepelWoreOffText::
 	text_far _RepelWoreOffText
 	text_end
+
+DisplayPikachuEmotion::
+	callfar TalkToPikachu
+	jp CloseTextDisplay

@@ -100,8 +100,7 @@ LeaguePCShowMon:
 	call LoadFrontSpriteByMonIndex
 	call GBPalNormal
 	hlcoord 0, 13
-	ld b, 2
-	ld c, $12
+	lb bc, 2, 18
 	call TextBoxBorder
 	hlcoord 1, 15
 	ld de, HallOfFameNoText
@@ -110,7 +109,7 @@ LeaguePCShowMon:
 	ld de, wHoFTeamNo
 	lb bc, 1, 3
 	call PrintNumber
-	farjp HoFDisplayMonInfo
+	farjp Func_7033f
 
 HallOfFameNoText:
 	db "HALL OF FAME No   @"

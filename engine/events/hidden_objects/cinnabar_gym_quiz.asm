@@ -9,6 +9,8 @@ CinnabarGymQuiz::
 	text_asm
 	xor a
 	ld [wOpponentAfterWrongAnswer], a
+	ld hl, wd475
+	res 7, [hl]
 	ld a, [wHiddenObjectFunctionArgument]
 	push af
 	and $f
@@ -17,7 +19,12 @@ CinnabarGymQuiz::
 	and $f0
 	swap a
 	ldh [hGymGateAnswer], a
+	ldh a, [hGymGateIndex]
 	ld hl, CinnabarGymQuizIntroText
+	cp 1
+	jr z, .onFirstQuestion
+	ld hl, CinnabarGymQuizShortIntroText
+.onFirstQuestion
 	call PrintText
 	ldh a, [hGymGateIndex]
 	dec a
@@ -35,8 +42,16 @@ CinnabarGymQuiz::
 	call CinnabarGymQuiz_AskQuestion
 	jp TextScriptEnd
 
+CinnabarGymQuizDummyIntroText:
+	text_far _CinnabarGymQuizDummyIntroText
+	text_end
+
 CinnabarGymQuizIntroText:
 	text_far _CinnabarGymQuizIntroText
+	text_end
+
+CinnabarGymQuizShortIntroText:
+	text_far _CinnabarGymQuizShortIntroText
 	text_end
 
 CinnabarQuizQuestions:
@@ -70,10 +85,6 @@ CinnabarQuizQuestionsText5:
 CinnabarQuizQuestionsText6:
 	text_far _CinnabarQuizQuestionsText6
 	text_end
-
-CinnabarGymGateFlagAction:
-	EventFlagAddress hl, EVENT_CINNABAR_GYM_GATE0_UNLOCKED
-	predef_jump FlagActionPredef
 
 CinnabarGymQuiz_AskQuestion:
 	call YesNoChoice
@@ -114,6 +125,8 @@ CinnabarGymQuiz_AskQuestion:
 	ldh a, [hGymGateIndex]
 	add $2
 	ld [wOpponentAfterWrongAnswer], a
+	ld hl, wd475
+	set 7, [hl]
 	ret
 
 CinnabarGymQuizCorrectText:
@@ -139,6 +152,10 @@ CinnabarGymQuizCorrectText:
 CinnabarGymQuizIncorrectText:
 	text_far _CinnabarGymQuizIncorrectText
 	text_end
+
+CinnabarGymGateFlagAction:
+	EventFlagAddress hl, EVENT_CINNABAR_GYM_GATE0_UNLOCKED
+	predef_jump FlagActionPredef
 
 UpdateCinnabarGymGateTileBlocks_::
 ; Update the overworld map with open floor blocks or locked gate blocks
@@ -177,10 +194,11 @@ UpdateCinnabarGymGateTileBlocks_::
 .next
 	pop bc
 	ld [wNewTileBlockID], a
-	predef ReplaceTileBlock
+	call CinnabarGym_ReplaceTileBlock
 	ld hl, hGymGateIndex
 	dec [hl]
 	jr nz, .loop
+	callfar RedrawMapView
 	ret
 
 MACRO gym_gate_coord
@@ -198,3 +216,31 @@ CinnabarGymGateCoords:
 	gym_gate_coord 3, 8, VERTICAL_GATE_BLOCK
 	gym_gate_coord 2, 6, HORIZONTAL_GATE_BLOCK
 	gym_gate_coord 2, 3, HORIZONTAL_GATE_BLOCK
+
+
+CinnabarGym_ReplaceTileBlock:
+; basically a copy of the first half of ReplaceTileBlock
+; before checking if it is necessary to redraw the map view
+	ld hl, wOverworldMap
+	ld a, [wCurMapWidth]
+	add $6
+	ld e, a
+	ld d, $0
+	add hl, de
+	add hl, de
+	add hl, de
+	ld e, $3
+	add hl, de
+	ld e, a
+	ld a, b
+	and a
+	jr z, .addX
+.addWidthYTimesLoop
+	add hl, de
+	dec b
+	jr nz, .addWidthYTimesLoop
+.addX
+	add hl, bc
+	ld a, [wNewTileBlockID]
+	ld [hl], a
+	ret

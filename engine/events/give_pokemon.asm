@@ -44,6 +44,8 @@ _GivePokemon::
 	ret
 .addToParty
 	call SetPokedexOwnedFlag
+	ld hl, UnknownTerminator_f6794
+	call PrintText
 	call AddPartyMon
 	ld a, 1
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
@@ -67,6 +69,9 @@ SetPokedexOwnedFlag:
 	call GetMonName
 	ld hl, GotMonText
 	jp PrintText
+
+UnknownTerminator_f6794:
+	text_end
 
 GotMonText:
 	text_far _GotMonText

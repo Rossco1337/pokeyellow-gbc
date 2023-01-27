@@ -1,6 +1,12 @@
 DisplayElevatorFloorMenu:
+	ld hl, wd730
+	ld a, [hl]
+	push af
+	set 6, [hl]
 	ld hl, WhichFloorText
 	call PrintText
+	pop af
+	ld [wd730], a
 	ld hl, wItemList
 	ld a, l
 	ld [wListPointer], a

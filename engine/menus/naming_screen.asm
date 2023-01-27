@@ -5,8 +5,7 @@ AskName:
 	ld a, [wIsInBattle]
 	dec a
 	hlcoord 0, 0
-	ld b, 4
-	ld c, 11
+	lb bc, 4, 11
 	call z, ClearScreenArea ; only if in wild battle
 	ld a, [wcf91]
 	ld [wd11e], a
@@ -88,17 +87,13 @@ DisplayNamingScreen:
 	call GBPalWhiteOutWithDelay3
 	call ClearScreen
 	call UpdateSprites
-
-	; HAX: Use command $0f instead of $08
-	ld b, SET_PAL_NAMING_SCREEN
+	ld b, SET_PAL_GENERIC
 	call RunPaletteCommand
-
 	call LoadHpBarAndStatusTilePatterns
 	call LoadEDTile
 	farcall LoadMonPartySpriteGfx
 	hlcoord 0, 4
-	ld b, 9
-	ld c, 18
+	lb bc, 9, 18
 	call TextBoxBorder
 	call PrintNamingText
 	ld a, 3
@@ -327,12 +322,28 @@ DisplayNamingScreen:
 	jp EraseMenuCursor
 
 LoadEDTile:
+; In Red/Blue, the bank for the ED_tile was defined incorrectly as bank0
+; Luckily, the MBC3 treats loading $0 into $2000-$2fff range as loading bank1 into $4000-$7fff range
+; Because Yellow uses the MBC5, loading $0 into $2000 - $2fff range will load bank0 instead of bank1 and thus incorrectly load the tile
+; Instead of defining the correct bank, GameFreak decided to simply copy the ED_Tile in the function during HBlank
 	ld de, ED_Tile
 	ld hl, vFont tile $70
-	ld bc, (ED_TileEnd - ED_Tile) / $8
-	; to fix the graphical bug on poor emulators
-	;lb bc, BANK(ED_Tile), (ED_TileEnd - ED_Tile) / $8
-	jp CopyVideoDataDouble
+	ld c, $4 ; number of copies needed
+.waitForHBlankLoop
+	ldh a, [rSTAT]
+	and %10 ; in HBlank?
+	jr nz, .waitForHBlankLoop
+	ld a, [de]
+	ld [hli], a
+	ld [hli], a
+	inc de
+	ld a, [de]
+	ld [hli], a
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .waitForHBlankLoop
+	ret
 
 ED_Tile:
 	INCBIN "gfx/font/ED.1bpp"

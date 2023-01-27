@@ -332,6 +332,9 @@ hGymTrashCanRandNumMask::
 NEXTU
 hFFDB:: db
 hFFDC:: db
+
+NEXTU
+hCanceledPrinting:: db
 ENDU
 
 	ds 1
@@ -385,9 +388,15 @@ ENDU
 
 hWhoseTurn:: db ; 0 on player's turn, 1 on enemy's turn
 
-hClearLetterPrintingDelayFlags:: db
+hLCDCPointer:: db
 
-	ds 1
+hJoyInput:: db
+
+	ds 2
+
+hDisableJoypadPolling:: db
+
+hClearLetterPrintingDelayFlags:: db
 
 ; bit 0: draw HP fraction to the right of bar instead of below (for party menu)
 ; bit 1: menu is double spaced
@@ -395,9 +404,12 @@ hUILayoutFlags:: db
 
 hFieldMoveMonMenuTopMenuItemX:: db
 
-hJoyInput:: db
+hPikachuSpriteVRAMOffset:: db
 
-hDisableJoypadPolling:: db
+	ds 1
+
+; 0 if DMG, != 0 if GBC
+hGBC:: db
 
 ; This byte is used by the color hack, in the "DelayFrameHook" function. It stores the
 ; bank that the interrupt wrapper should switch to if an interrupt occurs in the middle of
@@ -406,5 +418,5 @@ hDelayFrameHookBank:: db
 
 ; Used for convenience in color hack (in the _ColorOverworldSprite function)
 hColorHackTmp:: db
-
+	
 	ds 3

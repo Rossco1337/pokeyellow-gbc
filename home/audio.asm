@@ -24,6 +24,8 @@ PlayDefaultMusicCommon::
 	jr z, .walking
 	cp $2
 	jr z, .surfing
+	call CheckForNoBikingMusicMap
+	jr c, .walking
 	ld a, MUSIC_BIKE_RIDING
 	jr .next
 
@@ -75,10 +77,41 @@ PlayDefaultMusicCommon::
 
 	ret
 
-;UpdateMusic6Times::
-;CompareMapMusicBankWithCurrentBank:
-;	ret
+CheckForNoBikingMusicMap::
+; probably used to not change music upon getting on bike
+	ld a, [wCurMap]
+	cp ROUTE_23
+	jr z, .found
+	cp VICTORY_ROAD_1F
+	jr z, .found
+	cp VICTORY_ROAD_2F
+	jr z, .found
+	cp VICTORY_ROAD_3F
+	jr z, .found
+	cp INDIGO_PLATEAU
+	jr z, .found
+	and a
+	ret
+.found
+	scf
+	ret
 
+UpdateMusic6Times::
+	ld c, 6
+UpdateMusicCTimes::
+.loop
+	push bc
+	push hl
+	call UpdateSound
+	pop hl
+	pop bc
+	dec c
+	jr nz, .loop
+	ret
+
+StopAllMusic::
+	ld a, SFX_STOP_ALL_MUSIC
+;	ld [wNewSoundID], a
 ; plays music or SFX specified by a. If value is $ff, music is stopped
 PlaySound::
 	push de

@@ -11,18 +11,15 @@ DisplayPCMainMenu::
 	and a
 	jr nz, .leaguePCAvailable
 	hlcoord 0, 0
-	ld b, 8
-	ld c, 14
+	lb bc, 8, 14
 	jr .next
 .noOaksPC
 	hlcoord 0, 0
-	ld b, 6
-	ld c, 14
+	lb bc, 6, 14
 	jr .next
 .leaguePCAvailable
 	hlcoord 0, 0
-	ld b, 10
-	ld c, 14
+	lb bc, 10, 14
 .next
 	call TextBoxBorder
 	call UpdateSprites
@@ -119,10 +116,13 @@ BillsPCMenu:
 	lb bc, BANK(PokeballTileGraphics), 1
 	call CopyVideoData
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
-	hlcoord 0, 0
-	ld b, 10
-	ld c, 12
+	hlcoord 0, 12
+	lb bc, 4, 18
 	call TextBoxBorder
+	hlcoord 0, 0
+	lb bc, 12, 12
+	call TextBoxBorder
+	call UpdateSprites
 	hlcoord 2, 2
 	ld de, BillsPCMenuText
 	call PlaceString
@@ -133,7 +133,7 @@ BillsPCMenu:
 	ld [hli], a ; wTopMenuItemX
 	inc hl
 	inc hl
-	ld a, 4
+	ld a, 5
 	ld [hli], a ; wMaxMenuItem
 	ld a, A_BUTTON | B_BUTTON
 	ld [hli], a ; wMenuWatchedKeys
@@ -144,11 +144,8 @@ BillsPCMenu:
 	ld [hli], a ; wListScrollOffset
 	ld [hl], a ; wMenuWatchMovingOutOfBounds
 	ld [wPlayerMonNumber], a
-	ld hl, WhatText
-	call PrintText
 	hlcoord 9, 14
-	ld b, 2
-	ld c, 9
+	lb bc, 2, 9
 	call TextBoxBorder
 	ld a, [wCurrentBoxNum]
 	and $7f
@@ -184,6 +181,8 @@ BillsPCMenu:
 	jp z, BillsPCRelease ; release
 	cp $3
 	jp z, BillsPCChangeBox ; change box
+	cp $4
+	jp z, BillsPCPrintBox
 
 ExitBillsPC:
 	ld a, [wFlags_0xcd60]
@@ -204,6 +203,10 @@ ExitBillsPC:
 	res 6, [hl]
 	ret
 
+BillsPCPrintBox:
+	callfar PrintPCBox
+	jp BillsPCMenu
+
 BillsPCDeposit:
 	ld a, [wPartyCount]
 	dec a
@@ -222,14 +225,26 @@ BillsPCDeposit:
 	ld hl, wPartyCount
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
+	callfar IsThisPartymonStarterPikachu_Party
+	jr nc, .asm_215ad
+	call CheckPikachuFollowingPlayer
+	jr z, .asm_215ad
+	ld hl, SleepingPikachuText2
+	call PrintText
+	jp BillsPCMenu
+.asm_215ad
 	call DisplayDepositWithdrawMenu
 	jp nc, BillsPCMenu
+	callfar IsThisPartymonStarterPikachu_Party
+	jr nc, .asm_215c9
+	ld e, $1b
+	callfar PlayPikachuSoundClip
+	jr .asm_215cf
+.asm_215c9
 	ld a, [wcf91]
-
 	call PlayCry
-;	call GetCryData
-;	call PlaySoundWaitForCurrent
-
+.asm_215cf
+	callabd_ModifyPikachuHappiness PIKAHAPPY_DEPOSITED
 	ld a, PARTY_TO_BOX
 	ld [wMoveMonType], a
 	call MoveMon
@@ -256,6 +271,10 @@ BillsPCDeposit:
 	call PrintText
 	jp BillsPCMenu
 
+SleepingPikachuText2:
+	text_far _SleepingPikachuText2
+	text_end
+
 BillsPCWithdraw:
 	ld a, [wBoxCount]
 	and a
@@ -279,12 +298,15 @@ BillsPCWithdraw:
 	ld a, [wWhichPokemon]
 	ld hl, wBoxMonNicks
 	call GetPartyMonName
+	callfar IsThisPartymonStarterPikachu_Box
+	jr nc, .asm_21660
+	ld e, $22
+	callfar PlayPikachuSoundClip
+	jr .asm_21666
+.asm_21660
 	ld a, [wcf91]
-
 	call PlayCry
-;	call GetCryData
-;	call PlaySoundWaitForCurrent
-
+.asm_21666
 	xor a ; BOX_TO_PARTY
 	ld [wMoveMonType], a
 	call MoveMon
@@ -307,6 +329,8 @@ BillsPCRelease:
 	ld hl, wBoxCount
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
+	callfar IsThisPartymonStarterPikachu_Box
+	jr c, .asm_216cb
 	ld hl, OnceReleasedText
 	call PrintText
 	call YesNoChoice
@@ -320,6 +344,16 @@ BillsPCRelease:
 	ld a, [wcf91]
 	call PlayCry
 	ld hl, MonWasReleasedText
+	call PrintText
+	jp BillsPCMenu
+
+.asm_216cb
+	ld a, [wWhichPokemon]
+	ld hl, wBoxMonNicks
+	call GetPartyMonName
+	ld e, $27
+	callfar PlayPikachuSoundClip
+	ld hl, PikachuUnhappyText
 	call PrintText
 	jp BillsPCMenu
 
@@ -349,6 +383,7 @@ BillsPCMenuText:
 	next "DEPOSIT <PKMN>"
 	next "RELEASE <PKMN>"
 	next "CHANGE BOX"
+	next "PRINT BOX"
 	next "SEE YA!"
 	db "@"
 
@@ -387,8 +422,7 @@ INCLUDE "data/moves/hm_moves.asm"
 
 DisplayDepositWithdrawMenu:
 	hlcoord 9, 10
-	ld b, 6
-	ld c, 9
+	lb bc, 6, 9
 	call TextBoxBorder
 	ld a, [wParentMenuItem]
 	and a ; was the Deposit or Withdraw item selected in the parent menu?
@@ -492,6 +526,10 @@ NoMonText:
 
 CantTakeMonText:
 	text_far _CantTakeMonText
+	text_end
+
+PikachuUnhappyText:
+	text_far _PikachuUnhappyText
 	text_end
 
 ReleaseWhichMonText:

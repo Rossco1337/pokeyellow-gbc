@@ -23,8 +23,7 @@ CeladonPrizeMenu::
 	ld [wTopMenuItemX], a
 	call PrintPrizePrice
 	hlcoord 0, 2
-	ld b, 8
-	ld c, 16
+	lb bc, 8, 16
 	call TextBoxBorder
 	call GetPrizeMenuId
 	call UpdateSprites
@@ -143,12 +142,14 @@ GetPrizeMenuId:
 	ld c, (1 << 7 | 2)
 	jp PrintBCDNumber
 
+NoThanksText:
+	db "NO THANKS@"
+
 INCLUDE "data/events/prizes.asm"
 
 PrintPrizePrice:
 	hlcoord 11, 0
-	ld b, 1
-	ld c, 7
+	lb bc, 1, 7
 	call TextBoxBorder
 	call UpdateSprites
 	hlcoord 12, 0

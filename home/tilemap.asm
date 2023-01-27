@@ -1,17 +1,3 @@
-FillMemory::
-; Fill bc bytes at hl with a.
-	push de
-	ld d, a
-.loop
-	ld a, d
-	ld [hli], a
-	dec bc
-	ld a, b
-	or c
-	jr nz, .loop
-	pop de
-	ret
-
 UncompressSpriteFromDE::
 ; Decompress pic at a:de.
 	ld hl, wSpriteInputPtr
@@ -24,8 +10,7 @@ SaveScreenTilesToBuffer2::
 	hlcoord 0, 0
 	ld de, wTileMapBackup2
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call CopyData
-	ret
+	jp CopyData
 
 LoadScreenTilesFromBuffer2::
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
@@ -40,8 +25,7 @@ LoadScreenTilesFromBuffer2DisableBGTransfer::
 	ld hl, wTileMapBackup2
 	decoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call CopyData
-	ret
+	jp CopyData
 
 SaveScreenTilesToBuffer1::
 	hlcoord 0, 0

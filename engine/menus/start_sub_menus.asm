@@ -144,11 +144,14 @@ StartMenu_Pokemon::
 	call ChooseFlyDestination
 	ld a, [wd732]
 	bit 3, a ; did the player decide to fly?
-	jp nz, .goBackToMap
+	jr nz, .asm_5d4c
 	call LoadFontTilePatterns
 	ld hl, wd72e
 	set 1, [hl]
 	jp StartMenu_Pokemon
+.asm_5d4c
+	call Func_1510
+	jp .goBackToMap
 .cut
 	bit BIT_CASCADEBADGE, a
 	jp z, .newBadgeRequired
@@ -165,15 +168,28 @@ StartMenu_Pokemon::
 	bit 1, [hl]
 	res 1, [hl]
 	jp z, .loop
+	ld a, [wcf91]
+	cp STARTER_PIKACHU
+	jr z, .surfingPikachu
+	ld a, $1
+	jr .continue
+.surfingPikachu
+	ld a, $2
+.continue
+	ld [wd473], a
 	ld a, SURFBOARD
 	ld [wcf91], a
 	ld [wPseudoItemID], a
 	call UseItem
 	ld a, [wActionResultOrTookBattleTurn]
 	and a
-	jp z, .loop
+	jr z, .reloadNormalSprite
 	call GBPalWhiteOutWithDelay3
 	jp .goBackToMap
+.reloadNormalSprite
+	xor a
+	ld [wd473], a
+	jp .loop
 .strength
 	bit BIT_RAINBOWBADGE, a
 	jp z, .newBadgeRequired
@@ -217,6 +233,7 @@ StartMenu_Pokemon::
 	ld hl, wd732
 	set 3, [hl]
 	set 6, [hl]
+	call Func_1510
 	ld hl, wd72e
 	set 1, [hl]
 	res 4, [hl]
@@ -307,11 +324,11 @@ StartMenu_Item::
 	call PrintText
 	jr .exitMenu
 .notInCableClubRoom
-	ld bc, wNumBagItems
+	; store item bag pointer in wListPointer (for DisplayListMenuID)
 	ld hl, wListPointer
-	ld a, c
-	ld [hli], a
-	ld [hl], b ; store item bag pointer in wListPointer (for DisplayListMenuID)
+	ld [hl], LOW(wNumBagItems)
+	inc hl
+	ld [hl], HIGH(wNumBagItems)
 	xor a
 	ld [wPrintItemPrices], a
 	ld a, ITEMLISTMENU
@@ -469,10 +486,11 @@ StartMenu_TrainerInfo::
 	call LoadScreenTilesFromBuffer2 ; restore saved screen
 	call RunDefaultPaletteCommand
 	call ReloadMapData
+	farcall DrawStartMenu ; XXX what difference does this make?
 	call LoadGBPal
 	pop af
 	ldh [hTileAnimations], a
-	jp RedisplayStartMenu
+	jp RedisplayStartMenu_DoNotDrawStartMenu
 
 ; loads tile patterns and draws everything except for gym leader faces / badges
 DrawTrainerInfo:
@@ -506,7 +524,7 @@ DrawTrainerInfo:
 	ld de, vChars2 tile $20
 	ld bc, 8 * 8 tiles
 	ld a, BANK(GymLeaderFaceAndBadgeTileGraphics)
-	call FarCopyData2
+	call FarCopyData
 	ld hl, TextBoxGraphics
 	ld de, 13 tiles
 	add hl, de ; hl = colon tile pattern
@@ -514,7 +532,7 @@ DrawTrainerInfo:
 	ld bc, 1 tiles
 	ld a, BANK(TextBoxGraphics)
 	push bc
-	call FarCopyData2
+	call FarCopyData
 	pop bc
 	ld hl, TrainerInfoTextBoxTileGraphics tile 8  ; background tile pattern
 	ld de, vChars1 tile $57
@@ -566,7 +584,7 @@ DrawTrainerInfo:
 
 TrainerInfo_FarCopyData:
 	ld a, BANK(TrainerInfoTextBoxTileGraphics)
-	jp FarCopyData2
+	jp FarCopyData
 
 TrainerInfo_NameMoneyTimeText:
 	db   "NAME/"
@@ -641,7 +659,7 @@ TrainerInfo_DrawVerticalLine:
 StartMenu_SaveReset::
 	ld a, [wd72e]
 	bit 6, a ; is the player using the link feature?
-	jp nz, SoftReset
+	jp nz, Init
 	predef SaveSAV ; save the game
 	call LoadScreenTilesFromBuffer2 ; restore saved screen
 	jp HoldTextDisplayOpen

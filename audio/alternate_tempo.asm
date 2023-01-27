@@ -24,16 +24,18 @@ Music_RivalAlternateTempo::
 	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
-	ld hl, wChannel1MusicAddress
 	ld de, Music_MeetRival_Ch1_AlternateTempo
-	jp Audio1_OverwriteChannelPointer
+	jr FinishAlternateRivalMusic
 
 ; applies both the alternate start and alternate tempo
 Music_RivalAlternateStartAndTempo::
 	call Music_RivalAlternateStart
-	ld hl, wChannel1MusicAddress
 	ld de, Music_MeetRival_Ch1_AlternateStartAndTempo
+FinishAlternateRivalMusic:
+	ld hl, wChannel1MusicAddress
 	jp Audio1_OverwriteChannelPointer
+
+	ret ; unused
 
 ; an alternate tempo for Cities1 which is used for the Hall of Fame room
 Music_Cities1AlternateTempo::
@@ -47,9 +49,5 @@ Music_Cities1AlternateTempo::
 	ld a, MUSIC_CITIES1
 	call PlayMusic
 	ld hl, wChannel1MusicAddress
-IF GEN_2_MUSIC
-	ld de, Music_ViridianCity_Ch1_AltStart
-ELSE
 	ld de, Music_Cities1_Ch1_AlternateTempo
-ENDC
 	jp Audio1_OverwriteChannelPointer

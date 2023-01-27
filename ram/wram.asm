@@ -1211,8 +1211,6 @@ wScriptedNPCWalkCounter:: db
 
 	ds 1
 
-wGBC:: db
-
 ; if running on SGB, it's 1, else it's 0
 wOnSGB:: db
 
@@ -1738,7 +1736,7 @@ wMonHBackSprite:: dw
 wMonHMoves:: ds NUM_MOVES
 wMonHGrowthRate:: db
 wMonHLearnset:: flag_array NUM_TMS + NUM_HMS
-	ds 1
+wMonHPicBank:: db
 wMonHeaderEnd::
 
 ; saved at the start of a battle and then written back at the end of the battle
@@ -2625,8 +2623,22 @@ wEXPBarKeepFullFlag:: ds 1
 ENDC
 
 
+SECTION "GBC Palette Data", WRAM0
+
+wGBCBasePalPointers:: ds NUM_ACTIVE_PALS * 2
+wGBCPal:: ds PALETTE_SIZE
+wLastBGP:: db
+wLastOBP0:: db
+wLastOBP1:: db
+wdef5:: db
+wBGPPalsBuffer:: ds NUM_ACTIVE_PALS * PALETTE_SIZE
+
+wChannel5:: channel_struct wChannel5
+wChannel6:: channel_struct wChannel6
+
+
 SECTION "Stack", WRAM0
 
 ; the stack grows downward
-	ds $100 - 1
+	ds $87 - 1
 wStack:: db

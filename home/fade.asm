@@ -16,6 +16,9 @@ LoadGBPal::
 	ldh [rOBP0], a
 	ld a, [hli]
 	ldh [rOBP1], a
+	call UpdateGBCPal_BGP
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ret
 
 GBFadeInFromBlack::
@@ -34,6 +37,9 @@ GBFadeIncCommon:
 	ldh [rOBP0], a
 	ld a, [hli]
 	ldh [rOBP1], a
+	call UpdateGBCPal_BGP
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ld c, 8
 	call DelayFrames
 	dec b
@@ -56,6 +62,9 @@ GBFadeDecCommon:
 	ldh [rOBP0], a
 	ld a, [hld]
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
+	call UpdateGBCPal_OBP0
+	call UpdateGBCPal_OBP1
 	ld c, 8
 	call DelayFrames
 	dec b
@@ -65,11 +74,11 @@ GBFadeDecCommon:
 ; HAX: some of these palettes have been modified, mostly to make BGP/OBP0/OBP1 consistent
 ; with each other.
 FadePal1:: db %11111111, %11111111, %11111111
-FadePal2:: db %11111110, %11111110, %11111110 ; This is used in dark areas
-FadePal3:: db %11111001, %11111001, %11111001
-FadePal4:: db %11100100, %11100100, %11100100 ; This is the "standard" palette
-;                rBGP      rOBP0      rOBP1
-FadePal5:: db %11100100, %11100100, %11100100
-FadePal6:: db %10010000, %10010000, %10010000
-FadePal7:: db %01000000, %01000000, %01000000
-FadePal8:: db %00000000, %00000000, %00000000
+	FadePal2:: db %11111110, %11111110, %11111110 ; This is used in dark areas
+	FadePal3:: db %11111001, %11111001, %11111001
+	FadePal4:: db %11100100, %11100100, %11100100 ; This is the "standard" palette
+	;                rBGP      rOBP0      rOBP1
+	FadePal5:: db %11100100, %11100100, %11100100
+	FadePal6:: db %10010000, %10010000, %10010000
+	FadePal7:: db %01000000, %01000000, %01000000
+	FadePal8:: db %00000000, %00000000, %00000000

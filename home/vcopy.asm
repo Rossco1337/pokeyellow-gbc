@@ -100,11 +100,7 @@ VBlankCopyBgMap::
 	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
 	and a
 	ret z
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
+	ld [hSPTemp], sp ; save stack pointer
 	ldh a, [hVBlankCopyBGSource]
 	ld l, a
 	ldh a, [hVBlankCopyBGSource + 1]
@@ -133,11 +129,7 @@ VBlankCopyDouble::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld [hSPTemp], sp ; save stack pointer
 
 	ldh a, [hVBlankCopyDoubleSource]
 	ld l, a
@@ -179,21 +171,14 @@ ENDR
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDoubleDest], a
-	ld a, h
-	ldh [hVBlankCopyDoubleDest + 1], a
-
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopyDoubleSource], a
-	ld a, h
-	ldh [hVBlankCopyDoubleSource + 1], a
+	ld [hVBlankCopyDoubleSource], sp
+	ld sp, hl ; load destination into sp to save time with ld [$xxxx], sp
+	ld [hVBlankCopyDoubleDest], sp
 
 	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
 	ld l, a
+	ldh a, [hSPTemp + 1]
+	ld h, a
 	ld sp, hl
 
 	ret
@@ -210,11 +195,7 @@ VBlankCopy::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld [hSPTemp], sp
 
 	ldh a, [hVBlankCopySource]
 	ld l, a
@@ -248,21 +229,14 @@ ENDR
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDest], a
-	ld a, h
-	ldh [hVBlankCopyDest + 1], a
-
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopySource], a
-	ld a, h
-	ldh [hVBlankCopySource + 1], a
+	ld [hVBlankCopySource], sp
+	ld sp, hl
+	ld [hVBlankCopyDest], sp
 
 	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
 	ld l, a
+	ldh a, [hSPTemp + 1]
+	ld h, a
 	ld sp, hl
 
 	ret
@@ -275,6 +249,10 @@ UpdateMovingBgTiles::
 	ldh a, [hTileAnimations]
 	and a
 	ret z
+
+	ldh a, [rLY]
+	cp $90 ; check if not in vblank period??? (maybe if vblank is too long)
+	ret c
 
 	ldh a, [hMovingBGTilesCounter1]
 	inc a

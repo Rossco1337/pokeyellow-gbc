@@ -32,10 +32,8 @@ FileDataDestroyedText:
 	text_end
 
 LoadSAV0:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 ; This vc_hook does not have to be in any particular location.
 ; It is defined here because it refers to the same labels as the two lines below.
@@ -82,10 +80,8 @@ LoadSAV0:
 	jp SAVGoodChecksum
 
 LoadSAV1:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld hl, sGameData
 	ld bc, sGameDataEnd - sGameData
@@ -102,10 +98,8 @@ LoadSAV1:
 	jp SAVGoodChecksum
 
 LoadSAV2:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld hl, sGameData
 	ld bc, sGameDataEnd - sGameData
@@ -129,9 +123,7 @@ SAVBadCheckSum:
 	scf
 
 SAVGoodChecksum:
-	ld a, $0
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 LoadSAVIgnoreBadCheckSum:
@@ -142,12 +134,16 @@ LoadSAVIgnoreBadCheckSum:
 
 SaveSAV:
 	farcall PrintSaveScreenText
+	ld c, 10
+	call DelayFrames
 	ld hl, WouldYouLikeToSaveText
 	call SaveSAVConfirm
 	and a   ;|0 = Yes|1 = No|
 	ret nz
+	ld c, 10
+	call DelayFrames
 	ld a, [wSaveFileStatus]
-	dec a
+	cp $1
 	jr z, .save
 	call SAVCheckRandomID
 	jr z, .save
@@ -157,24 +153,20 @@ SaveSAV:
 	ret nz
 .save
 	call SaveSAVtoSRAM
-	hlcoord 1, 13
-	lb bc, 4, 18
-	call ClearScreenArea
-	hlcoord 1, 14
-	ld de, NowSavingString
-	call PlaceString
-	ld c, 120
+	ld hl, SavingText
+	call PrintText
+	ld c, 128
 	call DelayFrames
 	ld hl, GameSavedText
 	call PrintText
+	ld c, 10
+	call DelayFrames
 	ld a, SFX_SAVE
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	ld c, 30
-	jp DelayFrames
-
-NowSavingString:
-	db "Now saving...@"
+	call DelayFrames
+	ret
 
 SaveSAVConfirm:
 	call PrintText
@@ -190,6 +182,10 @@ WouldYouLikeToSaveText:
 	text_far _WouldYouLikeToSaveText
 	text_end
 
+SavingText:
+	text_far _SavingText
+	text_end
+
 GameSavedText:
 	text_far _GameSavedText
 	text_end
@@ -199,10 +195,8 @@ OlderFileWillBeErasedText:
 	text_end
 
 SaveSAVtoSRAM0:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld hl, wPlayerName
 	ld de, sPlayerName
@@ -226,17 +220,13 @@ SaveSAVtoSRAM0:
 	ld bc, sGameDataEnd - sGameData
 	call SAVCheckSum
 	ld [sMainDataCheckSum], a
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 SaveSAVtoSRAM1:
 ; stored pokémon
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld hl, wBoxDataStart
 	ld de, sCurBoxData
@@ -246,16 +236,12 @@ SaveSAVtoSRAM1:
 	ld bc, sGameDataEnd - sGameData
 	call SAVCheckSum
 	ld [sMainDataCheckSum], a
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 SaveSAVtoSRAM2:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $1
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld hl, wPartyDataStart
 	ld de, sPartyData
@@ -265,13 +251,18 @@ SaveSAVtoSRAM2:
 	ld de, sMainData
 	ld bc, wPokedexSeenEnd - wPokedexOwned
 	call CopyData
+	ld hl, wPikachuHappiness
+	ld de, sMainData + $179
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hl]
+	ld [de], a
 	ld hl, sGameData
 	ld bc, sGameDataEnd - sGameData
 	call SAVCheckSum
 	ld [sMainDataCheckSum], a
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 SaveSAVtoSRAM::
@@ -361,6 +352,9 @@ ChangeBox::
 	res 1, [hl]
 	bit BIT_B_BUTTON, a
 	ret nz
+	ld a, $b6
+	call PlaySoundWaitForCurrent
+	call WaitForSoundToFinish
 	call GetBoxSRAMLocation
 	ld e, l
 	ld d, h
@@ -383,9 +377,6 @@ ChangeBox::
 	call SaveSAVtoSRAM
 	ld hl, wChangeBoxSavedMapTextPointer
 	call SetMapTextPointer
-	ld a, SFX_SAVE
-	call PlaySoundWaitForCurrent
-	call WaitForSoundToFinish
 	ret
 
 WhenYouChangeBoxText:
@@ -395,10 +386,7 @@ WhenYouChangeBoxText:
 CopyBoxToOrFromSRAM:
 ; copy an entire box from hl to de with b as the SRAM bank
 	push hl
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
-	ld a, $1
-	ld [MBC1SRamBankingMode], a
+	call EnableSRAMAndLatchClockData
 	ld a, b
 	ld [MBC1SRamBank], a
 	ld bc, wBoxDataEnd - wBoxDataStart
@@ -416,9 +404,7 @@ CopyBoxToOrFromSRAM:
 	call SAVCheckSum
 	ld [sBank2AllBoxesChecksum], a ; sBank3AllBoxesChecksum
 	call CalcIndividualBoxCheckSums
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 DisplayChangeBoxMenu:
@@ -439,14 +425,12 @@ DisplayChangeBoxMenu:
 	ld [wCurrentMenuItem], a
 	ld [wLastMenuItem], a
 	hlcoord 0, 0
-	ld b, 2
-	ld c, 9
+	lb bc, 2, 9
 	call TextBoxBorder
 	ld hl, ChooseABoxText
 	call PrintText
 	hlcoord 11, 0
-	ld b, 12
-	ld c, 7
+	lb bc, 12, 7
 	call TextBoxBorder
 	ld hl, hUILayoutFlags
 	set 2, [hl]
@@ -516,19 +500,14 @@ BoxNoText:
 EmptyAllSRAMBoxes:
 ; marks all boxes in SRAM as empty (initialisation for the first time the
 ; player changes the box)
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
-	ld a, $1
-	ld [MBC1SRamBankingMode], a
+	call EnableSRAMAndLatchClockData
 	ld a, 2
 	ld [MBC1SRamBank], a
 	call EmptySRAMBoxesInBank
 	ld a, 3
 	ld [MBC1SRamBank], a
 	call EmptySRAMBoxesInBank
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 EmptySRAMBoxesInBank:
@@ -562,19 +541,14 @@ EmptySRAMBox:
 GetMonCountsForAllBoxes:
 	ld hl, wBoxMonCounts
 	push hl
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
-	ld a, $1
-	ld [MBC1SRamBankingMode], a
+	call EnableSRAMAndLatchClockData
 	ld a, $2
 	ld [MBC1SRamBank], a
 	call GetMonCountsForBoxesInBank
 	ld a, $3
 	ld [MBC1SRamBank], a
 	call GetMonCountsForBoxesInBank
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	pop hl
 
 ; copy the count for the current box from WRAM
@@ -607,10 +581,8 @@ SAVCheckRandomID:
 ; checks if Sav file is the same by checking player's name 1st letter
 ; and the two random numbers generated at game beginning
 ; (which are stored at wPlayerID)s
-	ld a, $0a
-	ld [MBC1SRamEnable], a
+	call EnableSRAMAndLatchClockData
 	ld a, $01
-	ld [MBC1SRamBankingMode], a
 	ld [MBC1SRamBank], a
 	ld a, [sPlayerName]
 	and a
@@ -673,34 +645,23 @@ LoadHallOfFameTeams:
 	; fallthrough
 
 HallOfFame_Copy:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
-	ld a, $1
-	ld [MBC1SRamBankingMode], a
+	call EnableSRAMAndLatchClockData
 	xor a
 	ld [MBC1SRamBank], a
 	call CopyData
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	call DisableSRAMAndPrepareClockData
 	ret
 
 ClearSAV:
-	ld a, SRAM_ENABLE
-	ld [MBC1SRamEnable], a
-	ld a, $1
-	ld [MBC1SRamBankingMode], a
-	xor a
+	call EnableSRAMAndLatchClockData
+	ld a, $4
+.loop
+	dec a
+	push af
 	call PadSRAM_FF
-	ld a, $1
-	call PadSRAM_FF
-	ld a, $2
-	call PadSRAM_FF
-	ld a, $3
-	call PadSRAM_FF
-	xor a
-	ld [MBC1SRamBankingMode], a
-	ld [MBC1SRamEnable], a
+	pop af
+	jr nz, .loop
+	call DisableSRAMAndPrepareClockData
 	ret
 
 PadSRAM_FF:
@@ -709,3 +670,16 @@ PadSRAM_FF:
 	ld bc, SRAM_End - SRAM_Begin
 	ld a, $ff
 	jp FillMemory
+
+EnableSRAMAndLatchClockData:
+	ld a, $1
+	ld [MBC1SRamBankingMode], a
+	ld a, SRAM_ENABLE
+	ld [MBC1SRamEnable], a
+	ret
+
+DisableSRAMAndPrepareClockData:
+	ld a, SRAM_DISABLE
+	ld [MBC1SRamBankingMode], a
+	ld [MBC1SRamEnable], a
+	ret

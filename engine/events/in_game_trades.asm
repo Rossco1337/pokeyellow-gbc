@@ -3,13 +3,8 @@ DoInGameTradeDialogue:
 	call SaveScreenTilesToBuffer2
 	ld hl, TradeMons
 	ld a, [wWhichTrade]
-	ld b, a
-	swap a
-	sub b
-	sub b
-	ld c, a
-	ld b, 0
-	add hl, bc
+	ld bc, $e
+	call AddNTimes
 	ld a, [hli]
 	ld [wInGameTradeGiveMonSpecies], a
 	ld a, [hli]
@@ -35,18 +30,15 @@ DoInGameTradeDialogue:
 	ld a, [wInGameTradeReceiveMonSpecies]
 	ld de, wInGameTradeReceiveMonName
 	call InGameTrade_GetMonName
-	ld hl, wCompletedInGameTradeFlags
-	ld a, [wWhichTrade]
-	ld c, a
-	ld b, FLAG_TEST
-	predef FlagActionPredef
-	ld a, c
-	and a
 	ld a, $4
 	ld [wInGameTradeTextPointerTableIndex], a
+	ld b, FLAG_TEST
+	call InGameTrade_FlagActionPredef
+	ld a, c
+	and a
 	jr nz, .printText
 ; if the trade hasn't been done yet
-	xor a
+	ld a, $0
 	ld [wInGameTradeTextPointerTableIndex], a
 	call .printText
 	ld a, $1
@@ -109,11 +101,8 @@ InGameTrade_DoTrade:
 	call AddNTimes
 	ld a, [hl]
 	ld [wCurEnemyLVL], a
-	ld hl, wCompletedInGameTradeFlags
-	ld a, [wWhichTrade]
-	ld c, a
 	ld b, FLAG_SET
-	predef FlagActionPredef
+	call InGameTrade_FlagActionPredef
 	ld hl, ConnectCableText
 	call PrintText
 	ld a, [wWhichPokemon]
@@ -137,7 +126,7 @@ InGameTrade_DoTrade:
 	ld [wMonDataLocation], a
 	call AddPartyMon
 	call InGameTrade_CopyDataToReceivedMon
-	callfar EvolveTradeMon
+	call InGameTrade_CheckForTradeEvo
 	call ClearScreen
 	call InGameTrade_RestoreScreen
 	farcall RedrawMapView
@@ -228,6 +217,37 @@ InGameTrade_GetReceivedMonPointer:
 	ld e, l
 	ld d, h
 	ret
+
+InGameTrade_FlagActionPredef:
+	ld hl, wCompletedInGameTradeFlags
+	ld a, [wWhichTrade]
+	ld c, a
+	predef_jump FlagActionPredef
+
+InGameTrade_CheckForTradeEvo:
+	ld a, [wInGameTradeReceiveMonSpecies]
+	cp KADABRA
+	jr z, .tradeEvo
+	cp GRAVELER
+	jr z, .tradeEvo
+	cp MACHOKE
+	jr z, .tradeEvo
+	cp HAUNTER
+	jr z, .tradeEvo
+	ret
+
+.tradeEvo
+	ld a, [wPartyCount]
+	dec a
+	ld [wWhichPokemon], a
+	ld a, $1
+	ld [wForceEvolution], a
+	ld a, LINK_STATE_TRADING
+	ld [wLinkState], a
+	callfar TryEvolvingMon
+	xor a ; LINK_STATE_NONE
+	ld [wLinkState], a
+	jp PlayDefaultMusic
 
 InGameTrade_TrainerString:
 	db "<TRAINER>@@@@@@@@@@"

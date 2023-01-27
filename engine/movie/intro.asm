@@ -75,34 +75,9 @@ IntroPlaceBlackTiles:
 	jr nz, .loop
 	ret
 
-IntroCopyTiles:
-	hlcoord 13, 7
-
 CopyTileIDsFromList_ZeroBaseTileID:
 	ld c, 0
 	predef_jump CopyTileIDsFromList
-
-LoadIntroGraphics:
-	ld hl, FightIntroBackMon
-	ld de, vChars2
-	ld bc, FightIntroBackMonEnd - FightIntroBackMon
-	ld a, BANK(FightIntroBackMon)
-	call FarCopyData2
-	ld hl, GameFreakIntro
-	ld de, vChars2 + (FightIntroBackMonEnd - FightIntroBackMon)
-	ld bc, GameFreakIntroEnd - GameFreakIntro
-	ld a, BANK(GameFreakIntro)
-	call FarCopyData2
-	ld hl, GameFreakIntro
-	ld de, vChars1
-	ld bc, GameFreakIntroEnd - GameFreakIntro
-	ld a, BANK(GameFreakIntro)
-	call FarCopyData2
-	ld hl, FightIntroFrontMon
-	ld de, vChars0
-	ld bc, FightIntroFrontMonEnd - FightIntroFrontMon
-	ld a, BANK(FightIntroFrontMon)
-	jp FarCopyData2
 
 PlayShootingStar:
 	ld b, SET_PAL_GAME_FREAK_INTRO
@@ -110,6 +85,7 @@ PlayShootingStar:
 	farcall LoadCopyrightAndTextBoxTiles
 	ldpal a, SHADE_BLACK, SHADE_DARK, SHADE_LIGHT, SHADE_WHITE
 	ldh [rBGP], a
+	call UpdateGBCPal_BGP
 	ld c, 180
 	call DelayFrames
 	call ClearScreen
@@ -117,7 +93,27 @@ PlayShootingStar:
 	xor a
 	ld [wCurOpponent], a
 	call IntroDrawBlackBars
-	call LoadIntroGraphics
+; write the black and white tiles
+	ld hl, vChars2
+	ld bc, $10
+	xor a
+	call FillMemory
+	ld hl, vChars2 + $10
+	ld bc, $10
+	ld a, $ff
+	call FillMemory
+; copy gamefreak logo and others
+	ld hl, GameFreakIntro
+	ld de, vChars2 + $600
+	ld bc, GameFreakIntroEnd - GameFreakIntro
+	ld a, BANK(GameFreakIntro)
+	call FarCopyData
+	ld hl, GameFreakIntro
+	ld de, vChars1
+	ld bc, GameFreakIntroEnd - GameFreakIntro
+	ld a, BANK(GameFreakIntro)
+	call FarCopyData
+
 	call EnableLCD
 	ld hl, rLCDC
 	res 5, [hl]
@@ -131,12 +127,6 @@ PlayShootingStar:
 	ld c, 40
 	call DelayFrames
 .next
-;	ld a, 0 ; BANK(Music_IntroBattle)
-;	ld [wAudioROMBank], a
-;	ld [wAudioSavedROMBank], a
-	ld a, MUSIC_INTRO_BATTLE
-;	ld [wNewSoundID], a
-	call PlayMusic
 	call IntroClearMiddleOfScreen
 	call ClearSprites
 	jp Delay3

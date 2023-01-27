@@ -61,10 +61,13 @@ LoadHoppingShadowOAM:
 	ld de, LedgeHoppingShadow
 	lb bc, BANK(LedgeHoppingShadow), (LedgeHoppingShadowEnd - LedgeHoppingShadow) / $8
 	call CopyVideoDataDouble
-	ld a, $9
-	lb bc, $54, $48 ; b, c = y, x coordinates of shadow
-	ld de, LedgeHoppingShadowOAM
-	call WriteOAMBlock
+	ld hl, LedgeHoppingShadowOAM
+	ld de, wShadowOAMSprite36
+	ld bc, LedgeHoppingShadowOAMEnd - LedgeHoppingShadowOAM
+	call CopyData
+	ld a, $a0
+	ld [wShadowOAMSprite38YCoord], a
+	ld [wShadowOAMSprite39YCoord], a
 	ret
 
 LedgeHoppingShadow:
@@ -72,5 +75,6 @@ LedgeHoppingShadow:
 LedgeHoppingShadowEnd:
 
 LedgeHoppingShadowOAM:
-	dbsprite  2, -1,  0,  7, $ff, OAM_HFLIP
-	dbsprite  8, -1,  0,  7, $ff, OAM_HFLIP | OAM_VFLIP
+	dbsprite  9, 11,  0,  0, $ff, 0
+	dbsprite 10, 11,  0,  0, $ff, OAM_HFLIP
+LedgeHoppingShadowOAMEnd:

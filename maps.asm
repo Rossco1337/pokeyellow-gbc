@@ -268,6 +268,11 @@ INCLUDE "data/maps/headers/ViridianPokecenter.asm"
 INCLUDE "scripts/ViridianPokecenter.asm"
 INCLUDE "data/maps/objects/ViridianPokecenter.asm"
 
+INCLUDE "data/maps/headers/CeladonMart1F.asm"
+INCLUDE "scripts/CeladonMart1F.asm"
+INCLUDE "data/maps/objects/CeladonMart1F.asm"
+CeladonMart1F_Blocks: INCBIN "maps/CeladonMart1F.blk"
+
 INCLUDE "data/maps/headers/PokemonMansion1F.asm"
 INCLUDE "scripts/PokemonMansion1F.asm"
 INCLUDE "data/maps/objects/PokemonMansion1F.asm"
@@ -558,6 +563,7 @@ INCLUDE "data/maps/headers/MtMoonB2F.asm"
 INCLUDE "scripts/MtMoonB2F.asm"
 INCLUDE "data/maps/objects/MtMoonB2F.asm"
 MtMoonB2F_Blocks: INCBIN "maps/MtMoonB2F.blk"
+INCLUDE "scripts/MtMoonB2F_2.asm"
 
 INCLUDE "data/maps/headers/SafariZoneWest.asm"
 INCLUDE "scripts/SafariZoneWest.asm"
@@ -1021,11 +1027,6 @@ INCLUDE "scripts/PokemonTower7F.asm"
 INCLUDE "data/maps/objects/PokemonTower7F.asm"
 PokemonTower7F_Blocks: INCBIN "maps/PokemonTower7F.blk"
 
-INCLUDE "data/maps/headers/CeladonMart1F.asm"
-INCLUDE "scripts/CeladonMart1F.asm"
-INCLUDE "data/maps/objects/CeladonMart1F.asm"
-CeladonMart1F_Blocks: INCBIN "maps/CeladonMart1F.blk"
-
 
 SECTION "Maps 18", ROMX
 
@@ -1149,9 +1150,9 @@ INCLUDE "data/maps/objects/WardensHouse.asm"
 WardensHouse_Blocks: INCBIN "maps/WardensHouse.blk"
 
 INCLUDE "data/maps/headers/SafariZoneGate.asm"
-INCLUDE "scripts/SafariZoneGate.asm"
 INCLUDE "data/maps/objects/SafariZoneGate.asm"
 SafariZoneGate_Blocks: INCBIN "maps/SafariZoneGate.blk"
+INCLUDE "scripts/SafariZoneGate.asm"
 
 INCLUDE "data/maps/headers/FuchsiaGym.asm"
 INCLUDE "scripts/FuchsiaGym.asm"
@@ -1167,6 +1168,7 @@ INCLUDE "data/maps/headers/CinnabarGym.asm"
 INCLUDE "scripts/CinnabarGym.asm"
 INCLUDE "data/maps/objects/CinnabarGym.asm"
 CinnabarGym_Blocks: INCBIN "maps/CinnabarGym.blk"
+INCLUDE "scripts/CinnabarGym_2.asm"
 
 INCLUDE "data/maps/headers/CinnabarLab.asm"
 INCLUDE "scripts/CinnabarLab.asm"

@@ -60,6 +60,16 @@ SleepEffect:
 	call BattleRandom
 	and $7
 	jr z, .setSleepCounter
+	ld b, a
+	ld a, [wUnknownSerialFlag_d499]
+	and a
+	jr z, .asm_3f1ba ; XXX stadium stuff?
+	ld a, b
+	and $3
+	jr z, .setSleepCounter
+	ld b, a
+.asm_3f1ba
+	ld a, b
 	ld [de], a
 	call PlayCurrentMoveAnimation2
 	ld hl, FellAsleepText
@@ -211,6 +221,16 @@ FreezeBurnParalyzeEffect:
 	cp b ; do target type 2 and move type match?
 	ret z  ; return if they match
 	ld a, [wPlayerMoveEffect]
+	cp UNUSED_EFFECT_23 ; more stadium stuff
+	jr nz, .asm_3f2c7
+	ld a, [wUnknownSerialFlag_d499]
+	and a
+	ld a, FREEZE_SIDE_EFFECT
+	ld b, 30 percent + 1
+	jr z, .regular_effectiveness
+	ld b, 10 percent + 1
+	jr .regular_effectiveness
+.asm_3f2c7
 	cp PARALYZE_SIDE_EFFECT1 + 1
 	ld b, 10 percent + 1
 	jr c, .regular_effectiveness
@@ -264,6 +284,16 @@ FreezeBurnParalyzeEffect:
 	cp b
 	ret z
 	ld a, [wEnemyMoveEffect]
+	cp UNUSED_EFFECT_23 ; more stadium stuff
+	jr nz, .asm_3f341
+	ld a, [wUnknownSerialFlag_d499]
+	and a
+	ld a, FREEZE_SIDE_EFFECT
+	ld b, 30 percent + 1
+	jr z, .regular_effectiveness2
+	ld b, 10 percent + 1
+	jr .regular_effectiveness2
+.asm_3f341
 	cp PARALYZE_SIDE_EFFECT1 + 1
 	ld b, 10 percent + 1
 	jr c, .regular_effectiveness2
@@ -285,17 +315,23 @@ FreezeBurnParalyzeEffect:
 	ld a, 1 << PAR
 	ld [wBattleMonStatus], a
 	call QuarterSpeedDueToParalysis
+	ld a, ANIM_C7
+	call PlayBattleAnimation2
 	jp PrintMayNotAttackText
 .burn2
 	ld a, 1 << BRN
 	ld [wBattleMonStatus], a
 	call HalveAttackDueToBurn
+	ld a, ANIM_C7
+	call PlayBattleAnimation2
 	ld hl, BurnedText
 	jp PrintText
 .freeze2
 ; hyper beam bits aren't reseted for opponent's side
 	ld a, 1 << FRZ
 	ld [wBattleMonStatus], a
+	ld a, ANIM_C7
+	call PlayBattleAnimation2
 	ld hl, FrozenText
 	jp PrintText
 
@@ -474,9 +510,9 @@ UpdateStatDone:
 	bit HAS_SUBSTITUTE_UP, [hl]
 	push af
 	push bc
+	push de
 	ld hl, HideSubstituteShowMonAnim
 	ld b, BANK(HideSubstituteShowMonAnim)
-	push de
 	call nz, Bankswitch
 	pop de
 .notMinimize
@@ -977,6 +1013,9 @@ FlinchSideEffect:
 	ld hl, wPlayerBattleStatus1
 	ld de, wEnemyMoveEffect
 .flinchSideEffect
+	ld a, [wLinkState]
+	cp LINK_STATE_BATTLING
+	call z, ClearHyperBeam
 	ld a, [de]
 	cp FLINCH_SIDE_EFFECT1
 	ld b, 10 percent + 1 ; chance of flinch (FLINCH_SIDE_EFFECT1)
@@ -1018,10 +1057,27 @@ ChargeEffect:
 	set INVULNERABLE, [hl] ; mon is now invulnerable to typical attacks (fly/dig)
 	ld b, ANIM_C0
 .notDigOrFly
+	push de
+	push bc
+	inc hl ; battle status 2
+	push hl
+	ld a, [hl]
+	bit HAS_SUBSTITUTE_UP, a
+	ld hl, HideSubstituteShowMonAnim
+	ld b, BANK(HideSubstituteShowMonAnim)
+	call nz, Bankswitch
+	pop hl
+	pop bc
 	xor a
 	ld [wAnimationType], a
 	ld a, b
 	call PlayBattleAnimation
+	ld a, [hl]
+	bit HAS_SUBSTITUTE_UP, a
+	ld hl, ReshowSubstituteAnim
+	ld b, BANK(ReshowSubstituteAnim)
+	call nz, Bankswitch
+	pop de
 	ld a, [de]
 	ld [wChargeMoveNum], a
 	ld hl, ChargeMoveEffectText
@@ -1491,6 +1547,7 @@ PlayBattleAnimationGotID:
 	push de
 	push bc
 	predef MoveAnimation
+	callfar Func_78e98
 	pop bc
 	pop de
 	pop hl

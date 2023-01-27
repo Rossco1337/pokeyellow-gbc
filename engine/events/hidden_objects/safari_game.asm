@@ -31,8 +31,7 @@ SafariZoneGameOver:
 	call EnableAutoTextBoxDrawing
 	xor a
 	ld [wMusicFade], a
-	dec a ; SFX_STOP_ALL_MUSIC
-	call PlaySound
+	call StopAllMusic
 	ld c, 0 ; BANK(SFX_Safari_Zone_PA)
 	ld a, SFX_SAFARI_ZONE_PA
 	call PlaySound

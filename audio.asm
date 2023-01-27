@@ -12,6 +12,9 @@ INCLUDE "audio/headers/sfxheaders2.asm"
 SECTION "Sound Effect Headers 3", ROMX
 INCLUDE "audio/headers/sfxheaders3.asm"
 
+SECTION "Sound Effect Headers 4", ROMX
+INCLUDE "audio/headers/sfxheaders4.asm"
+
 
 SECTION "Sound Effects 1", ROMX
 
@@ -134,6 +137,15 @@ INCLUDE "audio/sfx/slots_new_spin.asm"
 INCLUDE "audio/sfx/shooting_star.asm"
 
 
+SECTION "Sound Effects 4", ROMX
+
+INCLUDE "audio/sfx/surfing_jump.asm"
+INCLUDE "audio/sfx/surfing_flip.asm"
+INCLUDE "audio/sfx/unknown_802cc.asm"
+INCLUDE "audio/sfx/surfing_land.asm"
+INCLUDE "audio/sfx/surfing_crash.asm"
+
+
 SECTION "Music Routines", ROMX
 
 INCLUDE "audio/play_battle_music.asm"
@@ -147,6 +159,11 @@ INCLUDE "audio/alternate_tempo.asm"
 SECTION "Pokedex Rating SFX Routines", ROMX
 
 INCLUDE "audio/pokedex_rating_sfx.asm"
+
+
+SECTION "Surfing Pikachu GFX", ROMX
+
+INCLUDE "gfx/surfing_pikachu.asm"
 
 ; crystal:
 

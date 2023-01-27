@@ -25,4 +25,5 @@
 	const CLUB         ; 21
 	const FACILITY     ; 22
 	const PLATEAU      ; 23
+	const BEACH_HOUSE  ; 24
 DEF NUM_TILESETS EQU const_value

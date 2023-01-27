@@ -383,17 +383,6 @@ TrainerEndBattleText::
 	call TextCommandProcessor
 	jp TextScriptEnd
 
-; only engage with the trainer if the player is not already
-; engaged with another trainer
-; XXX unused?
-CheckIfAlreadyEngaged::
-	ld a, [wFlags_0xcd60]
-	bit 0, a
-	ret nz
-	call EngageMapTrainer
-	xor a
-	ret
-
 PlayTrainerMusic::
 	ld a, [wEngagedTrainerClass]
 	cp OPP_RIVAL1
@@ -407,8 +396,7 @@ PlayTrainerMusic::
 	ret nz
 	xor a
 	ld [wMusicFade], a
-	ld a, SFX_STOP_ALL_MUSIC
-	call PlaySound
+	call StopAllMusic
 ;	ld a, 0 ; BANK(Music_MeetEvilTrainer)
 ;	ld [wAudioROMBank], a
 ;	ld [wAudioSavedROMBank], a

@@ -31,13 +31,11 @@ RunNPCMovementScript::
 	ldh a, [hLoadedROMBank]
 	push af
 	ld a, [wNPCMovementScriptBank]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 	ld a, [wNPCMovementScriptFunctionNum]
 	call CallFunctionInTable
 	pop af
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 	ret
 
 .NPCMovementScriptPointerTables
@@ -52,13 +50,11 @@ EndNPCMovementScript::
 
 DebugPressedOrHeldB::
 IF DEF(_DEBUG)
-	ld a, [wd732]
-	bit 1, a
-	ret z
 	ldh a, [hJoyHeld]
 	bit BIT_B_BUTTON, a
 	ret nz
 	ldh a, [hJoyPressed]
 	bit BIT_B_BUTTON, a
+	ret
 ENDC
 	ret

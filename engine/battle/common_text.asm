@@ -8,8 +8,20 @@ PrintBeginningBattleText:
 	cp POKEMON_TOWER_7F + 1
 	jr c, .pokemonTower
 .notPokemonTower
+	ld a, [wBattleType]
+	cp BATTLE_TYPE_PIKACHU
+	jr nz, .notPikachuBattle
+	callfar IsPlayerPikachuAsleepInParty
+	ld e, $24
+	jr c, .asm_f4026
+	ld e, $a
+.asm_f4026
+	callfar PlayPikachuSoundClip
+	jr .continue
+.notPikachuBattle
 	ld a, [wEnemyMonSpecies2]
 	call PlayCry
+.continue
 	ld hl, WildMonAppearedText
 	ld a, [wMoveMissed]
 	and a
@@ -23,9 +35,13 @@ PrintBeginningBattleText:
 	call DelayFrames
 	ld hl, TrainerWantsToFightText
 .wildBattle
+	ld a, [wBattleType]
+	and a
+	jr nz, .doNotDrawPokeballs
 	push hl
 	callfar DrawAllPokeballs
 	pop hl
+.doNotDrawPokeballs
 	call PrintText
 	jr .done
 .pokemonTower

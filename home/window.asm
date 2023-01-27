@@ -50,6 +50,8 @@ HandleMenuInput_::
 	ld [wCheckFor180DegreeTurn], a
 	ldh a, [hJoy5]
 	ld b, a
+	bit BIT_A_BUTTON, a
+	jr nz, .checkOtherKeys
 	bit BIT_D_UP, a
 	jr z, .checkIfDownPressed
 .upPressed
@@ -135,15 +137,13 @@ PlaceMenuCursor::
 	ld a, [wLastMenuItem]
 	and a ; was the previous menu id 0?
 	jr z, .checkForArrow1
+	ld bc, 40
 	push af
 	ldh a, [hUILayoutFlags]
 	bit 1, a ; is the menu double spaced?
 	jr z, .doubleSpaced1
 	ld bc, 20
-	jr .getOldMenuItemScreenPosition
 .doubleSpaced1
-	ld bc, 40
-.getOldMenuItemScreenPosition
 	pop af
 .oldMenuItemLoop
 	add hl, bc
@@ -161,15 +161,13 @@ PlaceMenuCursor::
 	ld a, [wCurrentMenuItem]
 	and a
 	jr z, .checkForArrow2
+	ld bc, 40
 	push af
 	ldh a, [hUILayoutFlags]
 	bit 1, a ; is the menu double spaced?
 	jr z, .doubleSpaced2
 	ld bc, 20
-	jr .getCurrentMenuItemScreenPosition
 .doubleSpaced2
-	ld bc, 40
-.getCurrentMenuItemScreenPosition
 	pop af
 .currentMenuItemLoop
 	add hl, bc

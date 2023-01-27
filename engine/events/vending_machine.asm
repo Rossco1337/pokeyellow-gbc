@@ -18,8 +18,7 @@ VendingMachineMenu::
 	ld hl, wd730
 	set 6, [hl]
 	hlcoord 0, 3
-	ld b, 8
-	ld c, 12
+	lb bc, 8, 12
 	call TextBoxBorder
 	call UpdateSprites
 	hlcoord 2, 5

@@ -1,62 +1,41 @@
-FarCopyData2::
-; Identical to FarCopyData, but uses hROMBankTemp
-; as temp space instead of wBuffer.
-	ldh [hROMBankTemp], a
-	ldh a, [hLoadedROMBank]
-	push af
-	ldh a, [hROMBankTemp]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
-	call CopyData
-	pop af
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
-	ret
-
-FarCopyData3::
-; Copy bc bytes from a:de to hl.
-	ldh [hROMBankTemp], a
-	ldh a, [hLoadedROMBank]
-	push af
-	ldh a, [hROMBankTemp]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
-	push hl
-	push de
-	push de
-	ld d, h
-	ld e, l
-	pop hl
-	call CopyData
-	pop de
-	pop hl
-	pop af
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+IsTilePassable::
+; sets carry if tile is passable, resets carry otherwise
+	homecall_sf _IsTilePassable
 	ret
 
 FarCopyDataDouble::
 ; Expand bc bytes of 1bpp image data
-; from a:hl to 2bpp data at de.
-	ldh [hROMBankTemp], a
+; from a:de to 2bpp data at hl.
+	ld [wFarCopyDataSavedROMBank], a
 	ldh a, [hLoadedROMBank]
 	push af
-	ldh a, [hROMBankTemp]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
-.loop
-	ld a, [hli]
-	ld [de], a
-	inc de
-	ld [de], a
-	inc de
-	dec bc
+	ld a, [wFarCopyDataSavedROMBank]
+	call BankswitchCommon
+	ld a, h ; swap hl and de
+	ld h, d
+	ld d, a
+	ld a, l
+	ld l, e
+	ld e, a
+	ld a, b
+	and a
+	jr z, .eightbitcopyamount
 	ld a, c
-	or b
-	jr nz, .loop
+	and a ; multiple of $100
+	jr z, .expandloop ; if so, do not increment b because the first instance of dec c results in underflow
+.eightbitcopyamount
+	inc b
+.expandloop
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld [hli], a
+	dec c
+	jr nz, .expandloop
+	dec b
+	jr nz, .expandloop
 	pop af
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 	ret
 
 CopyVideoData::
@@ -70,11 +49,10 @@ CopyVideoData::
 	ldh [hAutoBGTransferEnabled], a
 
 	ldh a, [hLoadedROMBank]
-	ldh [hROMBankTemp], a
+	push af
 
 	ld a, b
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 
 	ld a, e
 	ldh [hVBlankCopySource], a
@@ -94,9 +72,8 @@ CopyVideoData::
 .done
 	ldh [hVBlankCopySize], a
 	call DelayFrame
-	ldh a, [hROMBankTemp]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	pop af
+	call BankswitchCommon
 	pop af
 	ldh [hAutoBGTransferEnabled], a
 	ret
@@ -119,11 +96,10 @@ CopyVideoDataDouble::
 	xor a ; disable auto-transfer while copying
 	ldh [hAutoBGTransferEnabled], a
 	ldh a, [hLoadedROMBank]
-	ldh [hROMBankTemp], a
+	push af
 
 	ld a, b
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	call BankswitchCommon
 
 	ld a, e
 	ldh [hVBlankCopyDoubleSource], a
@@ -143,9 +119,8 @@ CopyVideoDataDouble::
 .done
 	ldh [hVBlankCopyDoubleSize], a
 	call DelayFrame
-	ldh a, [hROMBankTemp]
-	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	pop af
+	call BankswitchCommon
 	pop af
 	ldh [hAutoBGTransferEnabled], a
 	ret
@@ -158,6 +133,42 @@ CopyVideoDataDouble::
 	sub 8
 	ld c, a
 	jr .loop
+
+FillMemory::
+	push af
+	ld a, b
+	and a
+	jr z, .eightbitcopyamount
+	ld a, c
+	and a
+	jr z, .mulitpleof0x100
+.eightbitcopyamount
+	inc b
+.mulitpleof0x100
+	pop af
+.loop
+	ld [hli], a
+	dec c
+	jr nz, .loop
+	dec b
+	jr nz, .loop
+	ret
+
+GetFarByte::
+; get a byte from a:hl
+; and return it in a
+	push bc
+	ld b, a
+	ldh a, [hLoadedROMBank]
+	push af
+	ld a, b
+	call BankswitchCommon
+	ld b, [hl]
+	pop af
+	call BankswitchCommon
+	ld a, b
+	pop bc
+	ret
 
 ClearScreenArea::
 ; Clear tilemap area cxb at hl.

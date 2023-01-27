@@ -108,6 +108,7 @@ OakSpeechSlidePicCommon:
 .loop
 	xor a
 	ldh [hAutoBGTransferEnabled], a
+	ldh [hAutoBGTransferPortion], a
 	ldh a, [hSlideDirection]
 	and a
 	jr nz, .slideLeft
@@ -129,8 +130,8 @@ OakSpeechSlidePicCommon:
 ; If sliding left, we need to zero the last tile in the pic (there is no need
 ; to take a corresponding action when sliding right because hl initially points
 ; to a 0 tile in that case).
-	xor a
 	dec hl
+	xor a
 	ld [hl], a
 .next3
 	ld a, 1
@@ -162,8 +163,7 @@ OakSpeechSlidePicCommon:
 DisplayIntroNameTextBox:
 	push de
 	hlcoord 0, 0
-	ld b, $a
-	ld c, $9
+	lb bc, 10, 9
 	call TextBoxBorder
 	hlcoord 3, 0
 	ld de, .namestring
