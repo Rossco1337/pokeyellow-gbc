@@ -1,10 +1,10 @@
 _CeladonCityText1::
 	text "I got my KOFFING"
-	line "in CINNABAR!"
+	line "from my friend!"
 
-	para "It's nice, but it"
-	line "breathes poison"
-	cont "when it's angry!"
+	para "We get along now,"
+	line "because I was"
+	cont "very nice to it!"
 	done
 
 _CeladonCityText2::
@@ -86,22 +86,6 @@ _CeladonCityText9::
 	line "ROCKET's way!"
 	done
 
-_CeladonCityText10::
-	text "TRAINER TIPS"
-
-	para "X ACCURACY boosts"
-	line "the accuracy of"
-	cont "techniques!"
-
-	para "DIRE HIT jacks up"
-	line "the likelihood of"
-	cont "critical hits!"
-
-	para "Get your items at"
-	line "CELADON DEPT."
-	cont "STORE!"
-	done
-
 _CeladonCityText11::
 	text "CELADON CITY"
 	line "The City of"
@@ -113,7 +97,7 @@ _CeladonCityText13::
 	line "#MON GYM"
 	cont "LEADER: ERIKA"
 
-	para "The Nature Loving"
+	para "The Nature-Loving"
 	line "Princess!"
 	done
 
@@ -150,5 +134,21 @@ _CeladonCityText17::
 _CeladonCityText18::
 	text "ROCKET GAME CORNER"
 	line "The playground"
-	cont "for grown-ups!"
+	cont "for grownups!"
+	done
+
+_CeladonCityText10::
+	text "TRAINER TIPS"
+
+	para "X ACCURACY boosts"
+	line "the accuracy of"
+	cont "techniques!"
+
+	para "DIRE HIT jacks up"
+	line "the likelihood of"
+	cont "critical hits!"
+
+	para "Get your items at"
+	line "CELADON DEPT."
+	cont "STORE!"
 	done

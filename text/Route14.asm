@@ -10,7 +10,7 @@ _Route14EndBattleText1::
 	prompt
 
 _Route14AfterBattleText1::
-	text "You have some HMs"
+	text "You have some HMs,"
 	line "right? #MON"
 	cont "can't ever forget"
 	cont "those moves."

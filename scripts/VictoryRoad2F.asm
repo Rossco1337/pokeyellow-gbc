@@ -44,6 +44,9 @@ VictoryRoad2Script0:
 	ld hl, CoordsData_51816
 	call CheckBoulderCoords
 	jp nc, CheckFightingMapTrainers
+	ldh a, [hSpriteIndexOrTextID]
+	cp $f
+	jp z, CheckFightingMapTrainers
 	EventFlagAddress hl, EVENT_VICTORY_ROAD_2_BOULDER_ON_SWITCH1
 	ld a, [wCoordIndex]
 	cp $2

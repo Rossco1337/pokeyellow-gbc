@@ -14,7 +14,8 @@ PewterGym_Script:
 .LoadNames:
 	ld hl, .CityName
 	ld de, .LeaderName
-	jp LoadGymLeaderAndCityName
+	call LoadGymLeaderAndCityName
+	ret
 
 .CityName:
 	db "PEWTER CITY@"
@@ -153,7 +154,7 @@ TM34NoRoomText:
 
 ReceivedBoulderBadgeText:
 	text_far _ReceivedBoulderBadgeText
-	sound_level_up ; probably supposed to play SFX_GET_ITEM_1 but the wrong music bank is loaded
+	sound_get_item_1
 	text_far _BrockBoulerBadgeInfoText ; Text to tell that the flash technique can be used
 	text_end
 
@@ -186,6 +187,9 @@ PewterGymGuideText:
 	ld a, [wCurrentMenuItem]
 	and a
 	jr nz, .PewterGymGuideBeginAdviceText
+	ld a, [wd472]
+	bit 7, a
+	jp nz, .asm_5c3fa
 	ld hl, PewterGymGuideBeginAdviceText
 	call PrintText
 	jr .PewterGymGuideAdviceText
@@ -200,6 +204,10 @@ PewterGymGuideText:
 	ld hl, PewterGymGuidePostBattleText
 	call PrintText
 .done
+	jp TextScriptEnd
+.asm_5c3fa
+	ld hl, PewterGymText_5c41c
+	call PrintText
 	jp TextScriptEnd
 
 PewterGymGuidePreAdviceText:
@@ -220,4 +228,8 @@ PewterGymText_5c524:
 
 PewterGymGuidePostBattleText:
 	text_far _PewterGymGuidePostBattleText
+	text_end
+
+PewterGymText_5c41c:
+	text_far _PewterGymGuyText
 	text_end

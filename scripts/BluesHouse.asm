@@ -1,8 +1,9 @@
 BluesHouse_Script:
 	call EnableAutoTextBoxDrawing
 	ld hl, BluesHouse_ScriptPointers
-	ld a, [wBluesHouseCurScript]
-	jp CallFunctionInTable
+	xor a
+	call CallFunctionInTable
+	ret
 
 BluesHouse_ScriptPointers:
 	dw BluesHouseScript0
@@ -12,8 +13,6 @@ BluesHouseScript0:
 	SetEvent EVENT_ENTERED_BLUES_HOUSE
 	ld a, $1
 	ld [wBluesHouseCurScript], a
-	ret
-
 BluesHouseScript1:
 	ret
 

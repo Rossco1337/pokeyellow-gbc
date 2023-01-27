@@ -3,7 +3,7 @@ _SaffronGateText_1dfe7::
 	line "Gee, I'm thirsty,"
 	cont "though!"
 
-	para "Oh wait there,"
+	para "Oh, wait there,"
 	line "the road's closed."
 	done
 
@@ -20,7 +20,7 @@ _SaffronGateText_1dff1::
 	text_start
 
 	para "..."
-	line "Glug glug..."
+	line "Glug, glug..."
 	cont "..."
 	cont "Gulp..."
 	cont "If you want to go"

@@ -30,7 +30,7 @@ Route19TrainerHeaders:
 Route19TrainerHeader0:
 	trainer EVENT_BEAT_ROUTE_19_TRAINER_0, 4, Route19BattleText1, Route19EndBattleText1, Route19AfterBattleText1
 Route19TrainerHeader1:
-	trainer EVENT_BEAT_ROUTE_19_TRAINER_1, 3, Route19BattleText2, Route19EndBattleText2, Route19AfterBattleText2
+	trainer EVENT_BEAT_ROUTE_19_TRAINER_1, 4, Route19BattleText2, Route19EndBattleText2, Route19AfterBattleText2
 Route19TrainerHeader2:
 	trainer EVENT_BEAT_ROUTE_19_TRAINER_2, 3, Route19BattleText3, Route19EndBattleText3, Route19AfterBattleText3
 Route19TrainerHeader3:
@@ -52,60 +52,52 @@ Route19TrainerHeader9:
 Route19Text1:
 	text_asm
 	ld hl, Route19TrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text2:
 	text_asm
 	ld hl, Route19TrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text3:
 	text_asm
 	ld hl, Route19TrainerHeader2
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text4:
 	text_asm
 	ld hl, Route19TrainerHeader3
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text5:
 	text_asm
 	ld hl, Route19TrainerHeader4
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text6:
 	text_asm
 	ld hl, Route19TrainerHeader5
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text7:
 	text_asm
 	ld hl, Route19TrainerHeader6
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text8:
 	text_asm
 	ld hl, Route19TrainerHeader7
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text9:
 	text_asm
 	ld hl, Route19TrainerHeader8
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr Route19_TalkToTrainer
 
 Route19Text10:
 	text_asm
 	ld hl, Route19TrainerHeader9
+Route19_TalkToTrainer:
 	call TalkToTrainer
 	jp TextScriptEnd
 

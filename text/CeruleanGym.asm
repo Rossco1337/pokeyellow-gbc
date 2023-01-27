@@ -2,19 +2,21 @@ _MistyPreBattleText::
 	text "Hi, you're a new"
 	line "face!"
 
-	para "Trainers who want"
-	line "to turn pro have"
-	cont "to have a policy"
-	cont "about #MON!"
-
-	para "What is your"
-	line "approach when you"
-	cont "catch #MON?"
+	para "What's your policy"
+	line "on #MON? What"
+	cont "is your approach?"
 
 	para "My policy is an"
 	line "all-out offensive"
 	cont "with water-type"
 	cont "#MON!"
+
+	para "MISTY, the world-"
+	line "famous beauty, is"
+	cont "your host!"
+
+	para "Are you ready,"
+	line "sweetie?"
 	done
 
 _TM11ExplanationText::
@@ -35,7 +37,7 @@ _MistyCascadeBadgeInfoText::
 
 	para "There's more, you"
 	line "can now use CUT"
-	cont "any time!"
+	cont "anytime!"
 
 	para "You can CUT down"
 	line "small bushes to"
@@ -56,15 +58,15 @@ _TM11NoRoomText::
 	done
 
 _ReceivedCascadeBadgeText::
-	text "Wow!"
-	line "You're too much!"
+	text "I can't"
+	line "believe I lost!"
 
 	para "All right!"
 
 	para "You can have the"
 	line "CASCADEBADGE to"
-	cont "show you beat me!@"
-	text_end
+	cont "show you beat me!"
+	prompt
 
 _CeruleanGymBattleText1::
 	text "I'm more than good"
@@ -127,7 +129,7 @@ _CeruleanGymGuidePostBattleText::
 	text "You beat MISTY!"
 	line "What'd I tell ya?"
 
-	para "You and me kid,"
+	para "You and me, kid,"
 	line "we make a pretty"
 	cont "darn good team!"
 	done

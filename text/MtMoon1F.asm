@@ -115,5 +115,5 @@ _MtMoon1AfterBattleText8::
 
 _MtMoon1Text14::
 	text "Beware! ZUBAT is"
-	line "a blood sucker!"
+	line "a bloodsucker!"
 	done

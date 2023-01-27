@@ -114,13 +114,13 @@ _FightingDojoAfterBattleText4::
 
 _WantHitmonleeText::
 	text "You want the"
-	line "hard kicking"
+	line "hard-kicking"
 	cont "HITMONLEE?"
 	done
 
 _WantHitmonchanText::
 	text "You want the"
-	line "piston punching"
+	line "piston-punching"
 	cont "HITMONCHAN?"
 	done
 

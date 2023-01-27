@@ -13,7 +13,7 @@ INCLUDE "engine/gfx/sprite_oam.asm"
 INCLUDE "engine/gfx/oam_dma.asm"
 INCLUDE "engine/link/print_waiting_text.asm"
 INCLUDE "engine/overworld/sprite_collisions.asm"
-INCLUDE "engine/debug/debug_menu.asm"
+
 INCLUDE "engine/events/pick_up_item.asm"
 INCLUDE "engine/overworld/movement.asm"
 INCLUDE "engine/link/cable_club.asm"
@@ -50,8 +50,8 @@ ENDC
 SECTION "bank3", ROMX
 
 INCLUDE "engine/joypad.asm"
-INCLUDE "data/maps/songs.asm"
-INCLUDE "data/maps/map_header_banks.asm"
+
+
 INCLUDE "engine/overworld/clear_variables.asm"
 INCLUDE "engine/overworld/player_state.asm"
 INCLUDE "engine/events/poison.asm"
@@ -239,6 +239,11 @@ SECTION "Pokédex Rating", ROMX
 INCLUDE "engine/events/pokedex_rating.asm"
 
 
+SECTION "Dungeon Warps", ROMX
+
+INCLUDE "engine/overworld/dungeon_warps.asm"
+
+
 SECTION "Hidden Objects Core", ROMX
 
 INCLUDE "engine/overworld/hidden_objects.asm"
@@ -362,12 +367,27 @@ INCLUDE "color/ghost_marowak_anim.asm"
 INCLUDE "color/color.asm"
 
 
+SECTION "Credits", ROMX
+
+INCLUDE "engine/events/pokecenter_chansey.asm"
+INCLUDE "engine/movie/credits.asm"
+
+
 SECTION "Itemfinder 1", ROMX
 
-INCLUDE "engine/movie/credits.asm"
 INCLUDE "engine/pokemon/status_ailments.asm"
 INCLUDE "engine/items/itemfinder.asm"
 
+SECTION "Pikachu PCM", ROMX
+
+INCLUDE "engine/pikachu/pikachu_pcm.asm"
+INCLUDE "engine/overworld/advance_player_sprite.asm"
+INCLUDE "engine/overworld/specific_script_flags.asm"
+
+SECTION "Try Pikachu Movement", ROMX
+
+INCLUDE "engine/overworld/unused_load_missable_object_data.asm"
+INCLUDE "engine/events/try_pikachu_movement.asm"
 
 SECTION "Vending Machine", ROMX
 
@@ -394,6 +414,28 @@ INCLUDE "engine/overworld/elevator.asm"
 INCLUDE "engine/items/tm_prices.asm"
 
 INCLUDE "color/animations.asm"
+
+
+SECTION "Surfing Minigame", ROMX
+
+INCLUDE "engine/minigame/surfing_pikachu.asm"
+INCLUDE "engine/movie/intro_yellow.asm"
+INCLUDE "engine/gfx/animated_objects.asm"
+
+
+SECTION "Overworld Pikachu", ROMX
+
+INCLUDE "data/maps/songs.asm"
+INCLUDE "data/maps/map_header_pointers.asm"
+INCLUDE "data/maps/map_header_banks.asm"
+INCLUDE "engine/pikachu/pikachu_follow.asm"
+INCLUDE "engine/pikachu/pikachu_status.asm"
+INCLUDE "engine/pikachu/pikachu_emotions.asm"
+INCLUDE "engine/pikachu/pikachu_movement.asm"
+INCLUDE "engine/pikachu/pikachu_pic_animation.asm"
+INCLUDE "engine/debug/debug_menu.asm"
+
+
 
 ; Inserted pokemon images go here
 

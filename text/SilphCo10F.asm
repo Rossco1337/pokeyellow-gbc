@@ -1,6 +1,6 @@
 _SilphCo10Text_5a1d3::
 	text "Waaaaa!"
-	cont "I'm scared!"
+	line "I'm scared!"
 	done
 
 _SilphCo10Text_5a1d8::
@@ -40,3 +40,29 @@ _SilphCo10AfterBattleText2::
 	line "with beating me?"
 	cont "Then go on home!"
 	done
+
+_SilphCoJessieJamesText1::
+	text "Hold it right"
+	line "there, brat!@"
+	text_end
+
+_SilphCoJessieJamesText2::
+	text "Our BOSS is in a"
+	line "meeting!"
+
+	para "You better not"
+	line "disturb him!"
+	done
+
+_SilphCoJessieJamesText3::
+	text "Like"
+	line "always..."
+	prompt
+
+_SilphCoJessieJamesText4::
+	text "TEAM ROCKET, blast"
+	line "off at the speed"
+	cont "of light!"
+
+	para "Again...@"
+	text_end

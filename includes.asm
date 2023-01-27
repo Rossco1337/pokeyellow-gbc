@@ -17,6 +17,7 @@ INCLUDE "macros/vc.asm"
 INCLUDE "macros/scripts/maps.asm"
 INCLUDE "macros/scripts/events.asm"
 INCLUDE "macros/scripts/text.asm"
+INCLUDE "macros/scripts/gfx_anims.asm"
 
 INCLUDE "macros/color.asm"
 
@@ -57,3 +58,5 @@ INCLUDE "constants/menu_constants.asm"
 
 INCLUDE "color/wram.asm"
 INCLUDE "color/data/map_palette_constants.asm"
+
+INCLUDE "constants/pikachu_emotion_constants.asm"

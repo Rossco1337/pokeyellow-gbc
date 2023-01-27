@@ -6,8 +6,9 @@ SeafoamIslandsB4F_Script:
 
 SeafoamIslands5Script_467a5:
 	xor a
-	ld [wSeafoamIslandsB4FCurScript], a
 	ld [wJoyIgnore], a
+	ld [wSeafoamIslandsB4FCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 SeafoamIslandsB4F_ScriptPointers:

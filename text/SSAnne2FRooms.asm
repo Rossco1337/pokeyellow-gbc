@@ -1,5 +1,5 @@
 _SSAnne9Text_61bf2::
-	text "In all my travels"
+	text "In all my travels,"
 	line "I've never seen"
 	cont "any #MON sleep"
 	cont "like this one!"
@@ -18,32 +18,6 @@ _SSAnne9Text_61c01::
 _SSAnne9Text_61c10::
 	text "#MON can CUT"
 	line "down small bushes."
-	done
-
-_SSAnne9Text_61c1f::
-	text "Have you gone to"
-	line "the SAFARI ZONE"
-	cont "in FUCHSIA CITY?"
-
-	para "It had many rare"
-	line "kinds of #MON!!"
-	done
-
-_SSAnne9Text_61c2e::
-	text "Me and my Daddy"
-	line "think the SAFARI"
-	cont "ZONE is awesome!"
-	done
-
-_SSAnne9Text_61c3d::
-	text "The CAPTAIN looked"
-	line "really sick and"
-	cont "pale!"
-	done
-
-_SSAnne9Text_61c4c::
-	text "I hear many people"
-	line "get seasick!"
 	done
 
 _SSAnne9BattleText1::
@@ -110,4 +84,30 @@ _SSAnne9EndBattleText4::
 _SSAnne9AfterBattleText4::
 	text "Oh, I adore your"
 	line "strong #MON!"
+	done
+
+_SSAnne9Text_61c1f::
+	text "Have you gone to"
+	line "the SAFARI ZONE"
+	cont "in FUCHSIA CITY?"
+
+	para "It had many rare"
+	line "kinds of #MON!!"
+	done
+
+_SSAnne9Text_61c2e::
+	text "Me and my Daddy"
+	line "think the SAFARI"
+	cont "ZONE is awesome!"
+	done
+
+_SSAnne9Text_61c3d::
+	text "The CAPTAIN looked"
+	line "really sick and"
+	cont "pale!"
+	done
+
+_SSAnne9Text_61c4c::
+	text "I hear many people"
+	line "get seasick!"
 	done

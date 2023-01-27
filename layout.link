@@ -28,8 +28,8 @@ ROM0
 	org $0060
 	"joypad"
 	; $0061
-	"High Home"
-	org $00be
+	;"High Home"
+	;org $00be
 	"ColorizationHome"
 	org $100
 	"Header"
@@ -106,7 +106,7 @@ ROMX $11
 	"Maps 5"
 	"Pokédex Rating"
 	"Maps 6"
-	"Hidden Objects Core"
+	"Dungeon Warps"
 ROMX $12
 	"Maps 7"
 	"Screen Effects"
@@ -191,11 +191,16 @@ ROMX $26
 ROMX $27
 	"Text 8"
 ROMX $28
-	"Text 9"
+	"Pikachu PCM"
+	"Tilesets 4"
+	"Try Pikachu Movement"
+	"Pikachu Graphics 2"
+	"Credits"
+	"Maps 22"
+	"Hidden Objects Core"
 ROMX $29
-	"Text 10"
-ROMX $2A
-	"Text 11"
+	"Overworld Pikachu"
+	"NPC Sprites 3"
 ROMX $2B
 	"Pokédex Text"
 ROMX $2C
@@ -215,6 +220,37 @@ ROMX $36
 	"bank36"
 ROMX $37
 	"bank37"
+ROMX $38
+	"Pikachu Cries 1"
+ROMX $39
+	"Pikachu Cries 2"
+ROMX $3A
+	"Pikachu Cries 3"
+ROMX $3B
+	"Pikachu Cries 4"
+ROMX $3C
+	"Pikachu Cries 5"
+ROMX $3D
+	"Pikachu Cries 6"
+ROMX $3E
+	"Pikachu Cries 7"
+ROMX $3F
+	"Pikachu Cries 8"
+ROMX $40
+	"Pikachu Cries 9"
+ROMX $41
+	"Pikachu Cries 10"
+ROMX $42
+	"Pikachu Cries 11"
+ROMX $43
+	"Pikachu Cries 12"
+ROMX $44
+	"Pikachu Cries 13"
+ROMX $45
+	"Pikachu Graphics 1"
+ROMX $46
+	"Surfing Minigame"
+
 WRAM0
 	"Audio RAM"
 	org $c100
@@ -228,7 +264,7 @@ WRAM0
 	"Current Box Data"
 	org $df00
 	"Stack"
-VRAM
+VRAM $0
 	"VRAM"
 SRAM $0
 	"Sprite Buffers"

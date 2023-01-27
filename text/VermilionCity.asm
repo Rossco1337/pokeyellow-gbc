@@ -71,7 +71,7 @@ _VermilionCityText5::
 	line "Gogogoh!@"
 	text_end
 
-_VermilionCityText14::
+_VermilionCityText15::
 	text_start
 	para "A MACHOP is"
 	line "stomping the land"
@@ -87,13 +87,55 @@ _VermilionCityText6::
 	line "once a year."
 	done
 
-_VermilionCityText7::
+_OfficerJennyText1::
+	text "I just caught a"
+	line "SQUIRTLE that was"
+	cont "always getting"
+	cont "into mischief."
+
+	para "I think it needs a"
+	line "good trainer to"
+	cont "set it straight."
+	done
+
+_OfficerJennyText2::
+	text "You have the"
+	line "THUNDERBADGE!?"
+
+	para "You must be a"
+	line "good trainer!"
+
+	para "I just caught a"
+	line "SQUIRTLE that was"
+	cont "always getting"
+	cont "into mischief."
+
+	para "Would you take"
+	line "good care of it?"
+	done
+
+_OfficerJennyText3::
+	text "OK! Please treat"
+	line "SQUIRTLE right!@"
+	text_end
+
+_OfficerJennyText4::
+	text "Oh... What am I"
+	line "to do now?"
+	done
+
+_OfficerJennyText5::
+	text "How is SQUIRTLE"
+	line "doing?"
+	done
+
+_VermilionCityText8::
 	text "VERMILION CITY"
 	line "The Port of"
 	cont "Exquisite Sunsets"
 	done
 
-_VermilionCityText8::
+_VermilionCityText9::
 	text "NOTICE!"
 
 	para "ROUTE 12 may be"
@@ -107,13 +149,13 @@ _VermilionCityText8::
 	para "VERMILION POLICE"
 	done
 
-_VermilionCityText11::
+_VermilionCityText12::
 	text "#MON FAN CLUB"
 	line "All #MON fans"
 	cont "welcome!"
 	done
 
-_VermilionCityText12::
+_VermilionCityText13::
 	text "VERMILION CITY"
 	line "#MON GYM"
 	cont "LEADER: LT.SURGE"
@@ -122,6 +164,6 @@ _VermilionCityText12::
 	line "American!"
 	done
 
-_VermilionCityText13::
+_VermilionCityText14::
 	text "VERMILION HARBOR"
 	done

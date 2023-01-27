@@ -145,8 +145,6 @@ TM11NoRoomText:
 
 ReceivedCascadeBadgeText:
 	text_far _ReceivedCascadeBadgeText
-	sound_get_key_item ; actually plays the second channel of SFX_BALL_POOF due to the wrong music bank being loaded
-	text_promptbutton
 	text_end
 
 CeruleanGymTrainerText1:

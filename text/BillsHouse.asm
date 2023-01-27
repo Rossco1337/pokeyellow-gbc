@@ -1,3 +1,8 @@
+_BillsHouseDontLeaveText::
+	text "Whoa, don't go"
+	line "anywhere, wait!"
+	done
+
 _BillsHouseText_1e865::
 	text "Hiya! I'm a"
 	line "#MON..."

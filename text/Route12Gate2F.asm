@@ -5,7 +5,7 @@ _TM39PreReceiveText::
 
 	para "You can have this"
 	line "TM. I don't need"
-	cont "it any more..."
+	cont "it anymore..."
 	prompt
 
 _ReceivedTM39Text::

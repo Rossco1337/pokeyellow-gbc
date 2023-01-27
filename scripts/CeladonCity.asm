@@ -1,5 +1,14 @@
 CeladonCity_Script:
 	call EnableAutoTextBoxDrawing
+	ld hl, CeladonCity_ScriptPointers
+	ld a, [wCeladonCityCurScript]
+	call CallFunctionInTable
+	ret
+
+CeladonCity_ScriptPointers:
+	dw CeladonCityScript1
+
+CeladonCityScript1:
 	ResetEvents EVENT_1B8, EVENT_1BF
 	ResetEvent EVENT_67F
 	ret
@@ -100,8 +109,9 @@ CeladonCityText9:
 	text_end
 
 CeladonCityText10:
-	text_far _CeladonCityText10
-	text_end
+	text_asm
+	farcall Func_f1ac6
+	jp TextScriptEnd
 
 CeladonCityText11:
 	text_far _CeladonCityText11

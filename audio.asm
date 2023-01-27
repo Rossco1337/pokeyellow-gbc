@@ -508,3 +508,6 @@ SECTION "Cries", ROMX
 INCLUDE "crysaudio/cry_headers.asm"
 
 INCLUDE "crysaudio/cries.asm"
+
+; Pikachu cries are in different banks
+INCLUDE "audio/pikachu_cries.asm"

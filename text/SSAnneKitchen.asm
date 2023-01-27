@@ -47,7 +47,7 @@ _SSAnne6Text_61807::
 	prompt
 
 _SSAnne6Text_6180c::
-	text "Salmon du Salad!"
+	text "Salade de Salmon!"
 
 	para "Les guests may"
 	line "gripe it's fish"

@@ -1,5 +1,6 @@
 CeladonMartRoof_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ret
 
 CeladonMartRoofScript_GetDrinksInBag:
 ; construct a list of all drinks in the player's bag
@@ -125,13 +126,16 @@ CeladonMartRoofScript_GiveDrinkToGirl:
 	ret
 .bagFull
 	ld hl, CeladonMartRoofText_48526
-	jp PrintText
+	call PrintText
+	ret
 .alreadyGaveDrink
 	ld hl, CeladonMartRoofText_4852c
-	jp PrintText
+	call PrintText
+	ret
 
 RemoveItemByIDBank12:
-	farjp RemoveItemByID
+	farcall RemoveItemByID
+	ret
 
 CeladonMartRoofText_484ee:
 	text_far _CeladonMartRoofText_484ee

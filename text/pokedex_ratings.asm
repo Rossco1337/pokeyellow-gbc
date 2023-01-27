@@ -56,8 +56,8 @@ _DexRatingText_Own50To59::
 	done
 
 _DexRatingText_Own60To69::
-	text "Ho! This is geting"
-	line "even better!"
+	text "Oh! This is get-"
+	line "ting even better!"
 	done
 
 _DexRatingText_Own70To79::
@@ -112,6 +112,6 @@ _DexRatingText_Own140To149::
 
 _DexRatingText_Own150To151::
 	text "Your #DEX is"
-	line "entirely complete!"
+	line "fully complete!"
 	cont "Congratulations!"
 	done

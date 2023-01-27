@@ -183,8 +183,3 @@ _CeladonGameCornerText_48f09::
 	line "the poster!?"
 	cont "Let's push it!@"
 	text_end
-
-_CeladonGameCornerText_48f19::
-	text "Oops! Forgot the"
-	line "COIN CASE!"
-	done

@@ -1,200 +1,216 @@
-_ItemUseText001::
-	text "<PLAYER> used@"
-	text_end
-
-_ItemUseText002::
-	text_ram wStringBuffer
-	text "!"
+_PokemonText::
+	text "#MON!"
 	done
 
-_GotOnBicycleText1::
-	text "<PLAYER> got on the@"
-	text_end
+_PokemartGreetingText::
+	text "Hi there!"
+	next "May I help you?"
+	done
 
-_GotOnBicycleText2::
-	text_ram wStringBuffer
-	text "!"
-	prompt
-
-_GotOffBicycleText1::
-	text "<PLAYER> got off@"
-	text_end
-
-_GotOffBicycleText2::
-	text "the @"
-	text_ram wStringBuffer
-	text "."
-	prompt
-
-_ThrewAwayItemText::
-	text "Threw away"
-	line "@"
+_PokemonFaintedText::
 	text_ram wcd6d
-	text "."
+	text_start
+	line "fainted!"
+	done
+
+_PlayerBlackedOutText::
+	text "<PLAYER> is out of"
+	line "useable #MON!"
+
+	para "<PLAYER> blacked"
+	line "out!"
 	prompt
 
-_IsItOKToTossItemText::
-	text "Is it OK to toss"
-	line "@"
+_RepelWoreOffText::
+	text "REPEL's effect"
+	line "wore off."
+	done
+
+_PokemartBuyingGreetingText::
+	text "Take your time."
+	done
+
+_PokemartTellBuyPriceText::
 	text_ram wStringBuffer
 	text "?"
+	line "That will be"
+	cont "¥@"
+	text_bcd hMoney, 3 | LEADING_ZEROES | LEFT_ALIGN
+	text ". OK?"
+	done
+
+_PokemartBoughtItemText::
+	text "Here you are!"
+	line "Thank you!"
 	prompt
 
-_TooImportantToTossText::
-	text "That's too impor-"
-	line "tant to toss!"
+_PokemartNotEnoughMoneyText::
+	text "You don't have"
+	line "enough money."
 	prompt
 
-_AlreadyKnowsText::
-	text_ram wcd6d
-	text " knows"
+_PokemartItemBagFullText::
+	text "You can't carry"
+	line "any more items."
+	prompt
+
+_PokemonSellingGreetingText::
+	text "What would you"
+	line "like to sell?"
+	done
+
+_PokemartTellSellPriceText::
+	text "I can pay you"
+	line "¥@"
+	text_bcd hMoney, 3 | LEADING_ZEROES | LEFT_ALIGN
+	text " for that."
+	done
+
+_PokemartItemBagEmptyText::
+	text "You don't have"
+	line "anything to sell."
+	prompt
+
+_PokemartUnsellableItemText::
+	text "I can't put a"
+	line "price on that."
+	prompt
+
+_PokemartThankYouText::
+	text "Thank you!"
+	done
+
+_PokemartAnythingElseText::
+	text "Is there anything"
+	line "else I can do?"
+	done
+
+_LearnedMove1Text::
+	text_ram wLearnMoveMonName
+	text " learned"
 	line "@"
 	text_ram wStringBuffer
-	text "!"
-	prompt
-
-_ConnectCableText::
-	text "Okay, connect the"
-	line "cable like so!"
-	prompt
-
-_TradedForText::
-	text "<PLAYER> traded"
-	line "@"
-	text_ram wInGameTradeGiveMonName
-	text " for"
-	cont "@"
-	text_ram wInGameTradeReceiveMonName
 	text "!@"
 	text_end
 
-_WannaTrade1Text::
-	text "I'm looking for"
-	line "@"
-	text_ram wInGameTradeGiveMonName
-	text "! Wanna"
-
-	para "trade one for"
-	line "@"
-	text_ram wInGameTradeReceiveMonName
-	text "? "
+_WhichMoveToForgetText::
+	text "Which move should"
+	next "be forgotten?"
 	done
 
-_NoTrade1Text::
-	text "Awww!"
-	line "Oh well..."
+_AbandonLearningText::
+	text "Abandon learning"
+	line "@"
+	text_ram wStringBuffer
+	text "?"
 	done
 
-_WrongMon1Text::
-	text "What? That's not"
-	line "@"
-	text_ram wInGameTradeGiveMonName
+_DidNotLearnText::
+	text_ram wLearnMoveMonName
+	text_start
+	line "did not learn"
+	cont "@"
+	text_ram wStringBuffer
+	text "!"
+	prompt
+
+_TryingToLearnText::
+	text_ram wLearnMoveMonName
+	text " is"
+	line "trying to learn"
+	cont "@"
+	text_ram wStringBuffer
 	text "!"
 
-	para "If you get one,"
-	line "come back here!"
-	done
-
-_Thanks1Text::
-	text "Hey thanks!"
-	done
-
-_AfterTrade1Text::
-	text "Isn't my old"
-	line "@"
-	text_ram wInGameTradeReceiveMonName
-	text " great?"
-	done
-
-_WannaTrade2Text::
-	text "Hello there! Do"
-	line "you want to trade"
-
-	para "your @"
-	text_ram wInGameTradeGiveMonName
+	para "But, @"
+	text_ram wLearnMoveMonName
 	text_start
-	line "for @"
-	text_ram wInGameTradeReceiveMonName
+	line "can't learn more"
+	cont "than 4 moves!"
+
+	para "Delete an older"
+	line "move to make room"
+	cont "for @"
+	text_ram wStringBuffer
 	text "?"
 	done
 
-_NoTrade2Text::
-	text "Well, if you"
-	line "don't want to..."
-	done
+_OneTwoAndText::
+	text "1, 2 and...@"
+	text_end
 
-_WrongMon2Text::
-	text "Hmmm? This isn't"
+_PoofText::
+	text " Poof!@"
+	text_end
+
+_ForgotAndText::
+	text_start
+	para "@"
+	text_ram wLearnMoveMonName
+	text " forgot"
 	line "@"
-	text_ram wInGameTradeGiveMonName
-	text "."
-
-	para "Think of me when"
-	line "you get one."
-	done
-
-_Thanks2Text::
-	text "Thanks!"
-	done
-
-_AfterTrade2Text::
-	text "The @"
-	text_ram wInGameTradeGiveMonName
-	text " you"
-	line "traded to me"
-
-	para "went and evolved!"
-	done
-
-_WannaTrade3Text::
-	text "Hi! Do you have"
-	line "@"
-	text_ram wInGameTradeGiveMonName
-	text "?"
-
-	para "Want to trade it"
-	line "for @"
-	text_ram wInGameTradeReceiveMonName
-	text "?"
-	done
-
-_NoTrade3Text::
-	text "That's too bad."
-	done
-
-_WrongMon3Text::
-	text "...This is no"
-	line "@"
-	text_ram wInGameTradeGiveMonName
-	text "."
-
-	para "If you get one,"
-	line "trade it with me!"
-	done
-
-_Thanks3Text::
-	text "Thanks pal!"
-	done
-
-_AfterTrade3Text::
-	text "How is my old"
-	line "@"
-	text_ram wInGameTradeReceiveMonName
-	text "?"
-
-	para "My @"
-	text_ram wInGameTradeGiveMonName
-	text " is"
-	line "doing great!"
-	done
-
-_NothingToCutText::
-	text "There isn't"
-	line "anything to CUT!"
-	prompt
-
-_UsedCutText::
 	text_ram wcd6d
-	text " hacked"
-	line "away with CUT!"
+	text "!"
+
+	para "And..."
 	prompt
+
+_HMCantDeleteText::
+	text "HM techniques"
+	line "can't be deleted!"
+	prompt
+
+_PokemonCenterWelcomeText::
+	text "Welcome to our"
+	line "#MON CENTER!"
+
+	para "We heal your"
+	line "#MON back to"
+	cont "perfect health!"
+	prompt
+
+_ShallWeHealYourPokemonText::
+	text "Shall we heal your"
+	line "#MON?"
+	done
+
+_NeedYourPokemonText::
+	text "OK. We'll need"
+	line "your #MON."
+	done
+
+_PokemonFightingFitText::
+	text "Thank you!"
+	line "Your #MON are"
+	cont "fighting fit!"
+	prompt
+
+_PokemonCenterFarewellText::
+	text "We hope to see"
+	line "you again!"
+	done
+
+_LooksContentText::
+	text "It looks very"
+	line "content asleep."
+	done
+
+_CableClubNPCAreaReservedFor2FriendsLinkedByCableText::
+	text "This area is"
+	line "reserved for 2"
+	cont "friends who are"
+	cont "linked by cable."
+	done
+
+_CableClubNPCWelcomeText::
+	text "Welcome to the"
+	line "Cable Club!"
+	done
+
+_CableClubNPCPleaseApplyHereHaveToSaveText::
+	text "Please apply here."
+
+	para "Before opening"
+	line "the link, we have"
+	cont "to save the game."
+	done

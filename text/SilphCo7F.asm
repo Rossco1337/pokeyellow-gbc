@@ -79,7 +79,7 @@ _SilphCo7Text_51e4b::
 	done
 
 _SilphCo7BattleText1::
-	text "Oh ho! I smell a"
+	text "Aha! I smell a"
 	line "little rat!"
 	done
 
@@ -167,7 +167,7 @@ _SilphCo7Text_51ec3::
 	done
 
 _SilphCo7Text_51ec8::
-	text "Oh ho!"
+	text "Oh-oh!"
 	line "So, you are ready"
 	cont "for BOSS ROCKET!"
 	prompt

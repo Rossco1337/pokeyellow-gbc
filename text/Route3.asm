@@ -66,8 +66,8 @@ _Route3BattleText4::
 
 _Route3EndBattleText4::
 	text "If I"
-	line "had new #MON I"
-	cont "would've won!"
+	line "had new #MON,"
+	cont "I would've won!"
 	prompt
 
 _Route3AfterBattleText4::

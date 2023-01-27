@@ -13,7 +13,7 @@ _CinnabarIslandText1::
 _CinnabarIslandText2::
 	text "Scientists conduct"
 	line "experiments in"
-	cont "the burned out"
+	cont "the burned-out"
 	cont "building."
 	done
 

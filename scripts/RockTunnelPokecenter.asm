@@ -7,6 +7,7 @@ RockTunnelPokecenter_TextPointers:
 	dw RockTunnelPokecenterText2
 	dw RockTunnelPokecenterText3
 	dw RockTunnelTradeNurseText
+	dw RockTunnelPokecenterText5
 
 RockTunnelHealNurseText:
 	script_pokecenter_nurse
@@ -21,3 +22,8 @@ RockTunnelPokecenterText3:
 
 RockTunnelTradeNurseText:
 	script_cable_club_receptionist
+
+RockTunnelPokecenterText5:
+	text_asm
+	callfar PokecenterChanseyText
+	jp TextScriptEnd

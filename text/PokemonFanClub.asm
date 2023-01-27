@@ -1,13 +1,23 @@
 PikachuFanText::
 	text "Won't you admire"
-	line "my PIKACHU's"
+	line "my CLEFAIRY's"
 	cont "adorable tail?"
 	done
 
 PikachuFanBetterText::
-	text "Humph! My PIKACHU"
+	text "Humph! My CLEFAIRY"
 	line "is twice as cute"
 	cont "as that one!"
+	done
+
+PikachuFanPrintText::
+	text "Our CHAIRMAN's new"
+	line "hobby is taking"
+	cont "#MON photos."
+
+	para "He gave me a nice"
+	line "PRINT of my cute"
+	cont "CLEFAIRY."
 	done
 
 SeelFanText::
@@ -25,9 +35,15 @@ SeelFanBetterText::
 	line "more attractive!"
 	done
 
+SeelFanPrintText::
+	text "I'm going to hook"
+	line "up the cable to"
+	cont "get a photo PRINT"
+	cont "of my SEEL!"
+	done
+
 FanClubPikachuText::
-	text "PIKACHU: Chu!"
-	line "Pikachu!"
+	text "CLEFAIRY: Pippii!"
 	done
 
 FanClubSeelText::
@@ -38,8 +54,9 @@ FanClubMeetChairText::
 	text "I chair the"
 	line "#MON Fan Club!"
 
-	para "I have collected"
-	line "over 100 #MON!"
+	para "I have more than"
+	line "100 #MON. I"
+	cont "love them all!"
 
 	para "I'm very fussy"
 	line "when it comes to"
@@ -47,8 +64,8 @@ FanClubMeetChairText::
 
 	para "So..."
 
-	para "Did you come"
-	line "visit to hear"
+	para "Did you come to"
+	line "hear me brag"
 	cont "about my #MON?"
 	done
 
@@ -69,7 +86,7 @@ FanClubChairStoryText::
 	cont "love it!"
 
 	para "Hug it...when..."
-	cont "sleeping...warm"
+	line "sleeping...warm"
 	cont "and cuddly..."
 	cont "spectacular..."
 	cont "ravishing..."
@@ -126,19 +143,37 @@ FanClubBagFullText::
 	line "this!"
 	done
 
+FanClubChairPrintText1::
+	text "Hi there, <PLAYER>!"
+	line "Have you seen my"
+	cont "#MON photos?"
+
+	para "I have them framed"
+	line "up on that wall."
+
+	para "Ah, I know!"
+
+	para "Would you like me"
+	line "to take a photo"
+	cont "of your #MON?"
+	done
+
+FanClubChairPrintText2::
+	text "No? That's really"
+	line "disappointing."
+	done
+
+FanClubChairPrintText3::
+	text "OK, I'm done."
+	done
+
+FanClubChairPrintText4::
+	text "Maybe we won't"
+	line "PRINT this now."
+	done
+
 _FanClubText6::
-	text "Our Chairman is"
+	text "Our CHAIRMAN is"
 	line "very vocal about"
 	cont "#MON."
-	done
-
-_FanClubText7::
-	text "Let's all listen"
-	line "politely to other"
-	cont "trainers!"
-	done
-
-_FanClubText8::
-	text "If someone brags,"
-	line "brag right back!"
 	done

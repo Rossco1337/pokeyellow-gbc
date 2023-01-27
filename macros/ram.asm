@@ -114,6 +114,26 @@ MACRO map_connection_struct
 \1ConnectedMapViewPointer:: dw
 ENDM
 
+MACRO animated_object
+\1Index::          db
+\1FramesetID::     db
+\1AnimSeqID::      db
+\1TileID::         db
+\1XCoord::         db
+\1YCoord::         db
+\1XOffset::        db
+\1YOffset::        db
+\1Duration::       db
+\1DurationOffset:: db
+\1FrameIndex::     db
+\1FieldB::         db
+\1FieldC::         db
+\1FieldD::         db
+\1FieldE::         db
+\1FieldF::         db
+\1End::
+ENDM
+
 MACRO channel_struct
 \1MusicID::           dw
 \1MusicBank::         db

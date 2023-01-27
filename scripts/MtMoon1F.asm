@@ -49,42 +49,37 @@ MtMoon1TrainerHeader6:
 MtMoon1Text1:
 	text_asm
 	ld hl, MtMoon1TrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text2:
 	text_asm
 	ld hl, MtMoon1TrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text3:
 	text_asm
 	ld hl, MtMoon1TrainerHeader2
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text4:
 	text_asm
 	ld hl, MtMoon1TrainerHeader3
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text5:
 	text_asm
 	ld hl, MtMoon1TrainerHeader4
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text6:
 	text_asm
 	ld hl, MtMoon1TrainerHeader5
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr MtMoon1TalkToTrainer
 
 MtMoon1Text7:
 	text_asm
 	ld hl, MtMoon1TrainerHeader6
+MtMoon1TalkToTrainer:
 	call TalkToTrainer
 	jp TextScriptEnd
 

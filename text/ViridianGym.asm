@@ -39,7 +39,7 @@ _GiovanniPostBattleAdviceText::
 	cont "of #MON!"
 
 	para "Let us meet again"
-	line "some day!"
+	line "someday!"
 	cont "Farewell!@"
 	text_end
 
@@ -209,7 +209,7 @@ _ViridianGymEndBattleText8::
 	prompt
 
 _ViridianGymAfterBattleText8::
-	text "You can go onto"
+	text "You can go on to"
 	line "#MON LEAGUE"
 	cont "only by defeating"
 	cont "our GYM LEADER!"

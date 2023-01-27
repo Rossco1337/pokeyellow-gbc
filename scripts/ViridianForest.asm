@@ -17,16 +17,18 @@ ViridianForest_TextPointers:
 	dw ViridianForestText2
 	dw ViridianForestText3
 	dw ViridianForestText4
+	dw ViridianForestText5
+	dw ViridianForestText6
 	dw PickUpItemText
 	dw PickUpItemText
 	dw PickUpItemText
-	dw ViridianForestText8
-	dw ViridianForestText9
 	dw ViridianForestText10
 	dw ViridianForestText11
 	dw ViridianForestText12
 	dw ViridianForestText13
 	dw ViridianForestText14
+	dw ViridianForestText15
+	dw ViridianForestText16
 
 ViridianForestTrainerHeaders:
 	def_trainers 2
@@ -36,6 +38,10 @@ ViridianForestTrainerHeader1:
 	trainer EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_1, 4, ViridianForestBattleText2, ViridianForestEndBattleText2, ViridianForestAfterBattleText2
 ViridianForestTrainerHeader2:
 	trainer EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_2, 1, ViridianForestBattleText3, ViridianForestEndBattleText3, ViridianForestAfterBattleText3
+ViridianForestTrainerHeader3:
+	trainer EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_3, 0, ViridianForestBattleText4, ViridianForestEndBattleText4, ViridianForestAfterBattleText4
+ViridianForestTrainerHeader4:
+	trainer EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_4, 4, ViridianForestBattleText5, ViridianForestEndBattleText5, ViridianForestAfterBattleText5
 	db -1 ; end
 
 ViridianForestText1:
@@ -45,18 +51,27 @@ ViridianForestText1:
 ViridianForestText2:
 	text_asm
 	ld hl, ViridianForestTrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr ViridianForestTalkToTrainer
 
 ViridianForestText3:
 	text_asm
 	ld hl, ViridianForestTrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
+	jr ViridianForestTalkToTrainer
 
 ViridianForestText4:
 	text_asm
 	ld hl, ViridianForestTrainerHeader2
+	jr ViridianForestTalkToTrainer
+
+ViridianForestText5:
+	text_asm
+	ld hl, ViridianForestTrainerHeader3
+	jr ViridianForestTalkToTrainer
+
+ViridianForestText6:
+	text_asm
+	ld hl, ViridianForestTrainerHeader4
+ViridianForestTalkToTrainer:
 	call TalkToTrainer
 	jp TextScriptEnd
 
@@ -96,30 +111,63 @@ ViridianForestAfterBattleText3:
 	text_far _ViridianFrstAfterBattleText3
 	text_end
 
-ViridianForestText8:
-	text_far _ViridianForestText8
+ViridianForestBattleText4:
+	text_far _ViridianForestBattleTextPikaGirl
 	text_end
 
-ViridianForestText9:
-	text_far _ViridianForestText9
+ViridianForestEndBattleText4:
+	text_far _ViridianForestEndBattleTextPikaGirl
+	text_end
+
+ViridianForestAfterBattleText4:
+	text_far _ViridianForestAfterBattleTextPikaGirl
+	text_end
+
+ViridianForestBattleText5:
+	text_far _ViridianForestBattleTextSamurai
+	text_end
+
+ViridianForestEndBattleText5:
+	text_far _ViridianForestEndBattleTextSamurai
+	text_end
+
+ViridianForestAfterBattleText5:
+	text_far _ViridianForestAfterBattleTextSamurai
 	text_end
 
 ViridianForestText10:
-	text_far _ViridianForestText10
+	text_far _ViridianForestText8
 	text_end
 
 ViridianForestText11:
-	text_far _ViridianForestText11
-	text_end
+	text_asm
+	ld hl, Func_f2528
+	jp ViridianForestScript_6120d
 
 ViridianForestText12:
-	text_far _ViridianForestText12
-	text_end
+	text_asm
+	ld hl, Func_f2534
+	jp ViridianForestScript_6120d
 
 ViridianForestText13:
-	text_far _ViridianForestText13
-	text_end
+	text_asm
+	ld hl, Func_f2540
+	jp ViridianForestScript_6120d
 
 ViridianForestText14:
-	text_far _ViridianForestText14
-	text_end
+	text_asm
+	ld hl, Func_f254c
+	jp ViridianForestScript_6120d
+
+ViridianForestText15:
+	text_asm
+	ld hl, Func_f2558
+	jp ViridianForestScript_6120d
+
+ViridianForestText16:
+	text_asm
+	ld hl, Func_f2528
+ViridianForestScript_6120d:
+	ld b, BANK(Func_f2528)
+	call Bankswitch
+	jp TextScriptEnd

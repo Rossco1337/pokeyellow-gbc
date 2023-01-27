@@ -1,5 +1,6 @@
 CeladonMansionRoof_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ret
 
 CeladonMansionRoof_TextPointers:
 	dw CeladonMansion4Text1

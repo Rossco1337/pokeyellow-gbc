@@ -38,10 +38,9 @@ VermilionDock_Script:
 
 VermilionDock_1db9b:
 	SetEventForceReuseHL EVENT_SS_ANNE_LEFT
-	ld a, SFX_STOP_ALL_MUSIC
+	ld a, $ff
 	ld [wJoyIgnore], a
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	ld c, 0 ; BANK(Music_Surfing)
 	ld a, MUSIC_SURFING
 	call PlayMusic
@@ -63,6 +62,7 @@ VermilionDock_1db9b:
 	ldh [hAutoBGTransferEnabled], a
 	ld [wSSAnneSmokeDriftAmount], a
 	ldh [rOBP1], a
+	call UpdateGBCPal_OBP1
 	ld a, 88
 	ld [wSSAnneSmokeX], a
 	ld hl, wMapViewVRAMPointer
@@ -156,10 +156,10 @@ VermilionDock_EmitSmokePuff:
 
 VermilionDockOAMBlock:
 	; tile id, attribute
-	db $fc, $13
-	db $fd, $13
-	db $fe, $13
-	db $ff, $13
+	db $fc, $10
+	db $fd, $10
+	db $fe, $10
+	db $ff, $10
 
 VermilionDock_1dc7c:
 	ld h, d
@@ -181,13 +181,14 @@ VermilionDock_1dc7c:
 
 VermilionDock_EraseSSAnne:
 ; Fill the area the S.S. Anne occupies in BG map 0 with water tiles.
-; HAX: call another function to do this (also updates palettes).
-	CALL_INDIRECT EraseSSAnneWithColor
-
-; Padding to prevent data shifting
-rept 17
-	nop
-endr
+	ld hl, wVermilionDockTileMapBuffer
+	ld bc, wVermilionDockTileMapBufferEnd - wVermilionDockTileMapBuffer
+	ld a, $14 ; water tile
+	call FillMemory
+	hlbgcoord 0, 10
+	ld de, wVermilionDockTileMapBuffer
+	lb bc, BANK(wVermilionDockTileMapBuffer), 12
+	call CopyVideoData
 
 ; Replace the blocks of the lower half of the ship with water blocks. This
 ; leaves the upper half alone, but that doesn't matter because replacing any of

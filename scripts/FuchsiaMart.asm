@@ -1,5 +1,6 @@
 FuchsiaMart_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ret
 
 FuchsiaMart_TextPointers:
 	dw FuchsiaCashierText

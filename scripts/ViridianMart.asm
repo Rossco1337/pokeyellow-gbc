@@ -3,7 +3,8 @@ ViridianMart_Script:
 	call EnableAutoTextBoxDrawing
 	ld hl, ViridianMart_ScriptPointers
 	ld a, [wViridianMartCurScript]
-	jp CallFunctionInTable
+	call CallFunctionInTable
+	ret
 
 ViridianMartScript_1d47d:
 	CheckEvent EVENT_OAK_GOT_PARCEL
@@ -57,8 +58,19 @@ ViridianMartScript1:
 	SetEvent EVENT_GOT_OAKS_PARCEL
 	ld a, $2
 	ld [wViridianMartCurScript], a
-	; fallthrough
+	ret
+
 ViridianMartScript2:
+	CheckEventHL EVENT_02D
+	ret z
+	CheckAndSetEventReuseHL EVENT_02C
+	ret nz
+	ld a, HS_OLD_MAN
+	ld [wMissableObjectIndex], a
+	predef HideObject
+	ld a, HS_OLD_MAN_1
+	ld [wMissableObjectIndex], a
+	predef ShowObject
 	ret
 
 ViridianMart_TextPointers:

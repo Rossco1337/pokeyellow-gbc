@@ -16,6 +16,10 @@ _MtMoonPokecenterText3::
 	cont "news!"
 	done
 
+_MtMoonPokecenterText5::
+	text_start
+	done
+
 _MagikarpSalesmanText1::
 	text "MAN: Hello, there!"
 	line "Have I got a deal"
@@ -41,8 +45,4 @@ _MagikarpSalesmanNoMoneyText::
 _MagikarpSalesmanText2::
 	text "MAN: Well, I don't"
 	line "give refunds!"
-	done
-
-_MtMoonPokecenterText5::
-	text_start
 	done

@@ -68,9 +68,7 @@ ENDC
 	ld a, [wWalkBikeSurfState]
 	and a
 	jr z, .walking
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 .walking
 	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
@@ -140,23 +138,8 @@ CeruleanCityScript1:
 	call SaveEndBattleTextPointers
 	ld a, OPP_RIVAL1
 	ld [wCurOpponent], a
-
-	; select which team to use during the encounter
-	ld a, [wRivalStarter]
-	cp STARTER2
-	jr nz, .NotSquirtle
-	ld a, $7
-	jr .done
-.NotSquirtle
-	cp STARTER3
-	jr nz, .Charmander
-	ld a, $8
-	jr .done
-.Charmander
-	ld a, $9
-.done
+	ld a, 3
 	ld [wTrainerNo], a
-
 	xor a
 	ldh [hJoyHeld], a
 	call CeruleanCityScript_1955d
@@ -175,9 +158,7 @@ CeruleanCityScript2:
 	ld a, $1
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateStart
 	ld a, $1
 	ldh [hSpriteIndex], a

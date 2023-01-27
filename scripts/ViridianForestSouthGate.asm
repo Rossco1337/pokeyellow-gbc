@@ -1,5 +1,6 @@
 ViridianForestSouthGate_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ret
 
 ViridianForestSouthGate_TextPointers:
 	dw ViridianForestEntranceText1

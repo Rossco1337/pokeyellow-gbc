@@ -72,7 +72,7 @@ _Museum1FText_5c28e::
 	para "But, my colleagues"
 	line "just ignore me!"
 
-	para "So I have a favor"
+	para "So, I have a favor"
 	line "to ask!"
 
 	para "Take this to a"

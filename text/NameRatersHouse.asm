@@ -43,7 +43,7 @@ _NameRaterText_1dac7::
 	done
 
 _NameRaterText_1dacc::
-	text "Fine! Come any"
+	text "Fine! Come any-"
 	line "time you like!"
 	done
 

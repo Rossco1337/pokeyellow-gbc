@@ -24,9 +24,7 @@ SSAnne2Script0:
 	ld hl, CoordsData_61411
 	call ArePlayerCoordsInArray
 	ret nc
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
@@ -98,23 +96,8 @@ SSAnne2Script1:
 	call Delay3
 	ld a, OPP_RIVAL2
 	ld [wCurOpponent], a
-
-	; select which team to use during the encounter
-	ld a, [wRivalStarter]
-	cp STARTER2
-	jr nz, .NotSquirtle
 	ld a, $1
-	jr .done
-.NotSquirtle
-	cp STARTER3
-	jr nz, .Charmander
-	ld a, $2
-	jr .done
-.Charmander
-	ld a, $3
-.done
 	ld [wTrainerNo], a
-
 	call SSAnne2Script_61416
 	ld a, $2
 	ld [wSSAnne2FCurScript], a
@@ -144,9 +127,7 @@ SSAnne2Script2:
 	ld a, $2
 	ldh [hSpriteIndex], a
 	call MoveSprite
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateStart
 	ld a, $3
 	ld [wSSAnne2FCurScript], a

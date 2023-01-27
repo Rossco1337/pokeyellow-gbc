@@ -1,7 +1,7 @@
 _MomWakeUpText::
 	text "MOM: Right."
 	line "All boys leave"
-	cont "home some day."
+	cont "home someday."
 	cont "It said so on TV."
 
 	para "PROF.OAK, next"
@@ -10,9 +10,14 @@ _MomWakeUpText::
 	done
 
 _MomHealText1::
-	text "MOM: <PLAYER>!"
-	line "You should take a"
-	cont "quick rest."
+	text "MOM: <PLAYER>, if"
+	line "you drive your"
+	cont "#MON too hard,"
+	cont "they'll dislike"
+	cont "you."
+
+	para "You should take a"
+	line "rest."
 	prompt
 
 _MomHealText2::

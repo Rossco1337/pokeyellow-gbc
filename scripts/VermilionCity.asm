@@ -1,5 +1,7 @@
 VermilionCity_Script:
 	call EnableAutoTextBoxDrawing
+	ld hl, wd492
+	res 7, [hl]
 	ld hl, wCurrentMapScriptFlags
 	bit 6, [hl]
 	res 6, [hl]
@@ -11,11 +13,24 @@ VermilionCity_Script:
 	call nz, .setFirstLockTrashCanIndex
 	ld hl, VermilionCity_ScriptPointers
 	ld a, [wVermilionCityCurScript]
-	jp CallFunctionInTable
+	call CallFunctionInTable
+	call .vermilionCityScript_19869
+	ret
+
+.vermilionCityScript_19869
+	CheckEventHL EVENT_152
+	ret nz
+	CheckEventReuseHL EVENT_GOT_BIKE_VOUCHER
+	ret z
+	SetEventReuseHL EVENT_152
+	ret
 
 .setFirstLockTrashCanIndex
 	call Random
+	ldh a, [hRandomAdd]
+	ld b, a
 	ldh a, [hRandomSub]
+	adc b
 	and $e
 	ld [wFirstLockTrashCanIndex], a
 	ret
@@ -40,10 +55,10 @@ VermilionCity_ScriptPointers:
 VermilionCityScript0:
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	and a ; cp SPRITE_FACING_DOWN
-	ret nz
+	jr nz, .return
 	ld hl, SSAnneTicketCheckCoords
 	call ArePlayerCoordsInArray
-	ret nc
+	jr nc, .return
 	xor a
 	ldh [hJoyHeld], a
 	ld [wcf0d], a
@@ -65,6 +80,9 @@ VermilionCityScript0:
 	call StartSimulatingJoypadStates
 	ld a, $1
 	ld [wVermilionCityCurScript], a
+	ret
+
+.return
 	ret
 
 SSAnneTicketCheckCoords:
@@ -122,11 +140,12 @@ VermilionCity_TextPointers:
 	dw VermilionCityText6
 	dw VermilionCityText7
 	dw VermilionCityText8
+	dw VermilionCityText9
 	dw MartSignText
 	dw PokeCenterSignText
-	dw VermilionCityText11
 	dw VermilionCityText12
 	dw VermilionCityText13
+	dw VermilionCityText14
 
 VermilionCityText1:
 	text_far _VermilionCityText1
@@ -225,33 +244,43 @@ VermilionCityText5:
 	ld a, MACHOP
 	call PlayCry
 	call WaitForSoundToFinish
-	ld hl, VermilionCityText14
+	ld hl, VermilionCityText15
 	ret
 
-VermilionCityText14:
-	text_far _VermilionCityText14
+VermilionCityText15:
+	text_far _VermilionCityText15
 	text_end
 
 VermilionCityText6:
 	text_far _VermilionCityText6
 	text_end
 
-VermilionCityText7:
-	text_far _VermilionCityText7
-	text_end
-
 VermilionCityText8:
-	text_far _VermilionCityText8
-	text_end
+	text_asm
+	farcall Func_f1a8a
+	jp TextScriptEnd
 
-VermilionCityText11:
-	text_far _VermilionCityText11
-	text_end
+VermilionCityText9:
+	text_asm
+	farcall Func_f1a96
+	jp TextScriptEnd
 
 VermilionCityText12:
-	text_far _VermilionCityText12
-	text_end
+	text_asm
+	farcall Func_f1aa2
+	jp TextScriptEnd
 
 VermilionCityText13:
-	text_far _VermilionCityText13
-	text_end
+	text_asm
+	farcall Func_f1aae
+	jp TextScriptEnd
+
+VermilionCityText14:
+	text_asm
+	farcall Func_f1aba
+	jp TextScriptEnd
+
+VermilionCityText7:
+	text_asm
+	farcall Func_f1a0f
+	jp TextScriptEnd

@@ -10,7 +10,8 @@ LavenderPokecenter_Object:
 	def_object_events
 	object_event  3,  1, SPRITE_NURSE, STAY, DOWN, 1 ; person
 	object_event  5,  3, SPRITE_GENTLEMAN, STAY, NONE, 2 ; person
-	object_event  2,  6, SPRITE_LITTLE_GIRL, WALK, UP_DOWN, 3 ; person
+	object_event 10,  5, SPRITE_LITTLE_GIRL, WALK, LEFT_RIGHT, 3 ; person
 	object_event 11,  2, SPRITE_LINK_RECEPTIONIST, STAY, DOWN, 4 ; person
+	object_event  4,  1, SPRITE_CHANSEY, STAY, DOWN, 5 ; person
 
 	def_warps_to LAVENDER_POKECENTER

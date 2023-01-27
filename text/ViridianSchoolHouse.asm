@@ -4,6 +4,13 @@ _SchoolText1::
 	cont "my notes."
 	done
 
+_SchoolText3::
+	text "Sis says #MON"
+	line "will become tame"
+	cont "if you treat them"
+	cont "nicely."
+	done
+
 _SchoolText2::
 	text "Okay!"
 

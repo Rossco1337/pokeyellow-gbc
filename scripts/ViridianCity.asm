@@ -2,19 +2,34 @@ ViridianCity_Script:
 	call EnableAutoTextBoxDrawing
 	ld hl, ViridianCity_ScriptPointers
 	ld a, [wViridianCityCurScript]
-	jp CallFunctionInTable
+	call CallFunctionInTable
+	ret
 
 ViridianCity_ScriptPointers:
 	dw ViridianCityScript0
 	dw ViridianCityScript1
 	dw ViridianCityScript2
 	dw ViridianCityScript3
+	dw ViridianCityScript4
+	dw ViridianCityScript5
+	dw ViridianCityScript6
+	dw ViridianCityScript7
+	dw ViridianCityScript8
+	dw ViridianCityScript9
+	dw ViridianCityScript10
 
 ViridianCityScript0:
-	call ViridianCityScript_1900b
-	jp ViridianCityScript_1903d
+	call ViridianCityScript_1905b
+	call ViridianCityScript_190ab
+	ret
 
-ViridianCityScript_1900b:
+ViridianCityScript1:
+	call ViridianCityScript_19162
+ViridianCityScript2:
+	call ViridianCityScript_1905b
+	ret
+
+ViridianCityScript_1905b:
 	CheckEvent EVENT_VIRIDIAN_GYM_OPEN
 	ret nz
 	ld a, [wObtainedBadges]
@@ -29,19 +44,32 @@ ViridianCityScript_1900b:
 	ld a, [wXCoord]
 	cp 32
 	ret nz
-	ld a, $e
+	ld a, $f
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
+	call StartSimulatingJoypadStates
+	ld a, $1
+	ld [wSimulatedJoypadStatesIndex], a
+	ld a, D_DOWN
+	ld [wSimulatedJoypadStatesEnd], a
 	xor a
+	ld [wSpritePlayerStateData1FacingDirection], a
+	ld [wJoyIgnore], a
 	ldh [hJoyHeld], a
-	call ViridianCityScript_190cf
-	ld a, $3
+	ld a, $6
 	ld [wViridianCityCurScript], a
 	ret
 
-ViridianCityScript_1903d:
-	CheckEvent EVENT_GOT_POKEDEX
+ViridianCityScript6:
+	ld a, [wSimulatedJoypadStatesIndex]
+	and a
 	ret nz
+	call Delay3
+	ld a, $2
+	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityScript_190ab:
 	ld a, [wYCoord]
 	cp 9
 	ret nz
@@ -53,12 +81,31 @@ ViridianCityScript_1903d:
 	call DisplayTextID
 	xor a
 	ldh [hJoyHeld], a
-	call ViridianCityScript_190cf
-	ld a, $3
+	call ViridianCityScript_1914d
+	ld a, $5
 	ld [wViridianCityCurScript], a
 	ret
 
-ViridianCityScript1:
+ViridianCityScript3:
+	call ViridianCityScript_190ef
+	call ViridianCityScript_190db
+	ResetEvent EVENT_02F
+	ld a, $4
+	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityScript_190db:
+	xor a
+	ld [wListScrollOffset], a
+	ld a, BATTLE_TYPE_OLD_MAN
+	ld [wBattleType], a
+	ld a, 5
+	ld [wCurEnemyLVL], a
+	ld a, RATTATA
+	ld [wCurOpponent], a
+	ret
+
+ViridianCityScript_190ef:
 	ld a, [wSprite03StateData1YPixels]
 	ldh [hSpriteScreenYCoord], a
 	ld a, [wSprite03StateData1XPixels]
@@ -67,21 +114,26 @@ ViridianCityScript1:
 	ldh [hSpriteMapYCoord], a
 	ld a, [wSprite03StateData2MapX]
 	ldh [hSpriteMapXCoord], a
-	xor a
-	ld [wListScrollOffset], a
+	ret
 
-	; set up battle for Old Man
-	ld a, BATTLE_TYPE_OLD_MAN
+ViridianCityScript4:
+	call ViridianCityScript_1912a
+	call UpdateSprites
+	call Delay3
+	SetEvent EVENT_02E
+	xor a
+	ld [wJoyIgnore], a
+	ld a, $10
+	ldh [hSpriteIndexOrTextID], a
+	call DisplayTextID
+	xor a
 	ld [wBattleType], a
-	ld a, 5
-	ld [wCurEnemyLVL], a
-	ld a, WEEDLE
-	ld [wCurOpponent], a
+	ld [wJoyIgnore], a
 	ld a, $2
 	ld [wViridianCityCurScript], a
 	ret
 
-ViridianCityScript2:
+ViridianCityScript_1912a:
 	ldh a, [hSpriteScreenYCoord]
 	ld [wSprite03StateData1YPixels], a
 	ldh a, [hSpriteScreenXCoord]
@@ -90,30 +142,18 @@ ViridianCityScript2:
 	ld [wSprite03StateData2MapY], a
 	ldh a, [hSpriteMapXCoord]
 	ld [wSprite03StateData2MapX], a
-	call UpdateSprites
-	call Delay3
-	xor a
-	ld [wJoyIgnore], a
-	ld a, $f
-	ldh [hSpriteIndexOrTextID], a
-	call DisplayTextID
-	xor a
-	ld [wBattleType], a
-	ld [wJoyIgnore], a
-	ld a, $0
-	ld [wViridianCityCurScript], a
 	ret
 
-ViridianCityScript3:
+ViridianCityScript5:
 	ld a, [wSimulatedJoypadStatesIndex]
 	and a
 	ret nz
 	call Delay3
-	ld a, 0
+	ld a, $0
 	ld [wViridianCityCurScript], a
 	ret
 
-ViridianCityScript_190cf:
+ViridianCityScript_1914d:
 	call StartSimulatingJoypadStates
 	ld a, $1
 	ld [wSimulatedJoypadStatesIndex], a
@@ -124,204 +164,200 @@ ViridianCityScript_190cf:
 	ld [wJoyIgnore], a
 	ret
 
+ViridianCityScript_19162:
+	CheckEvent EVENT_02D
+	ret nz
+	ld a, [wYCoord]
+	cp 9
+	ret nz
+	ld a, [wXCoord]
+	cp 19
+	ret nz
+	ld a, $8
+	ldh [hSpriteIndexOrTextID], a
+	ld a, SPRITE_FACING_RIGHT
+	ldh [hSpriteFacingDirection], a
+	call SetSpriteFacingDirectionAndDelay
+	ld a, $8
+	ld [wSpritePlayerStateData1FacingDirection], a
+	ld a, $8
+	ldh [hSpriteIndexOrTextID], a
+	call DisplayTextID
+	ld a, D_UP | D_DOWN | D_LEFT | D_RIGHT | START | SELECT
+	ld [wJoyIgnore], a
+	ret
+
+ViridianCityScript7:
+	call ViridianCityScript_190ef
+	call ViridianCityScript_190db
+	SetEvent EVENT_02F
+	ld a, D_UP | D_DOWN | D_LEFT | D_RIGHT | START | SELECT
+	ld [wJoyIgnore], a
+	ld a, $8
+	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityScript8:
+	call ViridianCityScript_1912a
+	call UpdateSprites
+	call Delay3
+	SetEvent EVENT_02D
+	ld a, D_UP | D_DOWN | D_LEFT | D_RIGHT | START | SELECT
+	ld [wJoyIgnore], a
+	ld a, $8
+	ldh [hSpriteIndexOrTextID], a
+	call DisplayTextID
+	xor a
+	ld [wBattleType], a
+	dec a
+	ld [wJoyIgnore], a
+	ld a, $9
+	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityScript9:
+	ld de, ViridianCityOldManMovementData2
+	ld a, [wXCoord]
+	cp 19
+	jr z, .asm_191e4
+	callfar Func_f1a01
+	ld de, ViridianCityOldManMovementData1
+.asm_191e4
+	ld a, $8
+	ldh [hSpriteIndexOrTextID], a
+	call MoveSprite
+	ld a, $a
+	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityOldManMovementData1:
+	db NPC_MOVEMENT_RIGHT
+ViridianCityOldManMovementData2:
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
+	db $ff
+
+ViridianCityScript10:
+	ld a, [wd730]
+	bit 0, a
+	ret nz
+	ld a, $3
+	ld [wMissableObjectIndex], a
+	predef HideObject
+	xor a
+	ld [wJoyIgnore], a
+	ld a, $2
+	ld [wViridianCityCurScript], a
+	ret
+
 ViridianCity_TextPointers:
-	dw ViridianCityText1
-	dw ViridianCityText2
-	dw ViridianCityText3
-	dw ViridianCityText4
-	dw ViridianCityText5
-	dw ViridianCityText6
-	dw ViridianCityText7
-	dw ViridianCityText8
-	dw ViridianCityText9
-	dw ViridianCityText10
+	dw ViridianCityText_0
+	dw ViridianCityText_1
+	dw ViridianCityText_2
+	dw ViridianCityText_3
+	dw ViridianCityText_4
+	dw ViridianCityText_5
+	dw ViridianCityText_6
+	dw ViridianCityText_7
+	dw ViridianCityText_8
+	dw ViridianCityText_9
+	dw ViridianCityText_10
 	dw MartSignText
 	dw PokeCenterSignText
-	dw ViridianCityText13
-	dw ViridianCityText14
-	dw ViridianCityText15
+	dw ViridianCityText_11
+	dw ViridianCityText_12
+	dw ViridianCityText_13
 
-ViridianCityText1:
-	text_far _ViridianCityText1
-	text_end
-
-ViridianCityText2:
+ViridianCityText_0:
 	text_asm
-	ld a, [wObtainedBadges]
-	cp ~(1 << BIT_EARTHBADGE)
-	ld hl, ViridianCityText_19127
-	jr z, .done
-	CheckEvent EVENT_BEAT_VIRIDIAN_GYM_GIOVANNI
-	jr nz, .done
-	ld hl, ViridianCityText_19122
-.done
-	call PrintText
+	farcall Func_f18bb
 	jp TextScriptEnd
 
-ViridianCityText_19122:
-	text_far _ViridianCityText_19122
-	text_end
-
-ViridianCityText_19127:
-	text_far _ViridianCityText_19127
-	text_end
-
-ViridianCityText3:
+ViridianCityText_1:
 	text_asm
-	ld hl, ViridianCityText_1914d
-	call PrintText
-	call YesNoChoice
-	ld a, [wCurrentMenuItem]
-	and a
-	jr nz, .no
-	ld hl, ViridianCityText_19157
-	call PrintText
-	jr .done
-.no
-	ld hl, ViridianCityText_19152
-	call PrintText
-.done
+	farcall Func_f18c7
 	jp TextScriptEnd
 
-ViridianCityText_1914d:
-	text_far _ViridianCityText_1914d
-	text_end
-
-ViridianCityText_19152:
-	text_far _ViridianCityText_19152
-	text_end
-
-ViridianCityText_19157:
-	text_far _ViridianCityText_19157
-	text_end
-
-ViridianCityText4:
+ViridianCityText_2:
 	text_asm
-	CheckEvent EVENT_GOT_POKEDEX
-	jr nz, .gotPokedex
-	ld hl, ViridianCityText_19175
-	call PrintText
-	jr .done
-.gotPokedex
-	ld hl, ViridianCityText_1917a
-	call PrintText
-.done
+	farcall Func_f18e9
 	jp TextScriptEnd
 
-ViridianCityText_19175:
-	text_far _ViridianCityText_19175
-	text_end
-
-ViridianCityText_1917a:
-	text_far _ViridianCityText_1917a
-	text_end
-
-ViridianCityText5:
+ViridianCityText_3:
 	text_asm
-	ld hl, ViridianCityText_19191
-	call PrintText
-	call ViridianCityScript_190cf
-	ld a, $3
-	ld [wViridianCityCurScript], a
+	farcall Func_f1911
 	jp TextScriptEnd
 
-ViridianCityText_19191:
-	text_far _ViridianCityText_19191
-	text_end
-
-ViridianCityText6:
+ViridianCityText_4:
 	text_asm
-	CheckEvent EVENT_GOT_TM42
-	jr nz, .got_item
-	ld hl, ViridianCityText_191ca
-	call PrintText
-	lb bc, TM_DREAM_EATER, 1
-	call GiveItem
-	jr nc, .bag_full
-	ld hl, ReceivedTM42Text
-	call PrintText
-	SetEvent EVENT_GOT_TM42
-	jr .done
-.bag_full
-	ld hl, TM42NoRoomText
-	call PrintText
-	jr .done
-.got_item
-	ld hl, TM42Explanation
-	call PrintText
-.done
+	farcall Func_f192c
 	jp TextScriptEnd
 
-ViridianCityText_191ca:
-	text_far _ViridianCityText_191ca
-	text_end
-
-ReceivedTM42Text:
-	text_far _ReceivedTM42Text
-	sound_get_item_2
-	text_end
-
-TM42Explanation:
-	text_far _TM42Explanation
-	text_end
-
-TM42NoRoomText:
-	text_far _TM42NoRoomText
-	text_end
-
-ViridianCityText7:
+ViridianCityText_5:
 	text_asm
-	ld hl, ViridianCityText_1920a
-	call PrintText
-	ld c, 2
-	call DelayFrames
-	call YesNoChoice
-	ld a, [wCurrentMenuItem]
-	and a
-	jr z, .refused
-	ld hl, ViridianCityText_1920f
-	call PrintText
-	ld a, $1
-	ld [wViridianCityCurScript], a
-	jr .done
-.refused
-	ld hl, ViridianCityText_19214
-	call PrintText
-.done
+	farcall Func_f194a
 	jp TextScriptEnd
 
-ViridianCityText_1920a:
-	text_far _ViridianCityText_1920a
-	text_end
+ViridianCityText_6:
+	text_asm
+	farcall Func_f198e
+	jp TextScriptEnd
 
-ViridianCityText_1920f:
-	text_far _ViridianCityText_1920f
-	text_end
-
-ViridianCityText_19214:
-	text_far _ViridianCityText_19214
-	text_end
-
-ViridianCityText15:
+ViridianCityText_13:
 	text_far _ViridianCityText_19219
 	text_end
 
-ViridianCityText8:
-	text_far _ViridianCityText8
+ViridianCityText_7:
+	text_asm
+	CheckEvent EVENT_02D
+	jr nz, .asm_192a6
+	ld hl, ViridianCityText_192af
+	call PrintText
+	ld c, 2
+	call DelayFrames
+	ld a, $7
+	ld [wViridianCityCurScript], a
+	jr .asm_192ac
+
+.asm_192a6
+	ld hl, ViridianCityText_192b4
+	call PrintText
+.asm_192ac
+	jp TextScriptEnd
+
+ViridianCityText_192af:
+	text_far _ViridianCityText_1920a
 	text_end
 
-ViridianCityText9:
-	text_far _ViridianCityText9
+ViridianCityText_192b4:
+	text_far _OldManTextAfterBattle
 	text_end
 
-ViridianCityText10:
-	text_far _ViridianCityText10
-	text_end
+ViridianCityText_8:
+	text_asm
+	farcall Func_f19c5
+	jp TextScriptEnd
 
-ViridianCityText13:
-	text_far _ViridianCityText13
-	text_end
+ViridianCityText_9:
+	text_asm
+	farcall Func_f19d1
+	jp TextScriptEnd
 
-ViridianCityText14:
-	text_far _ViridianCityText14
-	text_end
+ViridianCityText_10:
+	text_asm
+	farcall Func_f19dd
+	jp TextScriptEnd
+
+ViridianCityText_11:
+	text_asm
+	farcall Func_f19e9
+	jp TextScriptEnd
+
+ViridianCityText_12:
+	text_asm
+	farcall Func_f19f5
+	jp TextScriptEnd

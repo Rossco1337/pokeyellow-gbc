@@ -21,11 +21,13 @@ ViridianMartParcelQuestText::
 	text_end
 
 _ViridianMartText2::
-	text "This shop sells"
-	line "many ANTIDOTEs."
+	text "This shop sells a"
+	line "lot of PARLYZ"
+	cont "HEALs."
 	done
 
 _ViridianMartText3::
-	text "No! POTIONs are"
-	line "all sold out."
+	text "The shop finally"
+	line "has some POTIONs"
+	cont "in stock."
 	done

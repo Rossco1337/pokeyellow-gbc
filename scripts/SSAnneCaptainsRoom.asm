@@ -3,7 +3,7 @@ SSAnneCaptainsRoom_Script:
 	jp EnableAutoTextBoxDrawing
 
 SSAnne7Script_6189b:
-	CheckEvent EVENT_RUBBED_CAPTAINS_BACK
+	CheckEvent EVENT_GOT_HM01
 	ret nz
 	ld hl, wd72d
 	set 5, [hl]
@@ -28,12 +28,12 @@ SSAnne7Text1:
 	ld hl, ReceivedHM01Text
 	call PrintText
 	SetEvent EVENT_GOT_HM01
+	ld hl, wd72d
+	res 5, [hl]
 	jr .done
 .bag_full
 	ld hl, HM01NoRoomText
 	call PrintText
-	ld hl, wd72d
-	set 5, [hl]
 	jr .done
 .got_item
 	ld hl, SSAnne7Text_61932
@@ -48,9 +48,7 @@ SSAnne7RubText:
 ;	cp BANK("Audio Engine 3")
 ;	ld [wAudioSavedROMBank], a
 ;	jr nz, .asm_61908
-;	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-;	call PlaySound
+;	call StopAllMusic
 ;	ld a, 0 ; BANK(Music_PkmnHealed)
 ;	ld [wAudioROMBank], a
 ;.asm_61908

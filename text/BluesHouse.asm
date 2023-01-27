@@ -30,10 +30,10 @@ _DaisyUseMapText::
 	done
 
 _BluesHouseDaisyWalkingText::
-	text "#MON are living"
-	line "things! If they"
-	cont "get tired, give"
-	cont "them a rest!"
+	text "Spending time"
+	line "with your #MON"
+	cont "makes them more"
+	cont "friendly to you."
 	done
 
 _BluesHouseTownMapText::

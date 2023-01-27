@@ -1639,57 +1639,6 @@ AdvancePlayerSprite::
 .done
 	ret
 
-; the following four functions are used to move the pointer to the upper left
-; corner of the tile block map in the direction of motion
-
-MoveTileBlockMapPointerEast::
-	ld a, [de]
-	add $01
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	inc a
-	ld [de], a
-	ret
-
-MoveTileBlockMapPointerWest::
-	ld a, [de]
-	sub $01
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	dec a
-	ld [de], a
-	ret
-
-MoveTileBlockMapPointerSouth::
-	add MAP_BORDER * 2
-	ld b, a
-	ld a, [de]
-	add b
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	inc a
-	ld [de], a
-	ret
-
-MoveTileBlockMapPointerNorth::
-	add MAP_BORDER * 2
-	ld b, a
-	ld a, [de]
-	sub b
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	dec a
-	ld [de], a
-	ret
-
 ; the following 6 functions are used to tell the V-blank handler to redraw
 ; the portion of the map that was newly exposed due to the player's movement
 

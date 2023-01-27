@@ -134,8 +134,7 @@ _SaffronGymEndBattleText2::
 
 _SaffronGymAfterBattleText2::
 	text "Psychic #MON"
-	line "fear only ghosts"
-	cont "and bugs!"
+	line "fear only bugs!"
 	done
 
 _SaffronGymBattleText3::

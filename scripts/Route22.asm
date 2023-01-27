@@ -22,16 +22,17 @@ Route22Script7:
 	ret
 
 Route22Script_50ed6:
+	ld a, OPP_RIVAL1
+	ld [wCurOpponent], a
+	ld a, $2
+	ld [wTrainerNo], a
+	ret
+
+Route22Script_50ee1:
+	ld a, OPP_RIVAL2
+	ld [wCurOpponent], a
 	ld a, [wRivalStarter]
-	ld b, a
-.asm_50eda
-	ld a, [hli]
-	cp b
-	jr z, .asm_50ee1
-	inc hl
-	jr .asm_50eda
-.asm_50ee1
-	ld a, [hl]
+	add 7
 	ld [wTrainerNo], a
 	ret
 
@@ -88,9 +89,7 @@ Route22Script0:
 	ld a, [wWalkBikeSurfState]
 	and a
 	jr z, .asm_50f4e
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 .asm_50f4e
 	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
@@ -131,24 +130,29 @@ Route22Script1:
 	ld hl, Route22RivalDefeatedText1
 	ld de, Route22Text_511bc
 	call SaveEndBattleTextPointers
-	ld a, OPP_RIVAL1
-	ld [wCurOpponent], a
-	ld hl, StarterMons_50faf
 	call Route22Script_50ed6
 	ld a, $2
 	ld [wRoute22CurScript], a
 	ret
 
-StarterMons_50faf:
-; starter the rival picked, rival trainer number
-	db STARTER2, 4
-	db STARTER3, 5
-	db STARTER1, 6
+Route22RivalDefeatedText1:
+	text_far _Route22RivalDefeatedText1
+	text_end
+
+Route22Text_511bc:
+	text_far _Route22Text_511bc
+	text_end
 
 Route22Script2:
 	ld a, [wIsInBattle]
 	cp $ff
 	jp z, Route22Script_50ece
+	ld a, [wRivalStarter]
+	cp RIVAL_STARTER_FLAREON
+	jr nz, .keep_rival_starter
+	ld a, RIVAL_STARTER_JOLTEON
+	ld [wRivalStarter], a
+.keep_rival_starter
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	and a ; cp SPRITE_FACING_DOWN
 	jr nz, .notDown
@@ -167,9 +171,7 @@ Route22Script2:
 	ld a, $1
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateStart
 	ld a, [wcf0d]
 	cp $1
@@ -241,13 +243,9 @@ Route22Script_5104e:
 	ld a, [wWalkBikeSurfState]
 	and a
 	jr z, .skipYVisibilityTesta
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 .skipYVisibilityTesta
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateTempo
 	ld a, $2
 	ldh [hSpriteIndex], a
@@ -287,18 +285,18 @@ Route22Script4:
 	ld hl, Route22RivalDefeatedText2
 	ld de, Route22Text_511d0
 	call SaveEndBattleTextPointers
-	ld a, OPP_RIVAL2
-	ld [wCurOpponent], a
-	ld hl, StarterMons_510d9
-	call Route22Script_50ed6
+	call Route22Script_50ee1
 	ld a, $5
 	ld [wRoute22CurScript], a
 	ret
 
-StarterMons_510d9:
-	db STARTER2, 10
-	db STARTER3, 11
-	db STARTER1, 12
+Route22RivalDefeatedText2:
+	text_far _Route22RivalDefeatedText2
+	text_end
+
+Route22Text_511d0:
+	text_far _Route22Text_511d0
+	text_end
 
 Route22Script5:
 	ld a, [wIsInBattle]
@@ -326,9 +324,7 @@ Route22Script5:
 	ld a, $2
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateStartAndTempo
 	ld a, [wcf0d]
 	cp $1
@@ -383,62 +379,15 @@ Route22_TextPointers:
 
 Route22Text1:
 	text_asm
-	CheckEvent EVENT_BEAT_ROUTE22_RIVAL_1ST_BATTLE
-	jr z, .asm_5118b
-	ld hl, Route22RivalAfterBattleText1
-	call PrintText
-	jr .asm_51191
-.asm_5118b
-	ld hl, Route22RivalBeforeBattleText1
-	call PrintText
-.asm_51191
+	farcall Func_f1b27
 	jp TextScriptEnd
 
 Route22Text2:
 	text_asm
-	CheckEvent EVENT_BEAT_ROUTE22_RIVAL_2ND_BATTLE
-	jr z, .asm_511a4
-	ld hl, Route22RivalAfterBattleText2
-	call PrintText
-	jr .asm_511aa
-.asm_511a4
-	ld hl, Route22RivalBeforeBattleText2
-	call PrintText
-.asm_511aa
+	farcall Func_f1b47
 	jp TextScriptEnd
 
-Route22RivalBeforeBattleText1:
-	text_far _Route22RivalBeforeBattleText1
-	text_end
-
-Route22RivalAfterBattleText1:
-	text_far _Route22RivalAfterBattleText1
-	text_end
-
-Route22RivalDefeatedText1:
-	text_far _Route22RivalDefeatedText1
-	text_end
-
-Route22Text_511bc:
-	text_far _Route22Text_511bc
-	text_end
-
-Route22RivalBeforeBattleText2:
-	text_far _Route22RivalBeforeBattleText2
-	text_end
-
-Route22RivalAfterBattleText2:
-	text_far _Route22RivalAfterBattleText2
-	text_end
-
-Route22RivalDefeatedText2:
-	text_far _Route22RivalDefeatedText2
-	text_end
-
-Route22Text_511d0:
-	text_far _Route22Text_511d0
-	text_end
-
 Route22FrontGateText:
-	text_far _Route22FrontGateText
-	text_end
+	text_asm
+	farcall Func_f1b67
+	jp TextScriptEnd

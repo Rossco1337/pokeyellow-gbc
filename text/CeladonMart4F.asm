@@ -1,7 +1,11 @@
 _CeladonMart4Text2::
 	text "I'm getting a"
-	line "# DOLL for my"
-	cont "girl friend!"
+	line "gift for COPYCAT"
+	cont "in CERULEAN CITY."
+
+	para "It's got to be a"
+	line "# DOLL. They"
+	cont "are trendy!"
 	done
 
 _CeladonMart4Text3::

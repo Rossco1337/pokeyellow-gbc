@@ -1,29 +1,36 @@
 _Route6BattleText1::
-	text "Who's there?"
-	line "Quit listening in"
-	cont "on us!"
+	text "I'm doing this"
+	line "out of love."
+	cont "Leave me alone!"
 	done
 
 _Route6EndBattleText1::
-	text "I"
-	line "just can't win!"
+	text "No,"
+	line "this can't be..."
 	prompt
 
 _Route6AfterBattleText1::
-	text "Whisper..."
-	line "whisper..."
+	text "My love will leave"
+	line "me in disgust."
 	done
 
 _Route6BattleText2::
-	text "Excuse me! This"
-	line "is a private"
-	cont "conversation!"
+	text "I'm training for"
+	line "my love. Don't"
+	cont "bother me!"
 	done
 
 _Route6EndBattleText2::
-	text "Ugh!"
-	line "I hate losing!"
+	text "My"
+	line "textbook never..."
 	prompt
+
+_Route6AfterBattleText2::
+	text "Now I understand,"
+	line "#MON isn't"
+	cont "about calculated"
+	cont "numbers."
+	done
 
 _Route6BattleText3::
 	text "There aren't many"

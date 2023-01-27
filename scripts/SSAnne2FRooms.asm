@@ -1,8 +1,5 @@
 SSAnne2FRooms_Script:
-	ld a, TRUE
-	ld [wAutoTextBoxDrawingControl], a
-	xor a
-	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	call DisableAutoTextBoxDrawing
 	ld hl, SSAnne9TrainerHeaders
 	ld de, SSAnne2FRooms_ScriptPointers
 	ld a, [wSSAnne2FRoomsCurScript]
@@ -102,43 +99,23 @@ SSAnne9Text_61c10:
 
 SSAnne9Text10:
 	text_asm
-	ld hl, SSAnne9Text_61c1f
-	call PrintText
+	farcall Func_f2570
 	jp TextScriptEnd
-
-SSAnne9Text_61c1f:
-	text_far _SSAnne9Text_61c1f
-	text_end
 
 SSAnne9Text11:
 	text_asm
-	ld hl, SSAnne9Text_61c2e
-	call PrintText
+	farcall Func_f257c
 	jp TextScriptEnd
-
-SSAnne9Text_61c2e:
-	text_far _SSAnne9Text_61c2e
-	text_end
 
 SSAnne9Text12:
 	text_asm
-	ld hl, SSAnne9Text_61c3d
-	call PrintText
+	farcall Func_f2588
 	jp TextScriptEnd
-
-SSAnne9Text_61c3d:
-	text_far _SSAnne9Text_61c3d
-	text_end
 
 SSAnne9Text13:
 	text_asm
-	ld hl, SSAnne9Text_61c4c
-	call PrintText
+	farcall Func_f2594
 	jp TextScriptEnd
-
-SSAnne9Text_61c4c:
-	text_far _SSAnne9Text_61c4c
-	text_end
 
 SSAnne9BattleText1:
 	text_far _SSAnne9BattleText1

@@ -1,5 +1,6 @@
 BikeShop_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ret
 
 BikeShop_TextPointers:
 	dw BikeShopText1
@@ -50,8 +51,7 @@ BikeShopText1:
 	ld hl, wd730
 	set 6, [hl]
 	hlcoord 0, 0
-	ld b, 4
-	ld c, 15
+	lb bc, 4, 15
 	call TextBoxBorder
 	call UpdateSprites
 	hlcoord 2, 2
@@ -62,11 +62,12 @@ BikeShopText1:
 	call PlaceString
 	ld hl, BikeShopText_1d815
 	call PrintText
+	; This fixes the bike shop instatext glitch
+	ld hl, wd730
+	res 6, [hl]
 	call HandleMenuInput
 	bit BIT_B_BUTTON, a
 	jr nz, .cancel
-	ld hl, wd730
-	res 6, [hl]
 	ld a, [wCurrentMenuItem]
 	and a
 	jr nz, .cancel

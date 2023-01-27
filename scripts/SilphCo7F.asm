@@ -130,9 +130,7 @@ SilphCo7Script0:
 	ld [wJoyIgnore], a
 	ld a, PLAYER_DIR_DOWN
 	ld [wPlayerMovingDirection], a
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
@@ -186,21 +184,11 @@ SilphCo7Script3:
 	ld a, OPP_RIVAL2
 	ld [wCurOpponent], a
 	ld a, [wRivalStarter]
-	cp STARTER2
-	jr nz, .asm_51cb6
-	ld a, $7
-	jr .asm_51cc0
-.asm_51cb6
-	cp STARTER3
-	jr nz, .asm_51cbe
-	ld a, $8
-	jr .asm_51cc0
-.asm_51cbe
-	ld a, $9
-.asm_51cc0
+	add 4
 	ld [wTrainerNo], a
 	ld a, $4
-	jp SilphCo7Text_51c10
+	call SilphCo7Text_51c10
+	ret
 
 SilphCo7Script4:
 	ld a, [wIsInBattle]
@@ -219,9 +207,7 @@ SilphCo7Script4:
 	ld a, $f
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
-	ld a, SFX_STOP_ALL_MUSIC
-;	ld [wNewSoundID], a
-	call PlaySound
+	call StopAllMusic
 	farcall Music_RivalAlternateStart
 	ld de, MovementData_51d1d
 	ld a, [wcf0d]

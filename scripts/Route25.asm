@@ -1,14 +1,21 @@
 Route25_Script:
-	call Route25Script_515e1
 	call EnableAutoTextBoxDrawing
 	ld hl, Route25TrainerHeaders
 	ld de, Route25_ScriptPointers
 	ld a, [wRoute25CurScript]
 	call ExecuteCurMapScriptInTable
 	ld [wRoute25CurScript], a
+	call Route25Script_515e1
 	ret
 
 Route25Script_515e1:
+	ld hl, wd492
+	res 2, [hl]
+	res 3, [hl]
+	res 4, [hl]
+	res 7, [hl]
+	xor a
+	ld [wBillsHouseCurScript], a
 	ld hl, wCurrentMapScriptFlags
 	bit 6, [hl]
 	res 6, [hl]
@@ -16,14 +23,15 @@ Route25Script_515e1:
 	CheckEventHL EVENT_LEFT_BILLS_HOUSE_AFTER_HELPING
 	ret nz
 	CheckEventReuseHL EVENT_MET_BILL_2
-	jr nz, .asm_515ff
+	jr nz, .asm_51638
 	ResetEventReuseHL EVENT_BILL_SAID_USE_CELL_SEPARATOR
 	ld a, HS_BILL_POKEMON
 	ld [wMissableObjectIndex], a
-	predef_jump ShowObject
-.asm_515ff
+	predef ShowObject
+	jr .asm_5165c
+.asm_51638
 	CheckEventAfterBranchReuseHL EVENT_GOT_SS_TICKET, EVENT_MET_BILL_2
-	ret z
+	jr z, .asm_5165c
 	SetEventReuseHL EVENT_LEFT_BILLS_HOUSE_AFTER_HELPING
 	ld a, HS_NUGGET_BRIDGE_GUY
 	ld [wMissableObjectIndex], a
@@ -33,7 +41,9 @@ Route25Script_515e1:
 	predef HideObject
 	ld a, HS_BILL_2
 	ld [wMissableObjectIndex], a
-	predef_jump ShowObject
+	predef ShowObject
+.asm_5165c
+	ret
 
 Route25_ScriptPointers:
 	dw CheckFightingMapTrainers

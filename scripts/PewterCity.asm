@@ -1,8 +1,11 @@
 PewterCity_Script:
 	call EnableAutoTextBoxDrawing
+	ld hl, wd492
+	res 7, [hl]
 	ld hl, PewterCity_ScriptPointers
 	ld a, [wPewterCityCurScript]
-	jp CallFunctionInTable
+	call CallFunctionInTable
+	ret
 
 PewterCity_ScriptPointers:
 	dw PewterCityScript0
@@ -30,7 +33,7 @@ ENDC
 	ld hl, CoordsData_19277
 	call ArePlayerCoordsInArray
 	ret nc
-	ld a, $f0
+	ld a, $fc
 	ld [wJoyIgnore], a
 	ld a, $5
 	ldh [hSpriteIndexOrTextID], a
@@ -52,9 +55,9 @@ PewterCityScript1:
 	ld a, SPRITE_FACING_UP
 	ldh [hSpriteFacingDirection], a
 	call SetSpriteFacingDirectionAndDelay
-	ld a, ($3 << 4) | SPRITE_FACING_UP
+	ld a, SPRITE_FACING_UP
 	ldh [hSpriteImageIndex], a
-	call SetSpriteImageIndexAfterSettingFacingDirection
+	call SpriteFunc_34a1
 	call PlayDefaultMusic
 	ld hl, wFlags_0xcd60
 	set 4, [hl]
@@ -119,10 +122,7 @@ PewterCityScript4:
 	ldh [hSpriteIndex], a
 	ld a, SPRITE_FACING_LEFT
 	ldh [hSpriteFacingDirection], a
-	call SetSpriteFacingDirectionAndDelay
-	ld a, ($1 << 4) | SPRITE_FACING_LEFT
-	ldh [hSpriteImageIndex], a
-	call SetSpriteImageIndexAfterSettingFacingDirection
+	call SpriteFunc_34a1
 	call PlayDefaultMusic
 	ld hl, wFlags_0xcd60
 	set 4, [hl]

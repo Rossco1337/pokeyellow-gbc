@@ -71,8 +71,12 @@ CeladonGameCornerScript1:
 .asm_48c43
 	ld a, [wXCoord]
 	cp 8
-	jr nz, .asm_48c4d
+	jr nz, .pikachu
 	ld de, MovementData_48c63
+	jr .asm_48c4d
+.pikachu
+	callfar Func_f1f23
+	ld de, MovementData_48c5a
 .asm_48c4d
 	ld a, $b
 	ldh [hSpriteIndex], a
@@ -85,8 +89,8 @@ MovementData_48c5a:
 	db NPC_MOVEMENT_DOWN
 	db NPC_MOVEMENT_RIGHT
 	db NPC_MOVEMENT_RIGHT
-	db NPC_MOVEMENT_UP
 	db NPC_MOVEMENT_RIGHT
+	db NPC_MOVEMENT_UP
 	db NPC_MOVEMENT_RIGHT
 	db NPC_MOVEMENT_RIGHT
 	db NPC_MOVEMENT_RIGHT
@@ -475,13 +479,11 @@ CeladonGameCornerScript_48f1e:
 	ld hl, wd730
 	set 6, [hl]
 	hlcoord 11, 0
-	ld b, 5
-	ld c, 7
+	lb bc, 5, 7
 	call TextBoxBorder
 	call UpdateSprites
 	hlcoord 12, 1
-	ld b, 4
-	ld c, 7
+	lb bc, 4, 7
 	call ClearScreenArea
 	hlcoord 12, 2
 	ld de, GameCornerMoneyText

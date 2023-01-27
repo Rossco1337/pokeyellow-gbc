@@ -5,7 +5,8 @@
 	const EVENT_FOLLOWED_OAK_INTO_LAB
 	const_skip 2
 	const EVENT_HALL_OF_FAME_DEX_RATING
-	const_skip 2
+	const_skip
+	const EVENT_PLAYER_AT_RIGHT_EXIT_TO_PALLET_TOWN
 	const EVENT_PALLET_AFTER_GETTING_POKEBALLS
 	const_skip 17
 	const EVENT_GOT_TOWN_MAP
@@ -25,7 +26,12 @@
 	const_next $28
 	const EVENT_VIRIDIAN_GYM_OPEN
 	const EVENT_GOT_TM42
-	const_skip 14
+	const_skip 2
+	const EVENT_02C
+	const EVENT_02D
+	const EVENT_02E
+	const EVENT_02F
+	const_skip 8
 	const EVENT_OAK_GOT_PARCEL
 	const EVENT_GOT_OAKS_PARCEL
 	const_skip 22
@@ -55,7 +61,8 @@
 	const EVENT_BEAT_CERULEAN_RIVAL
 	const_skip 14
 	const EVENT_BEAT_CERULEAN_ROCKET_THIEF
-	const_skip 18
+	const EVENT_GOT_BULBASAUR_IN_CERULEAN
+	const_skip 17
 	const EVENT_BEAT_CERULEAN_GYM_TRAINER_0
 	const EVENT_BEAT_CERULEAN_GYM_TRAINER_1
 	const_skip 2
@@ -96,12 +103,15 @@
 	const EVENT_RESCUED_MR_FUJI_2
 	const_skip 16
 	const EVENT_GOT_POKE_FLUTE
+	const_skip 30
+	const EVENT_GOT_SQUIRTLE_FROM_OFFICER_JENNY
 
 ; Vermilion City events
 	const_next $150
 	const_skip
 	const EVENT_GOT_BIKE_VOUCHER
-	const_skip 4
+	const EVENT_152
+	const_skip 3
 	const EVENT_SEEL_FAN_BOAST
 	const EVENT_PIKACHU_FAN_BOAST
 	const_skip 8
@@ -505,7 +515,8 @@
 	const EVENT_NUGGET_REWARD_AVAILABLE
 
 ; Route 25 events
-	const_next $550
+	const_next $550 - 1
+	const EVENT_54F
 	const EVENT_MET_BILL
 	const EVENT_BEAT_ROUTE_25_TRAINER_0
 	const EVENT_BEAT_ROUTE_25_TRAINER_1
@@ -529,6 +540,8 @@
 	const EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_0
 	const EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_1
 	const EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_2
+	const EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_3
+	const EVENT_BEAT_VIRIDIAN_FOREST_TRAINER_4
 
 ; Mt. Moon events
 	const_next $570
@@ -540,13 +553,13 @@
 	const EVENT_BEAT_MT_MOON_1_TRAINER_4
 	const EVENT_BEAT_MT_MOON_1_TRAINER_5
 	const EVENT_BEAT_MT_MOON_1_TRAINER_6
-	const_skip
+	const EVENT_GOT_DOME_FOSSIL
 	const EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
 	const EVENT_BEAT_MT_MOON_3_TRAINER_0
 	const EVENT_BEAT_MT_MOON_3_TRAINER_1
 	const EVENT_BEAT_MT_MOON_3_TRAINER_2
 	const EVENT_BEAT_MT_MOON_3_TRAINER_3
-	const EVENT_GOT_DOME_FOSSIL
+	const EVENT_57E
 	const EVENT_GOT_HELIX_FOSSIL
 
 ; S.S. Anne events
@@ -606,7 +619,9 @@
 	const_skip 15
 	const EVENT_BEAT_ROCKET_HIDEOUT_3_TRAINER_0
 	const EVENT_BEAT_ROCKET_HIDEOUT_3_TRAINER_1
-	const_skip 15
+	const_skip 13
+	const EVENT_6A0
+	const_skip
 	const EVENT_BEAT_ROCKET_HIDEOUT_4_TRAINER_0
 	const EVENT_BEAT_ROCKET_HIDEOUT_4_TRAINER_1
 	const EVENT_BEAT_ROCKET_HIDEOUT_4_TRAINER_2
@@ -683,7 +698,11 @@
 	const EVENT_BEAT_SILPH_CO_10F_TRAINER_1
 	const_skip 5
 	const EVENT_SILPH_CO_10_UNLOCKED_DOOR
-	const_skip 11
+	const_skip 7
+	const EVENT_780
+	const EVENT_781
+	const EVENT_782
+	const_skip
 	const EVENT_BEAT_SILPH_CO_11F_TRAINER_0
 	const EVENT_BEAT_SILPH_CO_11F_TRAINER_1
 	const_skip 2
